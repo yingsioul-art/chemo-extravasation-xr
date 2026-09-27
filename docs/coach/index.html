@@ -1,3 +1,349 @@
-<!DOCTYPE html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>練習：對 AI 病人做衛教｜建置中</title>
-<style>body{font-family:"Microsoft JhengHei",system-ui,sans-serif;background:#f4f7fb;margin:0;padding:40px 16px;text-align:center;color:#1c2430}a{color:#123a6b}</style></head>
-<body><h1>練習：對 AI 病人做衛教</h1><p>建置中（S5）。</p><p><a href="../">← 回首頁</a></p></body></html>
+<!DOCTYPE html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>練習：對 AI 病人做衛教</title>
+<meta name="description" content="化療藥品外滲後續處置（表單 17–19）：把提示詞貼給 Copilot，AI 扮演外滲病人，你用口語做出院衛教，AI 依六項檢核表逐項回饋。">
+<style>
+:root{--bg:#f4f7fb;--card:#fff;--ink:#1c2430;--mut:#5b6675;--line:#e3e8ef;--navy:#123a6b;--red:#c81e3a;--cold:#1f6fd0;--warm:#d9541e;--dmso:#7a3fb5;--ok:#2e8b57;--soft:#fff4f6;--gold:#b7791f}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Microsoft JhengHei","PingFang TC","Noto Sans TC",system-ui,sans-serif;line-height:1.6;padding-bottom:84px}
+header{background:var(--navy);color:#fff;padding:16px 16px 14px}
+header .wrap{max-width:860px;margin:0 auto}
+header a{color:#fff;opacity:.8;font-size:.85rem;text-decoration:none}
+header h1{margin:4px 0 0;font-size:1.35rem}
+.flow{display:flex;align-items:center;gap:4px;margin-top:10px;overflow-x:auto;scrollbar-width:none}.flow::-webkit-scrollbar{display:none}
+.flow div{flex:none;background:rgba(255,255,255,.12);border-radius:12px;padding:6px 10px;font-size:.78rem;text-align:center;line-height:1.2;min-width:64px}.flow div span{display:block;font-size:1.3rem;margin-bottom:2px}.flow i{color:rgba(255,255,255,.5);font-style:normal;flex:none}
+/* 步驟列（黏在上方） */
+.stepbar{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid var(--line);box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.stepbar .wrap{max-width:860px;margin:0 auto;display:flex}
+.stepbar a{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:10px 4px;text-decoration:none;color:var(--mut);font-size:.85rem;border-bottom:3px solid transparent;white-space:nowrap}
+.stepbar a .n{width:22px;height:22px;border-radius:50%;background:#dfe5ee;color:#fff;font-weight:700;font-size:.8rem;display:inline-flex;align-items:center;justify-content:center}
+.stepbar a.on{color:var(--red);border-bottom-color:var(--red);font-weight:700}.stepbar a.on .n{background:var(--red)}
+.stepbar a.done .n{background:var(--ok)}
+main{max-width:860px;margin:0 auto;padding:14px 16px}
+.sec{background:var(--card);border-radius:16px;padding:16px;margin-bottom:16px;box-shadow:0 2px 10px rgba(0,0,0,.05);scroll-margin-top:56px}
+.sec .step{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+.sec .step .n{width:30px;height:30px;border-radius:50%;background:var(--red);color:#fff;font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex:none}
+.sec h2{margin:0;font-size:1.15rem}
+.sec .sub{margin:0 0 10px 40px;color:var(--mut);font-size:.88rem}
+.note{font-size:.86rem;color:var(--mut)}
+/* 提示框 */
+.hint{display:flex;gap:8px;align-items:flex-start;background:#fff8e6;border:1px solid #f3dfa6;border-radius:12px;padding:10px 12px;font-size:.9rem;margin-top:10px}
+.hint.ok{background:#eef8f1;border-color:#bfe3cb}
+.hint b{color:var(--gold)}.hint.ok b{color:var(--ok)}
+/* 案例卡 */
+.cases{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-top:8px}
+.casecard{border:2px solid var(--line);border-radius:14px;background:#fff;padding:12px 14px;cursor:pointer;text-align:left;font:inherit;color:var(--ink);position:relative;border-top-width:6px}
+.casecard.c1{border-top-color:var(--cold)}.casecard.c2{border-top-color:var(--warm)}
+.casecard.on{border-color:var(--red);background:var(--soft)}
+.casecard.on::after{content:"✓ 已選";position:absolute;top:10px;right:12px;background:var(--red);color:#fff;font-size:.75rem;padding:2px 8px;border-radius:999px}
+.casecard .ic{font-size:1.5rem}.casecard h3{margin:2px 0;font-size:1.02rem}.casecard p{margin:0;font-size:.85rem;color:var(--mut)}
+.tags{margin-top:6px}.tag{display:inline-block;font-size:.75rem;padding:2px 8px;border-radius:6px;color:#fff;margin-right:4px}
+.tC{background:var(--cold)}.tW{background:var(--warm)}.tD{background:var(--dmso)}
+.rolerow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:12px}
+.pill{display:inline-flex;border:2px solid var(--line);border-radius:999px;overflow:hidden}
+.pill button{border:0;background:#fff;padding:8px 14px;font:inherit;font-size:.9rem;cursor:pointer;color:var(--mut)}
+.pill button.on{background:var(--navy);color:#fff;font-weight:700}
+.casebox{border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-top:10px;background:#fafbfd;font-size:.9rem}
+/* 按鈕 */
+.btnrow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
+.btn{border:0;border-radius:12px;padding:12px 18px;font:inherit;font-size:1rem;font-weight:700;cursor:pointer;color:#fff;background:var(--red);display:inline-flex;align-items:center;gap:6px;justify-content:center}
+.btn.big{width:100%;padding:15px 18px;font-size:1.08rem}
+.btn.line{background:#fff;color:var(--navy);border:2px solid var(--navy);font-weight:600}
+.btn.ghost{background:transparent;color:var(--navy);border:0;font-weight:600;padding:8px 10px}
+.btn:active{transform:translateY(1px)}
+#copied{font-weight:700;font-size:.9rem;color:var(--ok)}
+/* 接著怎麼做 */
+.next3{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px;margin-top:12px}
+.next3 div{background:#f6f8fb;border-radius:12px;padding:10px 12px;font-size:.88rem;text-align:center;line-height:1.45}
+.next3 div b{display:block;font-size:1.6rem;margin-bottom:4px}
+/* 提示詞預覽 */
+.prewrap{position:relative;margin-top:10px}
+pre{white-space:pre-wrap;word-break:break-word;background:#1c2430;color:#e9eef5;border-radius:12px;padding:14px;font-size:.84rem;line-height:1.55;margin:0;max-height:170px;overflow:hidden;transition:max-height .2s}
+.prewrap.open pre{max-height:none}
+.prewrap .fade{position:absolute;left:0;right:0;bottom:0;height:70px;background:linear-gradient(transparent,#1c2430);border-radius:0 0 12px 12px;pointer-events:none}
+.prewrap.open .fade{display:none}
+/* 自評卡 */
+.chkcard{border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-top:8px;display:grid;grid-template-columns:30px 1fr;gap:8px}
+.chkcard .no{width:26px;height:26px;border-radius:50%;background:#eef2f7;color:var(--red);font-weight:700;display:flex;align-items:center;justify-content:center;font-size:.85rem}
+.chkcard .t{font-weight:700}.chkcard .d{font-size:.84rem;color:var(--mut);margin:2px 0 8px}
+.segc{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}
+.segc label{border:1.5px solid var(--line);border-radius:8px;padding:6px 4px;font-size:.84rem;text-align:center;cursor:pointer;color:var(--mut);user-select:none}
+.segc input{position:absolute;opacity:0;width:0;height:0}
+.segc input:checked+span{font-weight:700}
+.segc label.y:has(input:checked){background:#e7f5ec;border-color:var(--ok);color:var(--ok)}
+.segc label.n:has(input:checked){background:#f0f2f5;border-color:#7d8794;color:#333}
+.segc label.x:has(input:checked){background:#fdebee;border-color:var(--red);color:var(--red)}
+.sumrow{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:10px}
+.chip{font-size:.82rem;padding:3px 10px;border-radius:999px;background:#eef2f7;color:var(--mut)}
+.chip.y{background:#e7f5ec;color:var(--ok)}.chip.x{background:#fdebee;color:var(--red)}
+/* 參考資料 */
+.ref{border-top:6px solid var(--navy)}
+details{border:1px solid var(--line);border-radius:12px;padding:8px 12px;margin-top:8px;background:#fff}
+summary{cursor:pointer;font-weight:700;color:var(--navy);list-style:none;display:flex;justify-content:space-between;align-items:center}
+summary::after{content:"＋";color:var(--mut)}details[open] summary::after{content:"－"}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-top:8px}
+.box{border-radius:12px;padding:10px 12px;color:#fff}
+.box.cold{background:var(--cold)}.box.warm{background:var(--warm)}.box.dmso{background:var(--dmso)}
+.box ul{margin:6px 0 0 18px;padding:0;font-size:.9rem}
+.q{border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-top:8px;font-size:.92rem}
+.q .stem{font-weight:700}.q ol{margin:6px 0 0 20px;padding:0}.q li.ans{color:var(--ok);font-weight:700}
+.q details{border:0;padding:0;margin-top:4px}.q summary{font-weight:600;font-size:.85rem}
+/* 底部固定鈕 */
+.dock{position:fixed;left:0;right:0;bottom:0;z-index:30;background:rgba(255,255,255,.96);border-top:1px solid var(--line);padding:8px 16px;box-shadow:0 -4px 14px rgba(0,0,0,.06)}
+.dock .wrap{max-width:860px;margin:0 auto;display:flex;gap:10px;align-items:center}
+.dock .lab{flex:1;font-size:.82rem;color:var(--mut);line-height:1.3;min-width:0}
+.dock .lab b{display:block;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dock .btn{flex:none}
+footer{text-align:center;color:var(--mut);font-size:.8rem;padding:16px}
+.hide{display:none!important}
+.stepbar a.lock{opacity:.45;cursor:default}
+.sec.wiz{animation:fadein .25s ease}@keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (max-width:480px){.sec{padding:14px}.stepbar a{font-size:.8rem}.stepbar a .txt{display:none}.stepbar a.on .txt{display:inline}}
+</style></head>
+<body>
+<header><div class="wrap"><a href="../">← 回首頁</a><h1>🗣️ 練習：對 AI 病人做衛教</h1><div class="flow"><div><span>🧊🔥</span>選案例</div><i>›</i><div><span>📋</span>複製提示詞</div><i>›</i><div><span>🤖</span>貼給 Copilot</div><i>›</i><div><span>🗣️</span>講衛教</div><i>›</i><div><span>✅</span>看回饋</div></div></div></header>
+
+<nav class="stepbar"><div class="wrap">
+<a href="#" id="nav1" data-step="1" class="on"><span class="n">1</span><span class="txt">選案例</span></a>
+<a href="#" id="nav2" data-step="2" class="lock"><span class="n">2</span><span class="txt">複製提示詞</span></a>
+<a href="#" id="nav3" data-step="3" class="lock"><span class="n">3</span><span class="txt">練完自評</span></a>
+</div></nav>
+
+<main>
+
+<!-- STEP 1 -->
+<section class="sec wiz" id="s1">
+<div class="step"><span class="n">1</span><h2>選一個案例，決定 AI 扮誰</h2></div>
+<p class="sub">兩個案例敷法不同（一冷一熱），建議都練。</p>
+<div class="cases" id="caseSeg">
+<button class="casecard c1 on" data-case="1"><div class="ic">🧊</div><h3>案例一｜Doxorubicin 外滲</h3><p>小紅莓・明天出院</p><div class="tags"><span class="tag tC">冷敷</span><span class="tag tD">DMSO</span></div></button>
+<button class="casecard c2" data-case="2"><div class="ic">🔥</div><h3>案例二｜Vincristine 外滲</h3><p>長春新鹼・後天出院</p><div class="tags"><span class="tag tW">熱敷</span></div></button>
+</div>
+<div class="rolerow"><span style="font-size:.9rem">AI 扮演：</span>
+<div class="pill" id="roleSeg"><button data-role="p" class="on">病人本人</button><button data-role="f">家屬（選配）</button></div>
+</div>
+<div class="casebox" id="caseBox"></div>
+<div class="hint ok" id="hint1">✅ <div><b>已選好。</b>下一步：把提示詞複製、貼給 Copilot。</div></div>
+<div class="btnrow"><button class="btn big" id="go2">下一步：複製提示詞 ▶</button></div>
+</section>
+
+<!-- STEP 2 -->
+<section class="sec wiz hide" id="s2">
+<div class="step"><span class="n">2</span><h2>複製提示詞，貼給 Copilot</h2></div>
+<p class="sub">提示詞已依你選的案例與角色組好，不用改任何字。</p>
+<button class="btn big" id="copyBtn">📋 複製提示詞</button>
+<div class="btnrow"><button class="btn line" id="dlBtn">⬇ 下載 .txt</button><button class="btn ghost" id="toggleBtn">看提示詞全文 ▾</button><span id="copied"></span></div>
+<div class="prewrap" id="prewrap"><pre id="promptBox"></pre><div class="fade"></div></div>
+<div class="next3">
+<div><b>🤖</b>打開 Copilot<br>貼上、送出</div>
+<div><b>🗣️</b>像對病人那樣講<br>打字或口說都可以</div>
+<div><b>🏁</b>講完打「我說完了」<br>AI 逐項回饋</div>
+</div>
+<div class="hint">💡 <div><b>小提醒：</b>最多 20 輪。AI 回得太長或開始教你，回它一句「請照提示詞的規則，用病人口氣、三句以內」。</div></div>
+<div class="btnrow"><button class="btn ghost" id="back1">◀ 上一步</button><button class="btn big" id="go3" style="flex:1">練完了 → 下一步：自評 ▶</button></div>
+</section>
+
+<!-- STEP 3 -->
+<section class="sec wiz hide" id="s3">
+<div class="step"><span class="n">3</span><h2>練完了？自己勾一次，再對 AI 的回饋</h2></div>
+<p class="sub">六項就是 AI 回饋用的檢核表。先憑印象勾，再看 AI 怎麼說。</p>
+<div id="chkList"></div>
+<div class="sumrow" id="chkSum"></div>
+<div class="btnrow"><button class="btn ghost" id="back2">◀ 上一步</button><button class="btn line" id="clearChk">清除勾選</button><button class="btn" id="swapBtn">換另一個案例再練 🔁</button></div>
+<div class="hint" id="hint3">📌 <div><b>對照方法：</b>你勾「有講到」但 AI 說「沒講到」→ 通常是講得不完整（例如講了冷敷，沒講幾天）。</div></div>
+</section>
+
+<!-- 參考資料 -->
+<section class="sec ref">
+<div class="step"><span class="n" style="background:var(--navy)">📚</span><h2>參考資料</h2></div>
+
+<details open><summary>敷療速查：本頁兩案例</summary>
+<div class="grid3">
+<div class="box cold"><b>🧊 冷敷（案例一 Doxorubicin）</b><ul><li>冰敷袋或冰塊包毛巾 0℃</li><li>每次 20 分鐘，一天 4 次</li><li>持續 1–2 天（24–48 小時）</li><li>血管收縮，把藥侷限在原處</li></ul></div>
+<div class="box warm"><b>🔥 熱敷（案例二 Vincristine）</b><ul><li>44–50℃ 溫熱敷</li><li>每次 20–30 分鐘，一天 4 次</li><li>持續 1–2 天（24–48 小時）</li><li>血管擴張帶走藥；長春花鹼類冷敷會加重潰瘍</li></ul></div>
+<div class="box dmso"><b>🟣 DMSO（案例一適用、案例二不適用）</b><ul><li>99% DMSO 外用，依醫囑</li><li>塗抹範圍＝患部兩倍</li><li>自然風乾，不要覆蓋</li><li>一天 4 次、連續 7 天；同時冰敷</li></ul></div>
+</div>
+<p class="note" style="margin:8px 0 4px">任何藥品外滲都<b>不可壓迫、不可按摩</b>。其他藥品查 <a href="../lookup/">敷療查詢站</a>（57 個藥品）。</p>
+</details>
+
+<details><summary>技術評核表單「化療藥品外滲預防與處理」第 17–19 項</summary>
+<ol start="17" style="font-size:.9rem;padding-left:20px">
+<li>若為周邊靜脈外滲者，抬高患肢至少 48 小時，以減少腫脹。</li>
+<li>病人住院期間每天應觀察與記錄外滲部位皮膚顏色、溫度、完整性、腫脹、水泡、分泌物、疼痛指數、灼熱感或麻木感、外滲部位肢體活動狀況以及體溫升高或其他感染徵象，可參閱護理過程預設內容，直到症狀改善為止。若症狀未改善或惡化，須告知醫師做進一步處置，必要時照會外科部或皮膚部醫師。</li>
+<li>提供病人及家屬化療藥品外滲處理相關照護指導。</li>
+</ol>
+<div id="qArea"></div>
+</details>
+</section>
+
+</main>
+<footer>化療藥品外滲預防與處理 XR 教材｜④ 後續處置｜版本 2026-09-26</footer>
+
+<div class="dock hide" id="dock"><div class="wrap"><div class="lab">目前：<b id="dockLab"></b></div><button class="btn" id="dockCopy">📋 複製提示詞</button></div></div>
+
+<script>
+/* ---------- 六項檢核表（來源：規格檔 7-3；Q21–Q23 展開） ---------- */
+const CHECK=[
+ {t:"抬高患肢至少 48 小時",d:"高於心臟；睡覺用枕頭墊高也算。不是「不痛就放下」。"},
+ {t:"每天自己看九項＋發燒",d:"皮膚顏色、溫度、完整性（有沒有破皮）、腫脹、水泡、分泌物、疼痛、灼熱或麻木、手能不能正常活動；加上有沒有發燒。"},
+ {t:"惡化就回診或聯絡",d:"範圍變大、變黑變硬、起水泡、破皮、越來越痛、發燒 → 回診或打電話回病房，不要等下次回診。"},
+ {t:"敷療五要素＋不可壓迫",d:"冷還是熱、幾度、每次幾分鐘、一天幾次、敷幾天；並說「不可以壓、不可以揉」。"},
+ {t:"DMSO 用法（案例一）／說明不需要 DMSO（案例二）",d:"案例一：塗患部兩倍大、風乾不蓋、一天 4 次、連續 7 天、同時冰敷。案例二 Vincristine 不用 DMSO，講了算講錯。"},
+ {t:"6 週追蹤與電訪",d:"回家第一週病房護理師會打電話；第二週起腫瘤品管護理師每週一次；追到外滲後 6 週。電話裡覺得變差要說。"}
+];
+
+/* ---------- 兩案例 ---------- */
+const CASES={
+ 1:{short:"案例一 Doxorubicin",name:"案例一｜Doxorubicin（小紅莓）外滲",drug:"Doxorubicin（Adriamycin，俗稱小紅莓）",vesicant:"起疱性藥品",site:"左前臂周邊靜脈留置針",when:"今天上午打第一次化療時",
+    done:"護理師已停藥、換 10 mL 空針盡量回抽、拔針、油性筆畫了範圍、開始冰敷；醫師開了 99% DMSO 外用。",
+    home:"明天上午出院回家。",day:"明天",
+    comp:"冷敷：冰敷袋或冰塊包毛巾 0℃，每次 20 分鐘，一天 4 次，持續 1–2 天（24–48 小時）。",
+    dmso:"適用。99% DMSO 外用（依醫囑）：塗抹範圍為患部兩倍大，自然風乾、不要覆蓋，一天 4 次、連續 7 天，同時搭配冰敷。",
+    dmsoRule:"病人應被告知 DMSO 的四件事：塗多大範圍（患部兩倍）、風乾不覆蓋、一天幾次（4 次）、幾天（7 天）。少講任何一件＝「沒講到」；若學生說要熱敷、或說 DMSO 塗完要包起來＝「講錯」。",
+    tag:'<span class="tag tC">冷敷</span><span class="tag tD">DMSO</span>',
+    worry:"擔心手臂會不會爛掉、明天出院回家要怎麼弄冰敷、DMSO 那瓶藥水要怎麼擦、能不能揉一揉讓它散掉。"},
+ 2:{short:"案例二 Vincristine",name:"案例二｜Vincristine（長春新鹼）外滲",drug:"Vincristine（長春新鹼）",vesicant:"起疱性藥品",site:"右前臂周邊靜脈留置針",when:"今天下午打化療時",
+    done:"護理師已停藥、換 10 mL 空針盡量回抽、拔針、油性筆畫了範圍、開始溫熱敷。",
+    home:"後天上午出院回家。",day:"後天",
+    comp:"熱敷：44–50℃ 溫熱敷，每次 20–30 分鐘，一天 4 次，持續 1–2 天（24–48 小時）。長春花鹼類藥品不可冰敷，冰敷會讓藥留在原處、加重潰瘍。",
+    dmso:"不適用。Vincristine 不使用 DMSO。",
+    dmsoRule:"本案不用 DMSO。學生若主動說明「這個藥不需要塗 DMSO」或「只要熱敷」＝「有講到」；沒提 DMSO 也算「有講到」（因為不適用）；若學生說要塗 DMSO 或要冰敷＝「講錯」。",
+    tag:'<span class="tag tW">熱敷</span>',
+    worry:"擔心為什麼別人外滲是冰敷、{self}卻要熱敷；家裡沒有熱敷袋怎麼辦；會不會燙傷；能不能揉一揉。"}
+};
+const ROLES={
+ p:{short:"AI 扮病人",who:"病人本人「張示範」，58 歲，第一次打化療，不太懂醫療名詞，會用生活化的話問問題，有點緊張。",say:"張示範本人"},
+ f:{short:"AI 扮家屬",who:"病人的太太「張太太」，回家後主要由她照顧。她沒有醫療背景，會幫先生問，也會問自己要注意什麼。病人張示範 58 歲，第一次打化療。",say:"張示範的太太"}
+};
+
+function buildPrompt(c,r){
+ const C=CASES[c],R=ROLES[r];
+ return `【角色扮演練習：化療藥品外滲後的出院衛教】
+
+你現在要扮演一位病人${r==="f"?"的家屬":""}，配合我（護理師）練習「出院衛教」。請完全照下面的規則進行，不要跳出角色，不要在對話中教我或糾正我，直到練習結束。
+
+■ 你的身分
+${R.who}
+
+■ 情境（你知道的事）
+- ${C.when}，${C.site}發生化療藥品外滲，藥品是 ${C.drug}，屬於${C.vesicant}。
+- ${C.done}
+- 現在手臂還有點腫、有點痛，${C.home}
+- 你${r==="f"?"和先生都":""}${C.worry.replace("{self}",r==="f"?"先生":"自己")}
+
+■ 對話規則
+1. 用台灣人日常口語回應，像真的病人${r==="f"?"家屬":""}會說的話；每次回應最多 3 句。
+2. 我開口說話後，你才回應。你的第一句可以先表達擔心或問問題，例如「護理師，${r==="f"?"我先生":"我"}${C.day}回家，這隻手要怎麼顧？」
+3. 如果我講得太專業、太快、或用了你聽不懂的詞，就像真的病人一樣反問「那是什麼意思？」。
+4. 如果我講錯（例如敷法、溫度、時間、DMSO 用法與下面的「敷療說明」不同），你不要糾正，只能照常追問或表示「好」，把錯誤留到最後回饋。
+5. 最多 20 輪（我講一次、你回一次算一輪）。到第 20 輪、或我說「我說完了」「結束」，你就結束角色扮演，進入回饋。
+6. 回饋之前，不要透露檢核表的內容，也不要主動把我沒講到的項目問出來（最多只能用病人自然會問的方式問一次「還有什麼要注意的嗎？」）。
+
+■ 敷療說明（院內〈化療藥品外滲處置建議〉2023.5 版，你只用來核對我講得對不對）
+- 本案局部處置：${C.comp}
+- DMSO：${C.dmso}
+- 任何藥品外滲都不可壓迫、不可按摩患部。
+- 對照用：冷敷＝0℃ 每次 20 分鐘、一天 4 次、1–2 天；熱敷＝44–50℃ 每次 20–30 分鐘、一天 4 次、1–2 天；DMSO＝99% 外用、患部兩倍範圍、風乾不覆蓋、一天 4 次 × 7 天，僅 Anthracycline 類（Doxorubicin、Epirubicin、Idarubicin、Daunorubicin）與 Mitomycin-C、Mitoxantrone 適用。
+
+■ 結束時的回饋（跳出角色，用護理教師的口氣，繁體中文）
+先寫一行「── 練習結束，以下是回饋 ──」，然後依六項檢核表逐項給結果，每項一行，格式：「編號｜項目｜✅有講到／⬜沒講到／❌講錯｜一句話說明（我實際講了什麼、對或錯在哪）」。
+
+檢核表六項：
+1. 抬高患肢至少 48 小時（高於心臟；睡覺用枕頭墊高也算）。
+2. 每天自己觀察九項＋發燒：皮膚顏色、溫度、完整性（有沒有破皮）、腫脹、水泡、分泌物、疼痛、灼熱或麻木、手的活動；加上有沒有發燒。至少講到其中 5 項且提到「每天看」才算有講到。
+3. 惡化就回診或聯絡：講到「哪些情況」（範圍變大、變黑變硬、起水泡、破皮、更痛、發燒）以及「要做什麼」（回診或打電話回病房），兩者都有才算有講到。
+4. 敷療五要素＋不可壓迫：冷或熱、幾度、每次幾分鐘、一天幾次、敷幾天，並說不可以壓、不可以揉。五要素缺 1–2 項＝沒講到（在說明寫出缺哪些）；冷熱、溫度、時間任一與敷療說明不符＝講錯。
+5. DMSO：${C.dmsoRule}
+6. 6 週追蹤與電訪：回家第一週由病房護理師電訪，第二週起腫瘤品管護理師每週一次，追蹤到外滲後 6 週；電話中若覺得變差要說。三個時間點至少講到兩個才算有講到。
+
+六項之後，加一行「💡 最重要的一句建議：」，只給一句、針對我最該先改的地方（例如講了敷法卻沒講幾天、用了病人聽不懂的詞、沒確認病人聽懂）。最後一行寫「可以再用另一個案例練一次。」
+
+現在請以${R.say}的身分，等我開口。`;
+}
+
+/* ---------- 畫面 ---------- */
+let curCase=1,curRole="p";
+const $=s=>document.querySelector(s);
+function renderCase(){
+ const C=CASES[curCase],R=ROLES[curRole];
+ $("#caseBox").innerHTML=`<div>${C.tag}<b>${C.name}</b>・${R.short}</div>
+ <div style="margin-top:4px">張示範，58 歲，${C.when}${C.site}外滲。${C.done} ${C.home}</div>
+ <div class="note" style="margin-top:4px">本案敷法：${C.comp}<br>DMSO：${C.dmso}</div>`;
+ $("#promptBox").textContent=buildPrompt(curCase,curRole);
+ $("#hint1").innerHTML=`✅ <div><b>已選好：${C.short}・${R.short}。</b>下一步：把提示詞複製、貼給 Copilot。</div>`;
+ $("#dockLab").textContent=`${C.short}・${R.short}`;
+ $("#copied").textContent="";
+}
+document.querySelectorAll("#caseSeg button").forEach(b=>b.onclick=()=>{curCase=+b.dataset.case;document.querySelectorAll("#caseSeg button").forEach(x=>x.classList.toggle("on",x===b));renderCase();});
+document.querySelectorAll("#roleSeg button").forEach(b=>b.onclick=()=>{curRole=b.dataset.role;document.querySelectorAll("#roleSeg button").forEach(x=>x.classList.toggle("on",x===b));renderCase();});
+$("#swapBtn").onclick=()=>{const b=document.querySelector(`#caseSeg button[data-case="${curCase===1?2:1}"]`);b.click();show(1);};
+
+async function copyText(t){
+ try{await navigator.clipboard.writeText(t);return true;}catch(e){}
+ try{const ta=document.createElement("textarea");ta.value=t;ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.focus();ta.select();const ok=document.execCommand("copy");document.body.removeChild(ta);return ok;}catch(e){return false;}
+}
+async function doCopy(){
+ const ok=await copyText($("#promptBox").textContent);
+ $("#copied").textContent=ok?"✅ 已複製，去 Copilot 貼上":"⚠️ 無法自動複製，請展開全文長按複製";
+ [$("#copyBtn"),$("#dockCopy")].forEach(b=>{b.textContent=ok?"✅ 已複製":"📋 複製提示詞";});
+ setTimeout(()=>{[$("#copyBtn"),$("#dockCopy")].forEach(b=>b.textContent="📋 複製提示詞");},2500);
+}
+$("#copyBtn").onclick=doCopy;$("#dockCopy").onclick=doCopy;
+$("#dlBtn").onclick=()=>{const t=$("#promptBox").textContent;const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([t],{type:"text/plain;charset=utf-8"}));a.download=`外滲衛教練習_${CASES[curCase].short}_${curRole==="p"?"病人":"家屬"}.txt`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);};
+$("#toggleBtn").onclick=()=>{const w=$("#prewrap");w.classList.toggle("open");$("#toggleBtn").textContent=w.classList.contains("open")?"收合提示詞 ▴":"看提示詞全文 ▾";};
+
+/* 精靈式：一次只顯示一個步驟，按「下一步」才解鎖下一步 */
+let unlocked=1;
+function show(n){
+ if(n>unlocked)unlocked=n;
+ [1,2,3].forEach(i=>{
+  document.getElementById("s"+i).classList.toggle("hide",i!==n);
+  const a=document.getElementById("nav"+i);
+  a.classList.toggle("on",i===n);a.classList.toggle("done",i<n);a.classList.toggle("lock",i>unlocked);
+ });
+ $("#dock").classList.toggle("hide",n<2);
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+document.querySelectorAll(".stepbar a").forEach(a=>a.onclick=e=>{e.preventDefault();const n=+a.dataset.step;if(n<=unlocked)show(n);});
+$("#go2").onclick=()=>show(2);
+$("#go3").onclick=()=>show(3);
+$("#back1").onclick=()=>show(1);
+$("#back2").onclick=()=>show(2);
+
+/* 自評（勾選只存本機瀏覽器，失敗也不影響使用） */
+const KEY="coach_chk_v1";
+let saved={};try{saved=JSON.parse(localStorage.getItem(KEY)||"{}")||{};}catch(e){saved={};}
+function renderChk(){
+ $("#chkList").innerHTML=CHECK.map((c,i)=>`<div class="chkcard"><div class="no">${i+1}</div><div><div class="t">${c.t}</div><div class="d">${c.d}</div>
+ <div class="segc">
+ <label class="y"><input type="radio" name="c${i}" value="y" ${saved["c"+i]==="y"?"checked":""}><span>✅ 有講到</span></label>
+ <label class="n"><input type="radio" name="c${i}" value="n" ${saved["c"+i]==="n"?"checked":""}><span>⬜ 沒講到</span></label>
+ <label class="x"><input type="radio" name="c${i}" value="x" ${saved["c"+i]==="x"?"checked":""}><span>❌ 講錯</span></label></div></div></div>`).join("");
+ sumChk();
+}
+function sumChk(){
+ const v=Object.values(saved);const y=v.filter(x=>x==="y").length,n=v.filter(x=>x==="n").length,x=v.filter(x=>x==="x").length;
+ $("#chkSum").innerHTML=v.length?`<span class="chip y">有講到 ${y}</span><span class="chip">沒講到 ${n}</span><span class="chip x">講錯 ${x}</span><span class="note">／共 6 項${v.length<6?`，還有 ${6-v.length} 項沒勾`:""}</span>`:`<span class="note">還沒勾選。練完後每項選一個。</span>`;
+}
+$("#chkList").addEventListener("change",e=>{if(e.target.name){saved[e.target.name]=e.target.value;try{localStorage.setItem(KEY,JSON.stringify(saved));}catch(err){}sumChk();}});
+$("#clearChk").onclick=()=>{saved={};try{localStorage.removeItem(KEY);}catch(e){}renderChk();};
+
+/* 知識底稿 Q21–Q23：讀題庫檔（單一來源），不手抄 */
+async function loadQ(){
+ const area=$("#qArea");
+ try{
+  const r=await fetch("../assets/data/questions.json",{cache:"no-store"});
+  if(!r.ok)throw new Error(r.status);
+  const d=await r.json();
+  const qs=(d.questions||[]).filter(q=>q.block==="F"||(q.use||[]).includes("coach"));
+  if(!qs.length)throw new Error("empty");
+  area.innerHTML=qs.map(q=>`<div class="q"><div class="stem">練習題・表單 ${q.form_item}｜${q.stem}</div>
+   <ol type="A">${q.options.map(o=>`<li class="${o.key===q.answer?"ans":""}">${o.text}</li>`).join("")}</ol>
+   <details><summary>講解</summary><p style="margin:6px 0">${q.explain_ok||""}</p></details></div>`).join("");
+ }catch(e){
+  area.innerHTML="";
+ }
+}
+renderCase();renderChk();loadQ();
+</script>
+</body></html>

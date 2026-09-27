@@ -1,3 +1,624 @@
-<!DOCTYPE html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>動手：外滲當下怎麼做｜建置中</title>
-<style>body{font-family:"Microsoft JhengHei",system-ui,sans-serif;background:#f4f7fb;margin:0;padding:40px 16px;text-align:center;color:#1c2430}a{color:#123a6b}</style></head>
-<body><h1>動手：外滲當下怎麼做</h1><p>建置中（S3）。</p><p><a href="../">← 回首頁</a></p></body></html>
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>動手：外滲當下怎麼做</title>
+<meta name="description" content="化療藥品外滲初步處理動手互動：拔不拔針、穿什麼、抽多少、用哪支筆，做錯會看到後果。">
+<style>
+/* ===== 色票：沿用首頁；動手區主色＝橘 t2 ===== */
+:root{--bg:#f4f7fb;--card:#fff;--ink:#1c2430;--mut:#5b6675;--line:#e3e8ef;--navy:#123a6b;--acc:#e8792b;--ok:#2e8b57;--ng:#c81e3a;--warn:#d98a00;--cold:#1f6fd0;--dmso:#7a3fb5;--sh:0 2px 10px rgba(0,0,0,.06)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"Microsoft JhengHei","PingFang TC","Noto Sans TC",system-ui,sans-serif;line-height:1.55;font-size:16px}
+body{padding-bottom:env(safe-area-inset-bottom)}
+header{background:var(--navy);color:#fff;padding:12px 16px;position:sticky;top:0;z-index:20;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+header .row{display:flex;align-items:center;justify-content:space-between;gap:10px;max-width:640px;margin:0 auto}
+header h1{margin:0;font-size:1.05rem;font-weight:700}
+header a{color:#fff;text-decoration:none;font-size:.85rem;opacity:.9;white-space:nowrap}
+.prog{max-width:640px;margin:8px auto 0;height:6px;background:rgba(255,255,255,.25);border-radius:3px;overflow:hidden}
+.prog i{display:block;height:100%;background:var(--acc);width:0;transition:width .3s}
+.sub{max-width:640px;margin:6px auto 0;font-size:.8rem;opacity:.85;display:flex;justify-content:space-between}
+main{max-width:640px;margin:0 auto;padding:16px 16px 40px}
+.card{background:var(--card);border-radius:16px;padding:18px 16px;box-shadow:var(--sh);margin-bottom:14px}
+.card h2{margin:0 0 8px;font-size:1.15rem;color:var(--navy)}
+.card h3{margin:14px 0 6px;font-size:1rem}
+.stem{font-size:1.08rem;font-weight:700;margin:6px 0 12px}
+.lead{color:var(--mut);font-size:.92rem;margin:0 0 10px}
+.badge{display:inline-block;font-size:.75rem;padding:2px 8px;border-radius:6px;background:#eef2f7;color:var(--mut);margin-right:6px}
+.badge.acc{background:#fdebdd;color:#a2501a}
+.badge.ok{background:#e3f3ea;color:#1e6b42}.badge.ng{background:#fbe3e8;color:#8e1530}
+/* ===== 圖卡佔位：先顯示文字卡，若 ../assets/img/h_<id>.png 存在則自動換圖 ===== */
+.ph{position:relative;border:2px dashed #b8c2d0;border-radius:12px;background:#f8fafc;min-height:120px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:12px;color:var(--mut);font-size:.9rem;overflow:hidden}
+.ph .id{font-family:ui-monospace,Consolas,monospace;font-size:.72rem;color:#8a95a5;margin-bottom:4px}
+.ph .cap{font-weight:700;color:var(--ink)}
+.ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none}
+.ph.has img{display:block}.ph.has .id,.ph.has .cap,.ph.has .desc{display:none}
+.ph.scene{min-height:180px;aspect-ratio:16/9}
+.ph.small{min-height:70px;padding:8px;font-size:.82rem}
+.ph.nocap .cap{display:none}
+/* ===== 按鈕 ===== */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:0;border-radius:12px;padding:12px 18px;font-size:1rem;font-weight:700;cursor:pointer;font-family:inherit;background:var(--acc);color:#fff;min-height:48px;text-decoration:none}
+.btn.sec{background:#eef2f7;color:var(--navy)}
+.btn.ok{background:var(--ok)}.btn.ng{background:var(--ng)}.btn.navy{background:var(--navy)}
+.btn.wide{width:100%}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.btnrow .btn{flex:1 1 140px}
+/* ===== 選項 ===== */
+.opts{display:flex;flex-direction:column;gap:10px;margin-top:10px}
+.opt{display:flex;gap:10px;align-items:flex-start;text-align:left;width:100%;border:2px solid var(--line);background:#fff;border-radius:12px;padding:12px 14px;font-size:.98rem;cursor:pointer;font-family:inherit;color:var(--ink);line-height:1.45;min-height:52px}
+.opt .k{flex:0 0 28px;height:28px;border-radius:50%;background:#eef2f7;color:var(--navy);font-weight:700;display:flex;align-items:center;justify-content:center;font-size:.9rem}
+.opt:active{background:#fff7f0;border-color:var(--acc)}
+.opt.ok{border-color:var(--ok);background:#effaf3}.opt.ok .k{background:var(--ok);color:#fff}
+.opt.ng{border-color:var(--ng);background:#fdf1f3}.opt.ng .k{background:var(--ng);color:#fff}
+.opt:disabled{cursor:default}
+/* 選物格（空針／筆／敷療） */
+.pick{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}
+.pick button{border:2px solid var(--line);background:#fff;border-radius:12px;padding:8px;cursor:pointer;font-family:inherit;color:var(--ink)}
+.pick button .ph{min-height:80px;margin-bottom:6px}
+.pick button b{display:block;font-size:.95rem}
+.pick button.ok{border-color:var(--ok)}.pick button.ng{border-color:var(--ng)}
+/* ===== 講解面板 ===== */
+.exp{border-radius:12px;padding:12px 14px;margin-top:12px;font-size:.95rem;display:none}
+.exp.show{display:block}
+.exp.ok{background:#effaf3;border-left:5px solid var(--ok)}
+.exp.ng{background:#fdf1f3;border-left:5px solid var(--ng)}
+.exp.warn{background:#fff7e6;border-left:5px solid var(--warn)}
+.exp.info{background:#eef4fc;border-left:5px solid var(--cold)}
+.exp .t{font-weight:700;margin-bottom:4px}
+.src{font-size:.78rem;color:var(--mut);margin-top:6px}
+/* ===== PPE 拖放 ===== */
+.slots{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0}
+.slot{border:2px dashed #b8c2d0;border-radius:12px;min-height:110px;background:#f8fafc;position:relative;display:flex;align-items:center;justify-content:center;padding:4px}
+.slot .n{position:absolute;top:4px;left:8px;font-size:.75rem;color:#8a95a5;font-weight:700}
+.slot.over{border-color:var(--acc);background:#fff4ea}
+.slot.ok{border-color:var(--ok);border-style:solid}.slot.ng{border-color:var(--ng);border-style:solid}
+.pool{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:minmax(100px,auto);grid-template-rows:repeat(2,minmax(100px,auto));gap:8px;margin-top:10px;border:1px dashed #d5dce6;border-radius:12px;padding:6px}
+.dcard{border:2px solid var(--line);background:#fff;border-radius:10px;padding:6px 4px;font-size:.8rem;text-align:center;cursor:grab;user-select:none;-webkit-user-select:none;touch-action:none;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100px;line-height:1.3}
+.dcard .ph{min-height:44px;width:100%;padding:4px;font-size:.7rem;margin-bottom:4px;border-width:1px}
+.dcard b{font-size:.8rem}
+.dcard.sel{border-color:var(--acc);box-shadow:0 0 0 3px #fdebdd}
+.dcard.ghost{position:fixed;z-index:50;pointer-events:none;opacity:.9;width:82px;box-shadow:0 8px 20px rgba(0,0,0,.25);transform:translate(-50%,-50%)}
+.slot .dcard{width:100%;cursor:grab}
+.hint{font-size:.85rem;color:var(--mut);margin:6px 0}
+/* ===== 回抽長按 ===== */
+.asp{display:flex;gap:16px;align-items:flex-end;margin:12px 0}
+.cyl{flex:0 0 70px;height:200px;border:3px solid #33415a;border-top:0;border-radius:0 0 14px 14px;position:relative;background:#fff;overflow:hidden}
+.cyl .fill{position:absolute;left:0;right:0;bottom:0;height:0;background:linear-gradient(180deg,#f2b7c2,#c81e3a);transition:none}
+.cyl .tick{position:absolute;left:0;width:14px;height:2px;background:#33415a}
+.cyl .lab{position:absolute;left:18px;font-size:.62rem;color:#33415a}
+.aspinfo{flex:1}
+.hold{width:100%;min-height:64px;font-size:1.1rem;user-select:none;-webkit-user-select:none;touch-action:none;-webkit-touch-callout:none}
+.hold.holding{background:#c25f1c}
+.hold.done{background:var(--ok)}
+.meter{height:10px;background:#eef2f7;border-radius:5px;overflow:hidden;margin:10px 0}
+.meter i{display:block;height:100%;background:var(--acc);width:0}
+/* ===== 後果頁（全螢幕覆蓋） ===== */
+.ov{position:fixed;inset:0;background:rgba(20,10,12,.92);z-index:40;display:none;overflow:auto;padding:20px 16px}
+.ov.show{display:block}
+.ov .box{max-width:640px;margin:0 auto;background:#fff;border-radius:18px;padding:18px 16px;border-top:8px solid var(--ng)}
+.ov .box.warn{border-top-color:var(--warn)}
+.ov h2{margin:0 0 6px;color:var(--ng);font-size:1.2rem}
+.ov .box.warn h2{color:#a26400}
+.ov .ph{min-height:160px;margin:10px 0}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#1c2430;color:#fff;padding:10px 16px;border-radius:12px;font-size:.92rem;z-index:60;display:none;max-width:90vw;text-align:center}
+.toast.show{display:block}
+/* ===== 步驟總覽 ===== */
+.steps{display:grid;grid-template-columns:1fr;gap:8px;margin-top:10px}
+.step{display:flex;gap:10px;align-items:center;border:1px solid var(--line);border-radius:12px;padding:8px 10px;background:#fff}
+.step .no{flex:0 0 32px;height:32px;border-radius:50%;background:var(--navy);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center}
+.step .ph{flex:0 0 72px;min-height:54px;padding:4px;font-size:.65rem}
+.step .tx{flex:1;font-size:.92rem}
+.step .st{font-size:1.2rem}
+.case{display:block;text-decoration:none;color:var(--ink);background:#fff;border-radius:16px;padding:16px;box-shadow:var(--sh);border-left:8px solid var(--acc);margin-bottom:12px;cursor:pointer;border-top:0;border-right:0;border-bottom:0;width:100%;text-align:left;font-family:inherit}
+.case.c2{border-left-color:var(--dmso)}
+.case h2{margin:0 0 4px;font-size:1.1rem}.case p{margin:0;color:var(--mut);font-size:.9rem}
+.chip{display:inline-block;padding:2px 8px;border-radius:6px;font-size:.78rem;background:#eef2f7;color:var(--mut);margin:2px 4px 0 0}
+.err{background:#fdf1f3;border:1px solid #f3c2cb;border-radius:12px;padding:14px;color:#8e1530}
+footer{text-align:center;color:var(--mut);font-size:.78rem;padding:20px 16px}
+@media (min-width:520px){.dcard{font-size:.85rem}.steps{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<header>
+  <div class="row"><h1>🖐️ 動手：外滲當下怎麼做</h1><a href="../">← 回首頁</a></div>
+  <div class="prog"><i id="pbar"></i></div>
+  <div class="sub"><span id="ptitle">選擇案例</span><span id="pstep"></span></div>
+</header>
+<main id="app"><div class="card"><p class="lead">載入題庫中…</p></div></main>
+<footer>教學示範資料（張示範），無病人資料｜題目文字來源：規格檔 Q13–Q20（questions.json）｜敷療資料以查詢站（院內 2023.5 版）為準</footer>
+<div class="ov" id="ov"></div>
+<div class="toast" id="toast"></div>
+<script id="qdata" type="application/json">{"source":"20260925_打掉重練_需求規格與題目草稿_階段1.md","count":8,"questions":[{"id":13,"block":"E","block_name":"初步處理","use":["handson","test"],"stem":"懷疑化療藥品外滲，第一個動作是什麼？","note":"","options":[{"key":"A","text":"立即停止給藥，但不要拔出靜脈留置針，並估計、記錄尚未注入的剩餘藥量"},{"key":"B","text":"立即停止給藥並拔針，用紗布壓住止血"},{"key":"C","text":"先降低滴速，觀察 15 分鐘再決定"}],"answer":"A","explain_ok":"答對了。立即停止給藥，留置針先不要拔，因為它是等一下回抽外滲藥品唯一的路徑。同時看一下點滴袋或注射器，估計還沒注入的剩餘藥量並記錄，這個數字是後面推算外滲量的依據。","explain_ng":"正確答案是立即停止給藥、不拔針、估計並記錄剩餘藥量。留置針是等一下回抽外滲藥品唯一的路徑，拔掉就沒得抽；降速觀察只是讓更多藥品進入組織。剩餘藥量要當下記，之後推算外滲量才有依據。","img":"s289–293（立即停止給藥）","form_item":"8","text_hash":{"ok":"2ffbd7af","ng":"4aff2dbc","stem":"de8150ca"}},{"id":14,"block":"E","block_name":"初步處理","use":["handson","test"],"stem":"處理外滲時要穿戴哪些防護裝備？","note":"","options":[{"key":"A","text":"防水隔離衣（後開式、長袖、袖口可束緊）、雙層丁腈或乳膠手套並套住袖口、外科口罩；有噴濺風險時加護目鏡或防護面罩"},{"key":"B","text":"一般隔離衣＋單層手套＋外科口罩"},{"key":"C","text":"只要戴手套就可以，因為藥量很少"}],"answer":"A","explain_ok":"答對了。外滲處理會直接接觸化療藥品，防護是四件：防水隔離衣、雙層手套套住袖口、外科口罩，有噴濺風險時加護目鏡或面罩。這是保護自己，也是每次處理外滲的標準起手式。","explain_ng":"正確答案是防水隔離衣、雙層手套套住袖口、外科口罩，有噴濺風險時加護目鏡或面罩。一般隔離衣不防水、單層手套不夠；藥量少不代表沒有暴露，回抽時噴到手、噴到眼的機會就在這幾分鐘。","img":"s285–288（穿著個人防護裝備）","form_item":"9","text_hash":{"ok":"448d8275","ng":"916054c2","stem":"87aaf40b"}},{"id":15,"block":"E","block_name":"初步處理","use":["handson","test"],"stem":"停止給藥後，接下來要怎麼做才能把外滲的藥品抽出來？","note":"","options":[{"key":"A","text":"移除裝有剩餘化療藥品的注射器或輸液套管，接上無菌 10 mL 注射器，從原靜脈注射處盡可能回抽到抽不出來為止，並估計回抽量"},{"key":"B","text":"直接用原本的注射器往回抽"},{"key":"C","text":"拔針後用針筒從皮下抽"}],"answer":"A","explain_ok":"答對了。先把還裝著化療藥品的注射器或輸液套管拆掉，換上一支無菌 10 mL 空針，從原來的留置針盡可能回抽，抽到抽不出來為止，並估計回抽出的外滲藥量。這就是為什麼前面不能先拔針。","explain_ng":"正確答案是換上無菌 10 mL 空針，從原留置針盡可能回抽並估計回抽量。原本的注射器裡還有藥，回抽會混在一起算不出量；拔針後從皮下抽會造成新的傷口，也抽不到血管內殘留的藥。","img":"s291–293（接上注射器，儘可能回抽）","form_item":"10、11","text_hash":{"ok":"ef855295","ng":"364ef148","stem":"033a227e"}},{"id":16,"block":"E","block_name":"初步處理","use":["handson","test"],"stem":"回抽完成後，留置針要怎麼處理？","note":"","options":[{"key":"A","text":"看有沒有解毒劑：有解毒劑就依醫囑準備，由醫師從原靜脈注射處注射後再拔針；沒有解毒劑就直接拔針"},{"key":"B","text":"一律立刻拔針"},{"key":"C","text":"一律保留留置針 24 小時觀察"}],"answer":"A","explain_ok":"答對了。拔不拔針取決於有沒有解毒劑。有解毒劑，原來的留置針就是醫師給解毒劑的路徑，要等注射完再拔；沒有解毒劑，就把針拔掉。本院目前多數化療藥品沒有解毒劑，實務上大多是回抽後拔針。","explain_ng":"正確答案是依解毒劑有無決定：有就由醫師從原針注射解毒劑後再拔，沒有就直接拔針。一律立刻拔會把解毒劑的給藥路徑拔掉；一律保留 24 小時則讓一支已經不在血管內的針留在組織裡，沒有好處。","img":"s305–309（醫療處置：解毒劑）、s312（移除針具）","form_item":"12","text_hash":{"ok":"205716cd","ng":"f666c343","stem":"c275bb12"}},{"id":17,"block":"E","block_name":"初步處理","use":["handson","test"],"stem":"外滲部位可以用手壓迫止血或按壓嗎？","note":"","options":[{"key":"A","text":"不可以，壓迫會讓外滲藥品擴大浸潤到周圍組織，起疱性藥品尤其危險"},{"key":"B","text":"可以，跟一般拔針一樣壓緊止血"}],"answer":"A","explain_ok":"答對了。外滲部位不要壓。壓迫會把已經在皮下的藥品推開，浸潤範圍變大，起疱性藥品一擴散就是更大面積的組織壞死。拔針後用紗布輕輕覆蓋即可。","explain_ng":"正確答案是不可以壓迫。這跟一般拔針不同，皮下有藥品時一壓就把藥推開，浸潤範圍變大；起疱性藥品一擴散就是更大面積的組織壞死。拔針後用紗布輕輕覆蓋即可。","img":"s304、s312–313（勿壓迫／紗布覆蓋）","form_item":"13","text_hash":{"ok":"5f06c2ac","ng":"ec99eb98","stem":"f1b8771c"}},{"id":18,"block":"E","block_name":"初步處理","use":["handson","test"],"stem":"為什麼要用油性筆把外滲範圍標示出來？","note":"","options":[{"key":"A","text":"標出當下的外滲邊界，之後才能比較範圍有沒有擴大，也是拍照與交班的依據"},{"key":"B","text":"提醒同事不要在這隻手打針"}],"answer":"A","explain_ok":"答對了。油性筆沿著外滲邊界畫一圈，是替「現在」留下記號。之後每天觀察、拍照上傳、交班，都拿這條線比對範圍有沒有擴大。要用油性筆是因為不會被汗水或敷料擦掉。","explain_ng":"正確答案是標出當下的外滲邊界，供後續比較與拍照交班。油性筆的線是「現在」的記號，之後每天觀察、拍照、交班都拿它比對範圍有沒有擴大；用油性筆是因為不會被汗水或敷料擦掉。","img":"s325（限制藥品擴散到周圍組織）※待核是否有油性筆畫面","form_item":"14","text_hash":{"ok":"32c7c8ec","ng":"e8996ed1","stem":"5b72e157"}},{"id":19,"block":"E","block_name":"初步處理","use":["handson","test"],"stem":"外滲部位要冰敷還是熱敷？","note":"","options":[{"key":"A","text":"依外滲的藥品種類決定，要查「各類化療藥品外滲處置方法」"},{"key":"B","text":"一律冰敷，因為可以消腫止痛"},{"key":"C","text":"一律熱敷，因為可以促進吸收"}],"answer":"A","explain_ok":"答對了。冰敷或熱敷不是看腫不腫，是看藥品。多數起疱性藥品用冰敷讓藥品局限在局部；少數藥品（例如 Vinca alkaloid 類、Oxaliplatin）反而要熱敷幫助擴散吸收，冰敷會加重傷害。所以一定要查表，不憑印象。","explain_ng":"正確答案是依藥品種類決定並查表。冰敷或熱敷不是看腫不腫，是看藥品：多數起疱性藥品用冰敷，但 Vinca alkaloid 類與 Oxaliplatin 要熱敷，用錯方向會加重傷害。不憑印象，查「各類化療藥品外滲處置方法」。","img":"s316–322、s329–332（敷療／敷療方式）","form_item":"15","text_hash":{"ok":"d24b96a5","ng":"39462f54","stem":"2675d46f"}},{"id":20,"block":"E","block_name":"初步處理","use":["handson","test"],"stem":"哪一類化療藥品外滲時，可依醫囑在局部塗抹 DMSO？","note":"","options":[{"key":"A","text":"Anthracycline 類（Doxorubicin、Idarubicin、Epirubicin、Daunorubicin）與抗生素類（Mitomycin-C）"},{"key":"B","text":"所有起疱性化療藥品都可以"},{"key":"C","text":"鉑類藥品（Cisplatin、Oxaliplatin）"}],"answer":"A","explain_ok":"答對了。DMSO 是針對 Anthracycline 類與 Mitomycin-C 外滲的局部處置，依醫囑塗抹，使用方法要看「DMSO 化療藥品外滲使用需知」。其他藥品外滲不是用 DMSO 處理。","explain_ng":"正確答案是 Anthracycline 類與 Mitomycin-C。DMSO 不是所有起疱性藥品通用，鉑類也不是它的適應症；只有 Anthracycline 類與 Mitomycin-C 外滲時依醫囑局部塗抹，用法看「DMSO 化療藥品外滲使用需知」。","img":"s329–332（敷療方式）※待核是否有 DMSO 頁","form_item":"16","text_hash":{"ok":"6bfc4627","ng":"12d0fd23","stem":"170b23f4"}}]}</script>
+
+<script>
+/* ===================================================================
+   資料來源規則（分工檔第二節第 8 條）：題幹／選項／講解一律讀
+   ../assets/data/questions.json（Q13–Q20），本檔不手抄任何題目文字。
+   本檔只寫互動骨架：情境卡、用物卡標籤（7-1 盤點表）、後果卡標題。
+   =================================================================== */
+const DATA_URL = '../assets/data/questions.json';
+const IMG_BASE = '../assets/img/';           // S4 供圖：h_<卡片id>.png（見 _卡片清單.md）
+let Q = {};                                  // id → 題目物件
+
+/* ---------- 卡片定義（id 對應 _卡片清單.md，圖片檔名 h_<id>.png） ---------- */
+const SCENES = {
+  sc01: {cap:'案例一：張示範，病室', desc:'左前臂周邊留置針滴注 Cisplatin 中；穿刺處周圍腫脹、皮膚緊繃，張示範喊痛：「護理師，這裡好痛、好脹！」'},
+  sc02: {cap:'案例二：張示範，病室', desc:'右前臂周邊留置針推注 Doxorubicin（小紅莓）中；穿刺處周圍腫、發紅，張示範說：「這裡越來越燙。」'}
+};
+const PPE = [ // order>0 = 要穿戴的 4 件（不分順序，使用者 9/26 定）；0 表示干擾卡
+  {id:'ppe01', name:'防水隔離衣', sub:'後開式、長袖、袖口可束緊', order:1},
+  {id:'ppe02', name:'雙層手套', sub:'丁腈或乳膠，套住袖口', order:2},
+  {id:'ppe03', name:'外科口罩', sub:'', order:3},
+  {id:'ppe04', name:'護目鏡／防護面罩', sub:'有噴濺風險時', order:4},
+  {id:'ppe05', name:'一般隔離衣', sub:'布質、不防水', order:0},
+  {id:'ppe06', name:'單層手套', sub:'', order:0},
+  {id:'ppe07', name:'髮帽', sub:'', order:0},
+  {id:'ppe08', name:'鞋套', sub:'', order:0}
+];
+const SYR = [
+  {id:'syr03', name:'3 mL 空針', ok:false},
+  {id:'syr10', name:'10 mL 空針', sub:'無菌', ok:true},
+  {id:'syr50', name:'50 mL 空針', ok:false}
+];
+const PENS = [
+  {id:'pen_oil', name:'油性筆', ok:true},
+  {id:'pen_ball', name:'原子筆', ok:false},
+  {id:'pen_water', name:'水性麥克筆', ok:false}
+];
+const COMP = [ // 案例一敷療決策：本院寫死本案 Cisplatin 走冷敷
+  {id:'cp01', name:'冷敷', sub:'冰敷袋 0℃', kind:'ok'},
+  {id:'cp02', name:'熱敷', sub:'44–50℃', kind:'warn'},
+  {id:'cp03', name:'塗 DMSO', sub:'', kind:'ng'}
+];
+const CQ = { // 後果卡（7-1 盤點表：每個錯誤動作都有一頁後果圖）
+  bad_pull: {title:'拔針＝失去回抽路徑，藥全留在組織裡', cap:'後果：針已拔掉', desc:'留置針拔掉後，皮下的化療藥品沒有任何路徑可以回抽，全部留在組織裡。'},
+  bad_press: {title:'壓迫＝浸潤範圍擴大', cap:'後果：浸潤範圍擴大', desc:'按壓把皮下的藥品往周圍推開，原本一小圈的浸潤變成一大片。'},
+  bad_ballpen: {title:'原子筆／水性筆＝48 小時後範圍看不到', cap:'後果：48 小時後', desc:'汗水與敷料把記號擦掉了，交班時沒有人知道原本的邊界在哪裡。'}
+};
+const STEPS9 = [ // 九步驟總覽卡（7-1 盤點表「步驟」欄，表單 8–16）
+  {id:'st01', t:'立即停止給藥、勿拔針、估剩餘藥量', key:'d1'},
+  {id:'st02', t:'穿戴 PPE 四件', key:'ppe'},
+  {id:'st03', t:'移除注射器／輸液套，接無菌 10 mL 空針', key:'syr'},
+  {id:'st04', t:'回抽到抽不出為止、估回抽量', key:'asp'},
+  {id:'st05', t:'解毒劑有無 → 本院無 → 拔針', key:'anti'},
+  {id:'st06', t:'勿壓迫', key:'press'},
+  {id:'st07', t:'油性筆標示範圍', key:'pen'},
+  {id:'st08', t:'冰敷或熱敷（依藥品）', key:'comp'},
+  {id:'st09', t:'DMSO（Anthracycline／Mitomycin-C）', key:'dmso'}
+];
+/* 案例二三題：正解事實取自查詢站 Doxorubicin 列（院內 2023.5 版）：
+   「99% DMSO 外用，塗抹範圍為患部兩倍，自然風乾，一天 4 次 × 7 天；並冰敷 20 分鐘一天 4 次 1–2 天」 */
+const LOOKUP_DOXO = '99% DMSO 外用，塗抹範圍為患部兩倍，自然風乾，一天 4 次 × 7 天；並冰敷 20 分鐘一天 4 次 1–2 天';
+const DM = [
+  {key:'dm1', stem:'DMSO 要塗多大範圍？', opts:['只塗紅腫的患部','患部的兩倍範圍','整隻手臂'], ans:1},
+  {key:'dm2', stem:'塗完 DMSO 之後要怎麼做？', opts:['讓它自然風乾，不要覆蓋','馬上用紗布覆蓋包好','用保鮮膜密封起來'], ans:0},
+  {key:'dm3', stem:'DMSO 要用幾天？', opts:['1–2 天','一天 4 次，連續 7 天','塗到消腫為止'], ans:1}
+];
+
+/* ---------- 流程定義 ---------- */
+const FLOW1 = ['scene1','d1','ppe','syr','asp','anti','press','pen','comp','sum1'];
+const FLOW2 = ['scene2','look2','dm1','dm2','dm3','sum2'];
+let flow = null, pos = 0;
+const result = {};   // key → {tries, first:true/false, seen:[後果卡]}
+function rec(key){ return result[key] || (result[key] = {tries:0, first:null, seen:[]}); }
+function mark(key, ok, cq){
+  const r = rec(key); r.tries++;
+  if (r.first === null) r.first = ok;
+  if (cq && !r.seen.includes(cq)) r.seen.push(cq);
+}
+
+/* ---------- 小工具 ---------- */
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function ph(id, cap, desc, cls){
+  // 圖卡佔位：先文字卡；若 h_<id>.png 存在則 onload 換圖
+  return `<div class="ph ${cls||''}" data-ph="${id}"><img src="${IMG_BASE}h_${id}.png" alt="${esc(cap)}" onload="this.parentNode.classList.add('has')" onerror="this.remove()"><div class="id">圖卡 ${id}</div><div class="cap">${esc(cap)}</div>${desc?`<div class="desc">${esc(desc)}</div>`:''}</div>`;
+}
+function toast(msg, ms){
+  const t = $('#toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(t._h); t._h = setTimeout(()=>t.classList.remove('show'), ms||2200);
+}
+function shuffle(a){ a = a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+function optList(q){
+  // 由 JSON 產生選項按鈕（順序照規格檔）
+  return `<div class="opts">${q.options.map(o=>`<button class="opt" data-k="${o.key}"><span class="k">${o.key}</span><span>${esc(o.text)}</span></button>`).join('')}</div>`;
+}
+function bindOpts(q, handler, root){
+  (root||document).querySelectorAll('.opt').forEach(b => b.addEventListener('click', () => {
+    const k = b.dataset.k, ok = (k === q.answer);
+    (root||document).querySelectorAll('.opt').forEach(x => { x.disabled = true; if (x.dataset.k === q.answer) x.classList.add('ok'); });
+    if (!ok) b.classList.add('ng');
+    handler(ok, k, b);
+  }));
+}
+function expBox(cls, title, text, src){
+  return `<div class="exp ${cls} show"><div class="t">${esc(title)}</div><div>${esc(text)}</div>${src?`<div class="src">${esc(src)}</div>`:''}</div>`;
+}
+function nextBtn(label){ return `<div class="btnrow"><button class="btn wide" id="next">${label||'下一步 →'}</button></div>`; }
+function bindNext(){ const b = $('#next'); if (b) b.addEventListener('click', () => go(pos+1)); }
+function srcQ(q){ return `文字來源：規格檔 Q${q.id}（表單 ${q.form_item}）`; }
+
+/* ---------- 後果頁 ---------- */
+function showCQ(opt){
+  // opt: {cqId?, title, text, src, warn?, allowSkip, retryLabel, skipLabel, onRetry, onSkip}
+  const ov = $('#ov'); const c = opt.cqId ? CQ[opt.cqId] : null;
+  ov.innerHTML = `<div class="box ${opt.warn?'warn':''}">
+    <span class="badge ${opt.warn?'':'ng'}">${opt.warn?'提醒':'後果頁'}</span>
+    <h2>${esc(opt.title || (c && c.title) || '這一步做錯了')}</h2>
+    ${c ? ph(opt.cqId, c.cap, c.desc) : ''}
+    <div class="exp ${opt.warn?'warn':'ng'} show"><div class="t">${opt.warn?'說明':'為什麼不行'}</div><div>${esc(opt.text)}</div>${opt.src?`<div class="src">${esc(opt.src)}</div>`:''}</div>
+    <div class="btnrow">
+      <button class="btn ${opt.warn?'navy':'ng'}" id="cqRetry">${opt.retryLabel||'回去重做這一步'}</button>
+      ${opt.allowSkip?`<button class="btn sec" id="cqSkip">${opt.skipLabel||'看正解並繼續'}</button>`:''}
+    </div></div>`;
+  ov.classList.add('show'); ov.scrollTop = 0;
+  $('#cqRetry').onclick = () => { ov.classList.remove('show'); opt.onRetry && opt.onRetry(); };
+  const s = $('#cqSkip'); if (s) s.onclick = () => { ov.classList.remove('show'); opt.onSkip && opt.onSkip(); };
+}
+
+/* ---------- 導覽 ---------- */
+function go(i){
+  pos = i; const key = flow[pos];
+  const total = flow.length - 1; // 最後一頁是總覽
+  $('#pbar').style.width = Math.round(Math.min(pos,total)/total*100)+'%';
+  $('#ptitle').textContent = flow===FLOW1 ? '案例一 Cisplatin' : '案例二 Doxorubicin';
+  $('#pstep').textContent = key.startsWith('sum') ? '完成' : `步驟 ${pos+1} / ${total}`;
+  window.scrollTo({top:0});
+  RENDER[key]();
+}
+function home(){
+  flow = null; pos = 0;
+  $('#pbar').style.width = '0%'; $('#ptitle').textContent = '選擇案例'; $('#pstep').textContent = '';
+  for (const k in result) delete result[k];
+  $('#app').innerHTML = `
+  <div class="card"><h2>怎麼玩</h2><p class="lead">跟著情境一步一步做決定：拔不拔針、穿什麼、抽多少、用哪支筆。<b>做錯會看到後果</b>，再回頭重做。</p>
+  <div><span class="chip">決策 ×3</span><span class="chip">選物拖放 ×1</span><span class="chip">選物 ×2</span><span class="chip">回抽動作 ×1</span><span class="chip">查詢後決策 ×2</span></div></div>
+  <button class="case" id="c1"><h2>案例一｜Cisplatin 外滲（完整九步驟）</h2><p>張示範，左前臂周邊留置針，手臂腫、喊痛。從第一個動作到冷敷，9 個步驟。</p></button>
+  <button class="case c2" id="c2"><h2>案例二｜Doxorubicin 外滲（DMSO 簡版）</h2><p>查詢站查到 DMSO 之後：塗多大範圍、風乾還是覆蓋、幾天。3 題。</p></button>`;
+  $('#c1').onclick = () => { flow = FLOW1; go(0); };
+  $('#c2').onclick = () => { flow = FLOW2; go(0); };
+}
+
+/* ================= 各步驟畫面 ================= */
+const RENDER = {};
+
+/* S1 情境卡 */
+RENDER.scene1 = () => {
+  const s = SCENES.sc01;
+  $('#app').innerHTML = `<div class="card"><span class="badge acc">情境</span><h2>病室裡發生了什麼？</h2>
+    ${ph('sc01', s.cap, s.desc, 'scene')}
+    <p style="margin-top:12px"><b>張示範</b>，左前臂周邊留置針，正在滴注 <b>Cisplatin</b>。你巡視時發現穿刺處周圍<b>腫起來</b>，張示範喊<b>痛</b>。</p>
+    ${nextBtn('開始處理 →')}</div>`;
+  bindNext();
+};
+
+/* 決策①：第一個動作（Q13） */
+RENDER.d1 = () => {
+  const q = Q[13];
+  $('#app').innerHTML = `<div class="card"><span class="badge acc">決策 ①</span><span class="badge">表單 ${q.form_item}</span>
+    <div class="stem">${esc(q.stem)}</div>${optList(q)}<div id="fb"></div></div>`;
+  bindOpts(q, (ok, k) => {
+    if (ok) {
+      mark('d1', true);
+      $('#fb').innerHTML = expBox('ok', '答對了', q.explain_ok, srcQ(q)) + nextBtn();
+      bindNext();
+    } else {
+      const txt = q.options.find(o=>o.key===k).text;
+      const cq = /拔針|拔出/.test(txt) ? 'bad_pull' : null;   // 拔針 → 後果卡 bad_pull
+      mark('d1', false, cq);
+      showCQ({cqId: cq, title: cq ? undefined : '繼續觀察＝更多藥品進入組織', text: q.explain_ng, src: srcQ(q),
+        allowSkip: rec('d1').tries >= 2, onRetry: RENDER.d1,
+        onSkip: () => { $('#fb').innerHTML = expBox('ng', '正解說明', q.explain_ng, srcQ(q)) + nextBtn(); bindNext(); }});
+    }
+  });
+};
+
+/* PPE 選物拖放（Q14；不分順序） */
+RENDER.ppe = () => {
+  const q = Q[14];
+  const pool = shuffle(PPE);
+  $('#app').innerHTML = `<div class="card"><span class="badge acc">選物拖放</span><span class="badge">表單 ${q.form_item}</span>
+    <div class="stem">${esc(q.stem)}</div>
+    <p class="hint">從下面 8 張用物卡，把<b>要穿戴的 4 件</b>拖進上面 4 格，<b>不分順序</b>（或先點卡片、再點格子）。多出來的 4 張是干擾。</p>
+    <div class="slots" id="slots">${[1,2,3,4].map(n=>`<div class="slot" data-slot="${n}"></div>`).join('')}</div>
+    <div class="pool" id="pool">${pool.map(p=>dcard(p)).join('')}</div>
+    <div class="btnrow"><button class="btn wide" id="chk" disabled>檢查</button></div><div id="fb"></div></div>`;
+  initDnD();
+  $('#chk').onclick = () => {
+    const placed = [1,2,3,4].map(n => { const c = $(`.slot[data-slot="${n}"] .dcard`); return c ? c.dataset.id : null; });
+    // 不分順序：4 格都是「要穿戴的」即正解
+    const isNeed = id => !!id && PPE.find(p=>p.id===id).order > 0;
+    const okAll = placed.every(isNeed);
+    [1,2,3,4].forEach((n,i) => { const s = $(`.slot[data-slot="${n}"]`); s.classList.remove('ok','ng'); s.classList.add(isNeed(placed[i]) ? 'ok':'ng'); });
+    if (okAll) {
+      mark('ppe', true); disableDnD();
+      $('#fb').innerHTML = expBox('ok', '答對了', q.explain_ok, srcQ(q)) + nextBtn(); bindNext();
+    } else {
+      mark('ppe', false);
+      showCQ({title:'防護沒選對', text:q.explain_ng, src:srcQ(q), warn:true, retryLabel:'回去重選',
+        allowSkip: rec('ppe').tries >= 2, onRetry: () => {},
+        onSkip: () => { showAnswerPPE(); $('#fb').innerHTML = expBox('ng', '正解 4 件已放入格子', q.explain_ng, srcQ(q)) + nextBtn(); bindNext(); }});
+    }
+  };
+  function showAnswerPPE(){
+    disableDnD();
+    document.querySelectorAll('.dcard').forEach(c => c.remove());
+    PPE.filter(p=>p.order).forEach(p => { const s = $(`.slot[data-slot="${p.order}"]`); s.insertAdjacentHTML('beforeend', dcard(p)); s.classList.remove('ng'); s.classList.add('ok'); });
+    PPE.filter(p=>!p.order).forEach(p => $('#pool').insertAdjacentHTML('beforeend', dcard(p)));
+    $('#chk').disabled = true;
+  }
+};
+function dcard(p){ return `<div class="dcard" data-id="${p.id}">${ph(p.id, p.name, '', 'small nocap')}<b>${esc(p.name)}</b>${p.sub?`<span style="color:var(--mut);font-size:.68rem">${esc(p.sub)}</span>`:''}</div>`; }
+
+/* --- 通用拖放：Pointer Events（手機觸控可用）＋ 點卡再點格 的備援 --- */
+let dnd = {on:false};
+function initDnD(){
+  dnd = {on:true, drag:null, ghost:null, sel:null, justDragged:false};
+  const app = $('#app');
+  app.addEventListener('pointerdown', onDown);
+  document.addEventListener('pointermove', onMove, {passive:false});
+  document.addEventListener('pointerup', onUp);
+  document.addEventListener('pointercancel', onUp);
+  app.addEventListener('contextmenu', e => { if (e.target.closest('.dcard')) e.preventDefault(); });
+  app.addEventListener('click', onTap);
+  updateChk();
+}
+function disableDnD(){ dnd.on = false; document.querySelectorAll('.dcard').forEach(c => c.style.cursor='default'); }
+function onDown(e){
+  if (!dnd.on) return; const c = e.target.closest('.dcard'); if (!c) return;
+  dnd.drag = {card:c, x0:e.clientX, y0:e.clientY, moved:false, pid:e.pointerId};
+}
+function onMove(e){
+  const d = dnd.drag; if (!d || e.pointerId !== d.pid) return;
+  if (!d.moved) { if (Math.hypot(e.clientX-d.x0, e.clientY-d.y0) < 6) return; d.moved = true;
+    const g = d.card.cloneNode(true); g.classList.add('ghost'); document.body.appendChild(g); d.ghost = g; d.card.style.opacity = '.35'; }
+  e.preventDefault();
+  d.ghost.style.left = e.clientX+'px'; d.ghost.style.top = e.clientY+'px';
+  document.querySelectorAll('.slot').forEach(s => s.classList.remove('over'));
+  const t = targetAt(e.clientX, e.clientY); if (t && t.classList.contains('slot')) t.classList.add('over');
+}
+function onUp(e){
+  const d = dnd.drag; if (!d || e.pointerId !== d.pid) return;
+  dnd.drag = null;
+  if (!d.moved) return;                       // 沒移動 → 交給 click（點選備援）
+  d.ghost.remove(); d.card.style.opacity = '';
+  document.querySelectorAll('.slot').forEach(s => s.classList.remove('over'));
+  const t = targetAt(e.clientX, e.clientY);
+  if (t) place(d.card, t);
+  dnd.justDragged = true; setTimeout(()=>dnd.justDragged=false, 80);
+}
+function targetAt(x, y){
+  const el = document.elementFromPoint(x, y); if (!el) return null;
+  return el.closest('.slot') || el.closest('#pool');
+}
+function place(card, target){
+  if (target.classList.contains('slot')) {
+    const occ = target.querySelector('.dcard');
+    if (occ && occ !== card) { card.parentNode.appendChild(occ); } // 交換：目標格已有卡 → 換到來源位置
+    target.appendChild(card);
+  } else { $('#pool').appendChild(card); }
+  document.querySelectorAll('.slot').forEach(s => s.classList.remove('ok','ng'));
+  updateChk();
+}
+function onTap(e){
+  if (!dnd.on || dnd.justDragged) return;
+  const c = e.target.closest('.dcard');
+  if (c) { if (dnd.sel === c) { c.classList.remove('sel'); dnd.sel = null; if (c.parentNode.classList.contains('slot')) place(c, $('#pool')); return; } // 已選的格內卡再點一次＝放回
+    document.querySelectorAll('.dcard.sel').forEach(x=>x.classList.remove('sel')); c.classList.add('sel'); dnd.sel = c;
+    toast(c.parentNode.classList.contains('slot') ? '再點一個格子可交換；再點同一張＝放回' : '再點上面任一格放進去', 1600); return; }
+  const s = e.target.closest('.slot') || e.target.closest('#pool');
+  if (s && dnd.sel) { place(dnd.sel, s); dnd.sel.classList.remove('sel'); dnd.sel = null; }
+}
+function updateChk(){ const b = $('#chk'); if (b) b.disabled = document.querySelectorAll('.slot .dcard').length < 4; }
+
+/* 選空針（Q15，表單 10） */
+RENDER.syr = () => {
+  const q = Q[15];
+  $('#app').innerHTML = `<div class="card"><span class="badge acc">選物</span><span class="badge">表單 10</span>
+    <div class="stem">${esc(q.stem)}</div><p class="hint">先移除裝有剩餘藥品的注射器／輸液套管，然後──接哪一支？</p>
+    <div class="pick">${SYR.map(s=>`<button data-id="${s.id}">${ph(s.id, s.name, '', 'small nocap')}<b>${esc(s.name)}</b>${s.sub?`<span class="hint">${esc(s.sub)}</span>`:''}</button>`).join('')}</div><div id="fb"></div></div>`;
+  document.querySelectorAll('.pick button').forEach(b => b.onclick = () => {
+    const s = SYR.find(x=>x.id===b.dataset.id);
+    document.querySelectorAll('.pick button').forEach(x => { x.disabled = true; if (SYR.find(y=>y.id===x.dataset.id).ok) x.classList.add('ok'); });
+    if (s.ok) { mark('syr', true); $('#fb').innerHTML = expBox('ok', '接對了', q.explain_ok, srcQ(q)) + nextBtn('開始回抽 →'); bindNext(); }
+    else { b.classList.add('ng'); mark('syr', false);
+      showCQ({title:`${s.name}？不是這一支`, text:q.explain_ng, src:srcQ(q), warn:true, retryLabel:'回去重選',
+        allowSkip: rec('syr').tries >= 2, onRetry: RENDER.syr,
+        onSkip: () => { $('#fb').innerHTML = expBox('ng', '正解：無菌 10 mL 空針', q.explain_ng, srcQ(q)) + nextBtn('開始回抽 →'); bindNext(); }}); }
+  });
+};
+
+/* 回抽長按（Q15，表單 11） */
+RENDER.asp = () => {
+  const q = Q[15];
+  const FULL = 3200; // ms：按住到「抽不出」
+  $('#app').innerHTML = `<div class="card"><span class="badge acc">動作</span><span class="badge">表單 11</span>
+    <div class="stem">從原靜脈注射處回抽</div><p class="hint"><b>按住</b>「回抽」不要放，直到量筒顯示<b>抽不出</b>為止，再估計回抽量。</p>
+    <div class="asp"><div class="cyl"><div class="fill" id="fill"></div>
+      ${[1,2,3,4].map(n=>`<div class="tick" style="bottom:${n*40}px"></div><div class="lab" style="bottom:${n*40-6}px">${n} mL</div>`).join('')}</div>
+      <div class="aspinfo"><button class="btn hold" id="hold">🩸 按住回抽</button><div class="meter"><i id="mt"></i></div><div id="vol" class="hint">回抽量：0 mL</div></div></div>
+    <div id="fb"></div></div>`;
+  const hold = $('#hold'), fill = $('#fill'), mt = $('#mt'), vol = $('#vol');
+  let t0 = null, raf = null, done = false, pid = null;
+  const MAXML = 2.4; // 動畫上限（示範值）
+  function frame(){
+    const p = Math.min(1, (performance.now()-t0)/FULL);
+    fill.style.height = (p*MAXML*40)+'px'; mt.style.width = (p*100)+'%';
+    vol.textContent = `回抽量：約 ${(p*MAXML).toFixed(1)} mL` + (p>=1 ? '（抽不出了）' : '');
+    if (p >= 1) { finish(); return; }
+    raf = requestAnimationFrame(frame);
+  }
+  function start(e){ if (done) return; e.preventDefault(); pid = e.pointerId; try{ hold.setPointerCapture(pid); }catch(_){} t0 = performance.now(); hold.classList.add('holding'); hold.textContent = '回抽中…不要放開'; raf = requestAnimationFrame(frame); }
+  function stop(){ if (done || t0 === null) return; cancelAnimationFrame(raf); t0 = null;
+    hold.classList.remove('holding'); hold.textContent = '🩸 按住回抽';
+    fill.style.height = '0'; mt.style.width = '0'; vol.textContent = '回抽量：0 mL';
+    mark('asp', false); toast('太早放開了：要抽盡並估量', 2600); }
+  function finish(){ done = true; t0 = null; hold.classList.remove('holding'); hold.classList.add('done'); hold.textContent = '✓ 抽不出了'; mark('asp', true);
+    $('#fb').innerHTML = expBox('ok', `完成：回抽到抽不出為止，估計回抽量約 ${MAXML} mL，記錄下來`, q.explain_ok, srcQ(q)) + nextBtn(); bindNext(); }
+  hold.addEventListener('pointerdown', start);
+  hold.addEventListener('pointerup', stop); hold.addEventListener('pointercancel', stop);
+  hold.addEventListener('contextmenu', e => e.preventDefault());
+};
+
+/* 解毒劑判斷（Q16，表單 12）：本院無解毒劑 → 拔針；先開查詢站查 Cisplatin */
+RENDER.anti = () => {
+  const q = Q[16];
+  $('#app').innerHTML = `<div class="card"><span class="badge acc">判斷</span><span class="badge">表單 ${q.form_item}</span>
+    <div class="stem">${esc(q.stem)}</div>
+    <div class="exp info show"><div class="t">先查：本案 Cisplatin 稀釋滴注，有沒有適用的解毒劑？</div><div>開查詢站，輸入 <b>Cisplatin</b>，看「處置」欄。查完回到這一頁作答。</div>
+      <div class="btnrow"><a class="btn navy" href="../lookup/" target="_blank" rel="noopener" id="lk">🔍 開查詢站查 Cisplatin</a></div></div>
+    <div id="qa" style="display:none">${optList(q)}<div id="fb"></div></div>
+    <div id="pre" class="btnrow"><button class="btn sec wide" id="checked">我查過了，開始作答</button></div></div>`;
+  const reveal = () => { $('#qa').style.display = ''; $('#pre').style.display = 'none'; };
+  $('#checked').onclick = reveal; $('#lk').addEventListener('click', () => setTimeout(reveal, 300));
+  bindOpts(q, (ok) => {
+    if (ok) { mark('anti', true);
+      $('#fb').innerHTML = expBox('ok', '答對了', q.explain_ok, srcQ(q)) + expBox('info', '本案結論', '本院目前無適用解毒劑，本案 Cisplatin 稀釋滴注 → 回抽完成後拔針。', '本院規則（分工檔）') + nextBtn('拔針 →'); bindNext(); }
+    else { mark('anti', false);
+      showCQ({title:'不是一律拔、也不是一律留', text:q.explain_ng, src:srcQ(q), warn:true, retryLabel:'回去重選',
+        allowSkip: rec('anti').tries >= 2, onRetry: RENDER.anti,
+        onSkip: () => { $('#fb').innerHTML = expBox('ng', '正解說明', q.explain_ng, srcQ(q)) + nextBtn('拔針 →'); bindNext(); }}); }
+  });
+};
+
+/* 決策②：家屬要壓一壓（Q17，表單 13） */
+RENDER.press = () => {
+  const q = Q[17];
+  $('#app').innerHTML = `<div class="card"><span class="badge acc">決策 ②</span><span class="badge">表單 ${q.form_item}</span>
+    <div class="exp warn show"><div class="t">針拔了。家屬急著說：</div><div>「護理師，我幫他<b>壓一壓</b>止血！」</div></div>
+    <div class="stem">${esc(q.stem)}</div>${optList(q)}<div id="fb"></div></div>`;
+  bindOpts(q, (ok) => {
+    if (ok) { mark('press', true); $('#fb').innerHTML = expBox('ok', '答對了', q.explain_ok, srcQ(q)) + nextBtn(); bindNext(); }
+    else { mark('press', false, 'bad_press');
+      showCQ({cqId:'bad_press', text:q.explain_ng, src:srcQ(q), allowSkip: rec('press').tries >= 2, onRetry: RENDER.press,
+        onSkip: () => { $('#fb').innerHTML = expBox('ng', '正解說明', q.explain_ng, srcQ(q)) + nextBtn(); bindNext(); }}); }
+  });
+};
+
+/* 選筆（Q18，表單 14） */
+RENDER.pen = () => {
+  const q = Q[18];
+  $('#app').innerHTML = `<div class="card"><span class="badge acc">選物</span><span class="badge">表單 ${q.form_item}</span>
+    <div class="stem">用哪一支筆把外滲範圍標示出來？</div>
+    <div class="pick">${PENS.map(p=>`<button data-id="${p.id}">${ph(p.id, p.name, '', 'small nocap')}<b>${esc(p.name)}</b></button>`).join('')}</div><div id="fb"></div></div>`;
+  document.querySelectorAll('.pick button').forEach(b => b.onclick = () => {
+    const p = PENS.find(x=>x.id===b.dataset.id);
+    document.querySelectorAll('.pick button').forEach(x => { x.disabled = true; if (PENS.find(y=>y.id===x.dataset.id).ok) x.classList.add('ok'); });
+    if (p.ok) { mark('pen', true); $('#fb').innerHTML = expBox('ok', '選對了：' + q.stem, q.explain_ok, srcQ(q)) + nextBtn(); bindNext(); }
+    else { b.classList.add('ng'); mark('pen', false, 'bad_ballpen');
+      showCQ({cqId:'bad_ballpen', text:q.explain_ng, src:srcQ(q), allowSkip: rec('pen').tries >= 2, onRetry: RENDER.pen,
+        onSkip: () => { $('#fb').innerHTML = expBox('ng', '正解：油性筆', q.explain_ng, srcQ(q)) + nextBtn(); bindNext(); }}); }
+  });
+};
+
+/* 敷什麼（Q19，表單 15）：先開查詢站查 Cisplatin → 本案決策 → 原則題 */
+RENDER.comp = () => {
+  const q = Q[19], q20 = Q[20];
+  $('#app').innerHTML = `<div class="card"><span class="badge acc">查詢後決策</span><span class="badge">表單 ${q.form_item}</span>
+    <div class="stem">本案 Cisplatin 外滲，敷什麼？</div>
+    <div class="exp info show"><div class="t">不憑印象，先查</div><div>開查詢站，輸入 <b>Cisplatin</b>，看它是冷敷、熱敷還是 DMSO。查完回到這一頁選。</div>
+      <div class="btnrow"><a class="btn navy" href="../lookup/" target="_blank" rel="noopener" id="lk">🔍 開查詢站查 Cisplatin</a></div></div>
+    <div id="qa" style="display:none"><div class="pick">${COMP.map(c=>`<button data-id="${c.id}">${ph(c.id, c.name, '', 'small nocap')}<b>${esc(c.name)}</b>${c.sub?`<span class="hint">${esc(c.sub)}</span>`:''}</button>`).join('')}</div><div id="fb"></div>
+      <div id="q19" style="display:none"><h3>原則題</h3><div class="stem">${esc(q.stem)}</div>${optList(q)}<div id="fb2"></div></div></div>
+    <div id="pre" class="btnrow"><button class="btn sec wide" id="checked">我查過了，開始選</button></div></div>`;
+  const reveal = () => { $('#qa').style.display = ''; $('#pre').style.display = 'none'; };
+  $('#checked').onclick = reveal; $('#lk').addEventListener('click', () => setTimeout(reveal, 300));
+  const caseNote = '查詢站：Cisplatin 冷敷或熱敷無定論（院內建議兩者皆可）；本院本案定冷敷。';
+  document.querySelectorAll('.pick button').forEach(b => b.onclick = () => {
+    const c = COMP.find(x=>x.id===b.dataset.id);
+    document.querySelectorAll('.pick button').forEach(x => { x.disabled = true; if (COMP.find(y=>y.id===x.dataset.id).kind==='ok') x.classList.add('ok'); });
+    if (c.kind === 'ok') { mark('comp', true); $('#fb').innerHTML = expBox('ok', '本案走冷敷', caseNote, '本院規則（分工檔）＋查詢站'); showQ19(); }
+    else if (c.kind === 'warn') { b.classList.add('ng'); mark('comp', false);
+      $('#fb').innerHTML = expBox('warn', '熱敷：查詢站確實寫「無定論」，但本案本院定冷敷', caseNote, '本院規則（分工檔）＋查詢站'); showQ19(); }
+    else { b.classList.add('ng'); mark('comp', false);
+      showCQ({title:'DMSO 不是 Cisplatin 的處置', text:q20.explain_ng, src:srcQ(q20), warn:true, retryLabel:'回去重選',
+        allowSkip: rec('comp').tries >= 2, onRetry: RENDER.comp,
+        onSkip: () => { $('#fb').innerHTML = expBox('ng', '正解：冷敷', caseNote, '本院規則（分工檔）＋查詢站'); showQ19(); }}); }
+  });
+  function showQ19(){
+    const box = $('#q19'); box.style.display = '';
+    bindOpts(q, (ok) => {
+      mark('comp19', ok);
+      $('#fb2').innerHTML = expBox(ok?'ok':'ng', ok?'答對了':'正解說明', ok?q.explain_ok:q.explain_ng, srcQ(q)) + nextBtn('看九步驟總覽 →'); bindNext();
+    }, box);
+  }
+};
+
+/* 案例一總覽 */
+RENDER.sum1 = () => {
+  const seen = [].concat(...Object.values(result).map(r=>r.seen));
+  const rows = STEPS9.map((s,i) => {
+    const r = result[s.key]; let st = '—';
+    if (s.key === 'dmso') st = '案例二'; else if (r) st = r.first ? '✅' : '🔁';
+    return `<div class="step"><div class="no">${i+1}</div>${ph(s.id, s.t, '', 'small nocap')}<div class="tx">${esc(s.t)}</div><div class="st" title="第一次就對／重做過">${st}</div></div>`;
+  }).join('');
+  $('#app').innerHTML = `<div class="card"><span class="badge ok">完成案例一</span><h2>初步處理九步驟總覽</h2>
+    <p class="lead">✅＝第一次就對　🔁＝做錯後重做過　第 9 步在案例二。</p><div class="steps">${rows}</div>
+    ${seen.length ? `<h3>你看過的後果頁</h3><ul>${seen.map(c=>`<li>${esc(CQ[c].title)}</li>`).join('')}</ul>` : '<p class="hint" style="margin-top:12px">這一輪沒有進過後果頁。</p>'}
+    <div class="btnrow"><button class="btn" id="go2">去案例二 Doxorubicin →</button><button class="btn sec" id="again">案例一再玩一次</button><a class="btn sec" href="../">回首頁</a></div></div>`;
+  $('#go2').onclick = () => { flow = FLOW2; go(0); };
+  $('#again').onclick = () => { for (const k in result) delete result[k]; flow = FLOW1; go(0); };
+};
+
+/* ===== 案例二 Doxorubicin 簡版 ===== */
+RENDER.scene2 = () => {
+  const s = SCENES.sc02;
+  $('#app').innerHTML = `<div class="card"><span class="badge acc">情境</span><h2>案例二</h2>${ph('sc02', s.cap, s.desc, 'scene')}
+    <p style="margin-top:12px"><b>張示範</b>，右前臂周邊留置針，推注 <b>Doxorubicin</b>（小紅莓）中，穿刺處周圍腫、發紅。前面的步驟（停藥不拔針、PPE、回抽、不壓迫、油性筆）你都做了，現在到<b>敷療</b>。</p>
+    ${nextBtn('去查這個藥 →')}</div>`;
+  bindNext();
+};
+RENDER.look2 = () => {
+  const q20 = Q[20];
+  $('#app').innerHTML = `<div class="card"><span class="badge acc">查詢</span><span class="badge">表單 16</span>
+    <div class="stem">Doxorubicin 外滲，查詢站說要怎麼敷？</div>
+    <div class="exp info show"><div class="t">開查詢站，輸入 <b>Doxorubicin</b>（或 Adriamycin、小紅莓）</div><div>看「處置」欄與最下方「DMSO」原理段，記住：塗多大範圍、風乾還是覆蓋、幾天。</div>
+      <div class="btnrow"><a class="btn navy" href="../lookup/" target="_blank" rel="noopener" id="lk">🔍 開查詢站查 Doxorubicin</a></div></div>
+    <div id="qa" style="display:none">${expBox('info', '查到了：DMSO＋冷敷', LOOKUP_DOXO, '查詢站 Doxorubicin 列（院內 2023.5 版）')}
+      ${expBox('ok', '為什麼是 DMSO', q20.explain_ok, srcQ(q20))}${nextBtn('開始三題 →')}</div>
+    <div id="pre" class="btnrow"><button class="btn sec wide" id="checked">我查過了</button></div></div>`;
+  const reveal = () => { $('#qa').style.display = ''; $('#pre').style.display = 'none'; bindNext(); };
+  $('#checked').onclick = reveal; $('#lk').addEventListener('click', () => setTimeout(reveal, 300));
+};
+function dmStep(i){
+  return () => {
+    const d = DM[i];
+    $('#app').innerHTML = `<div class="card"><span class="badge acc">DMSO ${i+1}／3</span><div class="stem">${esc(d.stem)}</div>
+      <div class="opts">${d.opts.map((o,j)=>`<button class="opt" data-k="${j}"><span class="k">${'ABC'[j]}</span><span>${esc(o)}</span></button>`).join('')}</div><div id="fb"></div></div>`;
+    document.querySelectorAll('.opt').forEach(b => b.onclick = () => {
+      const ok = +b.dataset.k === d.ans;
+      document.querySelectorAll('.opt').forEach(x => { x.disabled = true; if (+x.dataset.k === d.ans) x.classList.add('ok'); });
+      if (!ok) b.classList.add('ng');
+      mark(d.key, ok);
+      $('#fb').innerHTML = expBox(ok?'ok':'ng', ok?'答對了':'正解：'+d.opts[d.ans], LOOKUP_DOXO, '查詢站 Doxorubicin 列（院內 2023.5 版）') + nextBtn(i<2?'下一題 →':'完成 →'); bindNext();
+    });
+  };
+}
+RENDER.dm1 = dmStep(0); RENDER.dm2 = dmStep(1); RENDER.dm3 = dmStep(2);
+RENDER.sum2 = () => {
+  const n = DM.filter(d => result[d.key] && result[d.key].first).length;
+  $('#app').innerHTML = `<div class="card"><span class="badge ok">完成案例二</span><h2>DMSO 三題：第一次就對 ${n}／3</h2>
+    <div class="exp info show"><div class="t">記住這一行</div><div>${esc(LOOKUP_DOXO)}</div><div class="src">查詢站 Doxorubicin 列（院內 2023.5 版）</div></div>
+    <div class="steps" style="margin-top:12px"><div class="step"><div class="no">9</div>${ph('st09', STEPS9[8].t, '', 'small nocap')}<div class="tx">${esc(STEPS9[8].t)}</div><div class="st">${n===3?'✅':'🔁'}</div></div></div>
+    <div class="btnrow"><button class="btn" id="go1">回案例一從頭做 →</button><button class="btn sec" id="again">案例二再玩一次</button><a class="btn sec" href="../">回首頁</a></div></div>`;
+  $('#go1').onclick = () => { for (const k in result) delete result[k]; flow = FLOW1; go(0); };
+  $('#again').onclick = () => { flow = FLOW2; go(0); };
+};
+
+/* ---------- 啟動：讀題庫 ---------- */
+function loadEmbedded(){ // fetch 失敗（file:// 直接開）時，退而讀 build 注入的內嵌題庫；空的就丟錯
+  const t = document.getElementById('qdata').textContent.trim(); if (!t) throw new Error('Failed to fetch');
+  return JSON.parse(t);
+}
+fetch(DATA_URL, {cache:'no-cache'}).then(r => { if (!r.ok) throw new Error(r.status); return r.json(); }).catch(loadEmbedded).then(d => {
+  d.questions.forEach(q => { Q[q.id] = q; });
+  const missing = [13,14,15,16,17,18,19,20].filter(id => !Q[id]);
+  if (missing.length) throw new Error('題庫缺 Q' + missing.join('、Q'));
+  home();
+}).catch(err => {
+  $('#app').innerHTML = `<div class="err"><b>題庫載入失敗</b>（${esc(err.message)}）。<br>本頁的題目文字來自 <code>assets/data/questions.json</code>，直接雙擊 HTML 用 <code>file://</code> 開會被瀏覽器擋住。<br><b>本機預覽</b>：雙擊同資料夾的 <code>_preview.bat</code>（會啟動本機伺服器並自動開頁），或等 S0 推上 GitHub Pages 後用網址開。</div>`;
+});
+</script>
+</body>
+</html>

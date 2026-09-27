@@ -1,3 +1,408 @@
-<!DOCTYPE html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>自學：預防與辨識｜建置中</title>
-<style>body{font-family:"Microsoft JhengHei",system-ui,sans-serif;background:#f4f7fb;margin:0;padding:40px 16px;text-align:center;color:#1c2430}a{color:#123a6b}</style></head>
-<body><h1>自學：預防與辨識</h1><p>建置中（S1）。</p><p><a href="../">← 回首頁</a></p></body></html>
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>自學：預防與辨識｜化療藥品外滲</title>
+<meta name="description" content="化療藥品外滲預防與處理 2D 自學站：區塊 A–D 12 題先選再講解（文字＋語音＋圖），區塊 G 紀錄與追蹤 4 張圖卡與自我檢核。">
+<style>
+/* ── 主題色與基礎（沿用首頁 docs/index.html 的色票） ── */
+:root{
+  --bg:#f4f7fb;--card:#ffffff;--ink:#1c2430;--mut:#5b6675;--navy:#123a6b;--line:#dfe5ee;
+  --ok:#1f8a4c;--okbg:#e8f6ee;--ng:#c81e3a;--ngbg:#fdecef;--acc:#2b7de9;
+  --cA:#2b7de9;--cB:#e8792b;--cC:#7a3fb5;--cD:#c81e3a;--cG:#2e8b57;
+  --r:16px;--sh:0 2px 10px rgba(0,0,0,.05);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Microsoft JhengHei","PingFang TC","Noto Sans TC",system-ui,sans-serif;line-height:1.6;font-size:16px}
+button{font:inherit;color:inherit}
+a{color:var(--navy)}
+
+/* ── 頁首 ── */
+header{background:var(--navy);color:#fff;padding:10px 16px 12px;position:sticky;top:0;z-index:10;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.hrow{display:flex;align-items:center;gap:10px;max-width:760px;margin:0 auto}
+.hrow h1{margin:0;font-size:1.05rem;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hbtn{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.35);color:#fff;border-radius:999px;padding:5px 11px;font-size:.82rem;cursor:pointer;white-space:nowrap;min-height:32px}
+.hbtn:active{background:rgba(255,255,255,.28)}
+.hbtn.off{opacity:.65}
+/* 進度條 */
+.prog{max-width:760px;margin:8px auto 0;display:none}
+.prog.show{display:block}
+.prog .lbl{display:flex;justify-content:space-between;font-size:.78rem;opacity:.9;margin-bottom:4px}
+.prog .bar{height:8px;background:rgba(255,255,255,.22);border-radius:999px;overflow:hidden}
+.prog .bar i{display:block;height:100%;width:0;background:#ffd166;border-radius:999px;transition:width .35s}
+
+/* ── 主內容 ── */
+main{max-width:760px;margin:0 auto;padding:16px 16px 48px}
+.card{background:var(--card);border-radius:var(--r);box-shadow:var(--sh);padding:16px;margin-bottom:14px}
+.mut{color:var(--mut);font-size:.9rem}
+.hint{background:#eef2f7;border-radius:12px;padding:10px 12px;font-size:.88rem;color:var(--mut);margin-bottom:14px}
+
+/* 首頁方塊 */
+.grid{display:grid;grid-template-columns:1fr;gap:12px}
+@media(min-width:560px){.grid{grid-template-columns:1fr 1fr}}
+.tile{display:flex;align-items:center;gap:12px;background:var(--card);border-radius:var(--r);padding:14px 14px 14px 16px;border-left:7px solid var(--c);box-shadow:var(--sh);width:100%;border-top:0;border-right:0;border-bottom:0;text-align:left;cursor:pointer;transition:.15s}
+.tile:active{transform:scale(.99)}
+.tile .bl{font-size:1.45rem;font-weight:700;color:var(--c);width:34px;text-align:center;flex:none}
+.tile .tx{flex:1;min-width:0}
+.tile h2{margin:0;font-size:1.05rem}
+.tile .sub{font-size:.82rem;color:var(--mut);margin-top:2px}
+.tile .st{flex:none;font-size:.8rem;padding:3px 9px;border-radius:999px;background:#eef2f7;color:var(--mut)}
+.tile .st.done{background:var(--okbg);color:var(--ok)}
+.tile .st.part{background:#fff4e0;color:#b25e00}
+.tA{--c:var(--cA)}.tB{--c:var(--cB)}.tC{--c:var(--cC)}.tD{--c:var(--cD)}.tG{--c:var(--cG)}
+.rev{margin-top:14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.rev .num{font-size:1.4rem;font-weight:700;color:var(--navy)}
+
+/* 題目 */
+.qno{display:inline-block;font-size:.78rem;font-weight:700;color:#fff;background:var(--c,var(--navy));padding:2px 10px;border-radius:999px;margin-bottom:8px}
+.stem{margin:0 0 12px;font-size:1.1rem;font-weight:700;line-height:1.55}
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{display:flex;gap:10px;align-items:flex-start;width:100%;text-align:left;background:#fff;border:2px solid var(--line);border-radius:12px;padding:12px 12px;min-height:48px;cursor:pointer;transition:.15s;line-height:1.5}
+.opt .k{flex:none;width:28px;height:28px;border-radius:50%;background:#eef2f7;color:var(--mut);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.9rem}
+.opt:not(:disabled):hover{border-color:var(--acc)}
+.opt:disabled{cursor:default;opacity:.92}
+.opt.ok{border-color:var(--ok);background:var(--okbg)}
+.opt.ok .k{background:var(--ok);color:#fff}
+.opt.ng{border-color:var(--ng);background:var(--ngbg)}
+.opt.ng .k{background:var(--ng);color:#fff}
+.opt .t{flex:1}
+
+/* 圖片與佔位 */
+.fig{margin:0 0 12px;border-radius:12px;overflow:hidden;background:#e9edf3}
+.fig img{display:block;width:100%;height:auto}
+.fig.ph{aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;color:var(--mut);font-size:.9rem;background:repeating-linear-gradient(45deg,#e6eaf0 0 12px,#eef1f6 12px 24px)}
+
+/* 講解卡 */
+.exp{margin-top:14px;border-radius:14px;padding:14px;border:1px solid var(--line);animation:fadeUp .4s ease both}
+.exp.ok{background:var(--okbg);border-color:#bfe3cc}
+.exp.ng{background:var(--ngbg);border-color:#f3c3cc}
+.exp .ttl{font-weight:700;font-size:1.02rem;margin-bottom:6px}
+.exp.ok .ttl{color:var(--ok)}
+.exp.ng .ttl{color:var(--ng)}
+.exp p{margin:0 0 10px}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.exp{animation:none}}
+.aud{margin-top:6px}
+.aud audio{width:100%;height:40px;display:block}
+.audnote{font-size:.78rem;color:var(--mut);margin-top:4px}
+
+/* 按鈕 */
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.btn{flex:1;min-width:120px;min-height:46px;border:0;border-radius:12px;padding:10px 14px;font-weight:700;cursor:pointer;background:var(--navy);color:#fff}
+.btn.sec{background:#fff;color:var(--navy);border:2px solid var(--navy)}
+.btn.lite{background:#eef2f7;color:var(--ink)}
+.btn:disabled{opacity:.45;cursor:default}
+.btn:active{transform:scale(.98)}
+
+/* 總複習 */
+.wrong{display:flex;gap:10px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:8px}
+.wrong .q{flex:1;min-width:0;font-size:.92rem}
+.wrong .q b{color:var(--ng)}
+.wrong .q span{display:block;color:var(--mut);font-size:.82rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wrong button{flex:none;min-height:38px;padding:6px 12px;border-radius:10px;border:0;background:var(--navy);color:#fff;font-weight:700;cursor:pointer}
+
+/* ⑤ 圖卡 */
+.gcard .num{display:inline-block;font-size:.78rem;font-weight:700;color:#fff;background:var(--cG);padding:2px 10px;border-radius:999px;margin-bottom:8px}
+.gcard h2{margin:0 0 4px;font-size:1.15rem}
+.gcard .sub{color:var(--mut);font-size:.9rem;margin-bottom:12px}
+.check{margin-top:14px;border-top:1px dashed var(--line);padding-top:12px}
+.check .tag{font-size:.8rem;color:var(--cG);font-weight:700;margin-bottom:6px}
+
+.err{background:var(--ngbg);border:1px solid #f3c3cc;border-radius:12px;padding:14px;color:var(--ng)}
+footer{text-align:center;color:var(--mut);font-size:.78rem;padding:0 16px 28px}
+.sr{position:absolute;left:-9999px}
+</style>
+</head>
+<body>
+<header>
+  <div class="hrow">
+    <button class="hbtn" id="back" type="button">← 回首頁</button>
+    <h1 id="ttl">自學：預防與辨識</h1>
+    <button class="hbtn" id="auto" type="button" aria-pressed="true">🔊 自動播放 開</button>
+  </div>
+  <div class="prog" id="prog"><div class="lbl"><span id="plbl"></span><span id="pnum"></span></div><div class="bar"><i id="pbar"></i></div></div>
+</header>
+<main id="app" aria-live="polite"></main>
+<footer>內容以院內〈化療藥品外滲預防與處理〉技術評核表單為準；示範資料一律「張示範」，無病人資料。</footer>
+
+<!-- 題目資料：正式版由頁面 fetch ../assets/data/questions.json；
+     本機用 file:// 開啟時 fetch 會失敗，build 腳本可把 questions.json 全文注入下方標籤作為 fallback（不手抄題目）。 -->
+<script id="qdata" type="application/json">{"source":"20260925_打掉重練_需求規格與題目草稿_階段1.md","count":27,"questions":[{"id":1,"block":"A","block_name":"導管選擇與監測","use":["learn","test","3d"],"stem":"病人今天要由靜脈滴注起疱性化療藥品（例如 Doxorubicin），優先選擇哪一種靜脈導管？","note":"","options":[{"key":"A","text":"中央靜脈導管（Port-A、CVC、PICC）"},{"key":"B","text":"前臂的周邊靜脈留置針"},{"key":"C","text":"手背的周邊靜脈留置針"}],"answer":"A","explain_ok":"答對了。起疱性藥品優先走中央靜脈導管，因為管徑大、血流快，藥品進入血流立刻被稀釋，外滲風險最低。只有在特殊因素無法使用中央導管時，才改用周邊靜脈。","explain_ng":"正確答案是中央靜脈導管，因為管徑大、血流快，藥品進入血流立刻被稀釋，外滲風險最低。只有在特殊因素無法使用中央導管時，才改用周邊靜脈。","img":"s078–084（靜脈導管種類）、s236–239（優先性考量）","form_item":"1","text_hash":{"ok":"bbc1e43a","ng":"13c9982d","stem":"754c771b"}},{"id":2,"block":"A","block_name":"導管選擇與監測","use":["learn","test","3d"],"stem":"因特殊因素改用周邊靜脈連續滴注起疱性化療藥品，開始給藥後，多久要測試一次血流導管功能並記錄？","note":"","options":[{"key":"A","text":"每 15 分鐘"},{"key":"B","text":"每 30 分鐘"},{"key":"C","text":"每 1 小時"},{"key":"D","text":"每班一次"}],"answer":"A","explain_ok":"答對了。依據本院作業規範，起疱性藥品走周邊靜脈時，每 15 分鐘測一次血流導管功能並記錄。要確認的是三件事：回血是全血、推注無阻力、入針處皮膚沒有滲液、紅、腫、熱、痛。","explain_ng":"正確答案是每 15 分鐘。依據本院作業規範，起疱性藥品走周邊靜脈時，每 15 分鐘測一次血流導管功能並記錄。要確認的是三件事：回血是全血、推注無阻力、入針處皮膚沒有滲液、紅、腫、熱、痛。","img":"s224–226、s244（安全給藥：方法／評估／時機）","form_item":"2","text_hash":{"ok":"4481ff54","ng":"167a8f82","stem":"6f91f849"}},{"id":3,"block":"B","block_name":"留置針管徑","use":["learn","test","3d"],"stem":"由周邊靜脈注射化療藥品，留置針管徑大小選擇原則是．．．","note":"","options":[{"key":"A","text":"留置針的號碼越大，代表管徑越小，選擇22 號或更小（≦22 號）"},{"key":"B","text":"留置針的號碼越小，代表管徑越大，選擇20 號或更大（≧20 號）"}],"answer":"A","explain_ok":"答對了。選 22 號或更細的留置針。針頭細、對血管壁傷害小，也不會擋住針頭下方的血流，藥品才能被血液順利帶走。","explain_ng":"正確答案留置針的號碼越大，代表管徑越小，選擇22 號或更小（≦22 號）。大管徑的針頭對血管傷害大，而且會阻礙針頭下方的血流，藥品在局部濃度反而更高。","img":"s135–136（留置針管徑的選擇）","form_item":"3(1)","text_hash":{"ok":"9755e551","ng":"bc702b24","stem":"b16a2d8a"}},{"id":4,"block":"B","block_name":"留置針管徑","use":["learn","test","3d"],"stem":"周邊注射化療藥品若使用留置針，管徑大小選擇的理由是什麼？","note":"","options":[{"key":"A","text":"較大管徑留置針對血管傷害大，且會阻礙下方血流"},{"key":"B","text":"較小管徑的留置針小針比較不痛，病人接受度高"}],"answer":"A","explain_ok":"答對了。理由就是兩個：一、較大管徑留置針傷血管壁；且針頭下方血流變差，藥品沖不走。兩個都會提高外滲與靜脈炎的機會。","explain_ng":"正確答案是「較大管徑留置針對血管傷害大，且會阻礙下方血流」","img":"s136（目的：減少血管傷害）","form_item":"3(2)","text_hash":{"ok":"192e03bc","ng":"41cfd1b0","stem":"95b4b833"}},{"id":5,"block":"C","block_name":"注射部位","use":["learn","test","3d"],"stem":"由周邊靜脈注射化療藥品，優先選擇哪個部位？","note":"這題搭配手部圖片","options":[{"key":"A","text":"前臂"},{"key":"B","text":"手背"},{"key":"C","text":"肘前窩"},{"key":"D","text":"手腕內側"}],"answer":"A","explain_ok":"答對了。手背、手腕內側、肘前窩都富含神經與肌腱，外滲一旦發生，傷到的不只是皮膚，是肌腱和神經，後果嚴重得多。","explain_ng":"正確答案是前臂。手背、手腕內側、肘前窩都富含神經與肌腱，外滲一旦發生，傷到的不只是皮膚，是肌腱和神經，後果嚴重得多。","img":"s102–108（優先選擇 前臂／遠心端）","form_item":"4","text_hash":{"ok":"1b7b9e4f","ng":"b765f29b","stem":"65242cd0"}},{"id":6,"block":"C","block_name":"注射部位","use":["learn","test","3d"],"stem":"為什麼手腕內側、手背、腕關節與肘前窩的靜脈要避免注射化療藥品？","note":"","options":[{"key":"A","text":"這些部位富含神經與肌腱，外滲容易造成嚴重傷害"},{"key":"B","text":"這些部位不好固定針頭"}],"answer":"A","explain_ok":"答對了。關節與手腕、手背下面就是肌腱和神經，皮下組織薄，外滲藥品直接侵犯這些構造，可能造成功能喪失，甚至需要外科處置。","explain_ng":"正確答案是「富含神經與肌腱」。關節與手腕、手背下面就是肌腱和神經，皮下組織薄，外滲藥品直接侵犯這些構造，可能造成功能喪失，甚至需要外科處置。","img":"s109–115（避免選擇 手背／關節處）","form_item":"5(2)","text_hash":{"ok":"19660965","ng":"12ff9d97","stem":"88bf8234"}},{"id":7,"block":"C","block_name":"注射部位","use":["learn","test","3d"],"stem":"病人右側乳癌術後有右上肢淋巴水腫，左手血管不好找。可以在右手注射化療藥品嗎？","note":"","options":[{"key":"A","text":"不可以，淋巴水腫的肢體要避免注射化療藥品"},{"key":"B","text":"可以，只要回血順暢就好"}],"answer":"A","explain_ok":"答對了。淋巴水腫肢體循環差、組織液回流慢，藥品一旦滲出會蓄積在局部，感染與組織傷害的風險都高。左手找不到血管時，應評估中央靜脈導管，而不是拿右手冒險。","explain_ng":"正確答案是不可以。淋巴水腫肢體循環差、組織液回流慢，藥品一旦滲出會蓄積在局部，感染與組織傷害的風險都高。回血順暢不能改變回流差的事實；左手找不到血管時，應評估中央靜脈導管，而不是拿右手冒險。","img":"s116（水腫肢體）","form_item":"5(3)","text_hash":{"ok":"280c3f58","ng":"c9a4f03d","stem":"9fd2804a"}},{"id":8,"block":"C","block_name":"注射部位","use":["learn","test","3d"],"stem":"病人雙上肢都無法建立周邊靜脈，可以改在下肢（腳背）注射化療藥品嗎？","note":"","options":[{"key":"A","text":"不建議，下肢末梢循環不佳，藥品容易在局部累積"},{"key":"B","text":"可以，腳背血管明顯、容易打，但要抬高下肢"}],"answer":"A","explain_ok":"答對了。下肢末梢循環差，藥品容易在局部累積，外滲與血栓的風險都高。雙上肢都無法建立周邊靜脈，就是中央靜脈導管的適應症。同樣的道理，接受過放射線治療的部位也要避開，因為血管與組織已經受過傷。","explain_ng":"正確答案是不建議。下肢末梢循環差，藥品容易在局部累積；抬高下肢不能解決循環差的問題。雙上肢都無法建立周邊靜脈，就是中央靜脈導管的適應症。同樣的道理，接受過放射線治療的部位也要避開。","img":"s112–117（下肢／放射治療肢體）","form_item":"5(4)(5)","text_hash":{"ok":"8aecf1ad","ng":"4c243e59","stem":"942e86a0"}},{"id":9,"block":"C","block_name":"注射部位","use":["learn","test","3d"],"stem":"由周邊靜脈注射化療藥品，下列哪一種血管「可以」選用？","note":"","options":[{"key":"A","text":"前臂一條直、有彈性、按壓會回彈的血管"},{"key":"B","text":"細小、按壓後不回彈、缺乏彈性的血管"},{"key":"C","text":"昨天發生靜脈炎、還在紅腫的血管"}],"answer":"A","explain_ok":"答對了。要選直、有彈性、容易固定的血管。細小脆弱、硬化、已經發生靜脈炎的血管，血管壁內皮都已經不健全，針一進去就可能破，外滲風險高。","explain_ng":"正確答案是前臂一條直、有彈性、按壓會回彈的血管。細小脆弱、硬化、已經發生靜脈炎的血管，血管壁都已經不健全，針一進去就可能破，外滲風險高。","img":"s107–108（避免選擇）","form_item":"5(1)(6)","text_hash":{"ok":"97e58640","ng":"087a4241","stem":"c4e6151d"}},{"id":10,"block":"C","block_name":"注射部位","use":["learn","test","3d"],"stem":"病人 20 小時前在左前臂抽過血（已拔針）。今天要注射化療藥品，若必須用同一條血管，留置針要建立在原穿刺點的哪一側？","note":"這題搭配前臂圖：粉紅 A 近心端、B 遠心端，橘點＝原穿刺點（20 小時前抽血）（使用者 9/26 定）","options":[{"key":"A","text":"近心端（靠近手肘那一側）"},{"key":"B","text":"遠心端（靠近手腕那一側）"},{"key":"C","text":"原穿刺點重打，只要回血順暢就好"}],"answer":"A","explain_ok":"答對了。24 小時內穿刺過的血管，穿刺孔還沒癒合，抽血也算穿刺。原則上不建議再用這條血管；真的只能用，就建立在近心端，藥品往心臟方向流時就不會經過舊的穿刺孔。","explain_ng":"正確答案是 A 近心端。24 小時內穿刺過的血管，穿刺孔還沒癒合，抽血也算穿刺。建立在遠心端，藥品往心臟方向流時會經過還沒癒合的舊穿刺孔，從那裡滲出來；原穿刺點重打更是直接打在沒癒合的孔上。原則上不建議再用這條血管，真的只能用才建立在近心端。","img":"`素材_全院pptx/gen_q10_前臂_A近心端_B遠心端_穿刺點.png`（AI 生圖＋PIL 加橘色穿刺點，repo 版 `docs/assets/img/q10.jpg`）；輔圖 s139–141、s105","form_item":"6","text_hash":{"ok":"aea55f21","ng":"09e8c0a7","stem":"7ba8da03"}},{"id":11,"block":"D","block_name":"外滲徵象辨識","use":["learn","test","3d"],"stem":"滴注化療藥品中，病人說注射部位「刺刺的、有燒灼感」，你看到局部皮膚微紅。下一步要怎麼做？","note":"","options":[{"key":"A","text":"懷疑外滲，立即停止給藥並評估"},{"key":"B","text":"是正常反應，繼續觀察到下次巡視"},{"key":"C","text":"是靜脈炎，熱敷就好"}],"answer":"A","explain_ok":"答對了。疼痛、燒灼感、刺痛、發紅、紅斑，任何一項出現都要懷疑外滲，第一個動作是停止給藥。徵象通常不會一次到齊，出現一項就夠。停藥不會造成傷害，繼續滴才會。","explain_ng":"正確答案是懷疑外滲，立即停止給藥並評估。疼痛、燒灼感、刺痛、發紅、紅斑，任何一項出現都要懷疑外滲，第一個動作是停止給藥。「再觀察」是外滲處置最常見的延誤；靜脈炎的判斷要在排除外滲之後。停藥不會造成傷害，繼續滴才會。","img":"s268–274（燒灼感等徵象）","form_item":"7(1)(2)","text_hash":{"ok":"26bca39d","ng":"e4acf406","stem":"93afe251"}},{"id":12,"block":"D","block_name":"外滲徵象辨識","use":["learn","test","3d"],"stem":"靜脈推注化療藥品時，你感覺推起來有阻力，回抽也沒有回血。這代表什麼？","note":"","options":[{"key":"A","text":"懷疑外滲，立即停止推注"},{"key":"B","text":"針太細，用力一點推"},{"key":"C","text":"換一支更大的注射器再推"}],"answer":"A","explain_ok":"答對了。推注有阻力、沒有回血，表示針可能已經不在血管內或血管已經破了，藥品正被推進組織裡。停下來，不要拔針，接著進入外滲處理流程。外滲的五個徵象：疼痛燒灼、發紅、滲漏腫脹硬結、無回血、推注有阻力，出現任何一項就停。","explain_ng":"正確答案是懷疑外滲，立即停止推注。推注有阻力、沒有回血，表示針可能已經不在血管內或血管已經破了；用力推、換大針，都是把更多藥品推進皮下組織。停下來，不要拔針，接著進入外滲處理流程。外滲的五個徵象：疼痛燒灼、發紅、滲漏腫脹硬結、無回血、推注有阻力，出現任何一項就停。","img":"s208–223（回血／阻力）","form_item":"7(3)(4)(5)","text_hash":{"ok":"3cea01ba","ng":"fce7c796","stem":"7b8bb0c8"}},{"id":13,"block":"E","block_name":"初步處理","use":["handson","test"],"stem":"懷疑化療藥品外滲，第一個動作是什麼？","note":"","options":[{"key":"A","text":"立即停止給藥，但不要拔出靜脈留置針，並估計、記錄尚未注入的剩餘藥量"},{"key":"B","text":"立即停止給藥並拔針，用紗布壓住止血"},{"key":"C","text":"先降低滴速，觀察 15 分鐘再決定"}],"answer":"A","explain_ok":"答對了。立即停止給藥，留置針先不要拔，因為它是等一下回抽外滲藥品唯一的路徑。同時看一下點滴袋或注射器，估計還沒注入的剩餘藥量並記錄，這個數字是後面推算外滲量的依據。","explain_ng":"正確答案是立即停止給藥、不拔針、估計並記錄剩餘藥量。留置針是等一下回抽外滲藥品唯一的路徑，拔掉就沒得抽；降速觀察只是讓更多藥品進入組織。剩餘藥量要當下記，之後推算外滲量才有依據。","img":"s289–293（立即停止給藥）","form_item":"8","text_hash":{"ok":"2ffbd7af","ng":"4aff2dbc","stem":"de8150ca"}},{"id":14,"block":"E","block_name":"初步處理","use":["handson","test"],"stem":"處理外滲時要穿戴哪些防護裝備？","note":"","options":[{"key":"A","text":"防水隔離衣（後開式、長袖、袖口可束緊）、雙層丁腈或乳膠手套並套住袖口、外科口罩；有噴濺風險時加護目鏡或防護面罩"},{"key":"B","text":"一般隔離衣＋單層手套＋外科口罩"},{"key":"C","text":"只要戴手套就可以，因為藥量很少"}],"answer":"A","explain_ok":"答對了。外滲處理會直接接觸化療藥品，防護是四件：防水隔離衣、雙層手套套住袖口、外科口罩，有噴濺風險時加護目鏡或面罩。這是保護自己，也是每次處理外滲的標準起手式。","explain_ng":"正確答案是防水隔離衣、雙層手套套住袖口、外科口罩，有噴濺風險時加護目鏡或面罩。一般隔離衣不防水、單層手套不夠；藥量少不代表沒有暴露，回抽時噴到手、噴到眼的機會就在這幾分鐘。","img":"s285–288（穿著個人防護裝備）","form_item":"9","text_hash":{"ok":"448d8275","ng":"916054c2","stem":"87aaf40b"}},{"id":15,"block":"E","block_name":"初步處理","use":["handson","test"],"stem":"停止給藥後，接下來要怎麼做才能把外滲的藥品抽出來？","note":"","options":[{"key":"A","text":"移除裝有剩餘化療藥品的注射器或輸液套管，接上無菌 10 mL 注射器，從原靜脈注射處盡可能回抽到抽不出來為止，並估計回抽量"},{"key":"B","text":"直接用原本的注射器往回抽"},{"key":"C","text":"拔針後用針筒從皮下抽"}],"answer":"A","explain_ok":"答對了。先把還裝著化療藥品的注射器或輸液套管拆掉，換上一支無菌 10 mL 空針，從原來的留置針盡可能回抽，抽到抽不出來為止，並估計回抽出的外滲藥量。這就是為什麼前面不能先拔針。","explain_ng":"正確答案是換上無菌 10 mL 空針，從原留置針盡可能回抽並估計回抽量。原本的注射器裡還有藥，回抽會混在一起算不出量；拔針後從皮下抽會造成新的傷口，也抽不到血管內殘留的藥。","img":"s291–293（接上注射器，儘可能回抽）","form_item":"10、11","text_hash":{"ok":"ef855295","ng":"364ef148","stem":"033a227e"}},{"id":16,"block":"E","block_name":"初步處理","use":["handson","test"],"stem":"回抽完成後，留置針要怎麼處理？","note":"","options":[{"key":"A","text":"看有沒有解毒劑：有解毒劑就依醫囑準備，由醫師從原靜脈注射處注射後再拔針；沒有解毒劑就直接拔針"},{"key":"B","text":"一律立刻拔針"},{"key":"C","text":"一律保留留置針 24 小時觀察"}],"answer":"A","explain_ok":"答對了。拔不拔針取決於有沒有解毒劑。有解毒劑，原來的留置針就是醫師給解毒劑的路徑，要等注射完再拔；沒有解毒劑，就把針拔掉。本院目前多數化療藥品沒有解毒劑，實務上大多是回抽後拔針。","explain_ng":"正確答案是依解毒劑有無決定：有就由醫師從原針注射解毒劑後再拔，沒有就直接拔針。一律立刻拔會把解毒劑的給藥路徑拔掉；一律保留 24 小時則讓一支已經不在血管內的針留在組織裡，沒有好處。","img":"s305–309（醫療處置：解毒劑）、s312（移除針具）","form_item":"12","text_hash":{"ok":"205716cd","ng":"f666c343","stem":"c275bb12"}},{"id":17,"block":"E","block_name":"初步處理","use":["handson","test"],"stem":"外滲部位可以用手壓迫止血或按壓嗎？","note":"","options":[{"key":"A","text":"不可以，壓迫會讓外滲藥品擴大浸潤到周圍組織，起疱性藥品尤其危險"},{"key":"B","text":"可以，跟一般拔針一樣壓緊止血"}],"answer":"A","explain_ok":"答對了。外滲部位不要壓。壓迫會把已經在皮下的藥品推開，浸潤範圍變大，起疱性藥品一擴散就是更大面積的組織壞死。拔針後用紗布輕輕覆蓋即可。","explain_ng":"正確答案是不可以壓迫。這跟一般拔針不同，皮下有藥品時一壓就把藥推開，浸潤範圍變大；起疱性藥品一擴散就是更大面積的組織壞死。拔針後用紗布輕輕覆蓋即可。","img":"s304、s312–313（勿壓迫／紗布覆蓋）","form_item":"13","text_hash":{"ok":"5f06c2ac","ng":"ec99eb98","stem":"f1b8771c"}},{"id":18,"block":"E","block_name":"初步處理","use":["handson","test"],"stem":"為什麼要用油性筆把外滲範圍標示出來？","note":"","options":[{"key":"A","text":"標出當下的外滲邊界，之後才能比較範圍有沒有擴大，也是拍照與交班的依據"},{"key":"B","text":"提醒同事不要在這隻手打針"}],"answer":"A","explain_ok":"答對了。油性筆沿著外滲邊界畫一圈，是替「現在」留下記號。之後每天觀察、拍照上傳、交班，都拿這條線比對範圍有沒有擴大。要用油性筆是因為不會被汗水或敷料擦掉。","explain_ng":"正確答案是標出當下的外滲邊界，供後續比較與拍照交班。油性筆的線是「現在」的記號，之後每天觀察、拍照、交班都拿它比對範圍有沒有擴大；用油性筆是因為不會被汗水或敷料擦掉。","img":"s325（限制藥品擴散到周圍組織）※待核是否有油性筆畫面","form_item":"14","text_hash":{"ok":"32c7c8ec","ng":"e8996ed1","stem":"5b72e157"}},{"id":19,"block":"E","block_name":"初步處理","use":["handson","test"],"stem":"外滲部位要冰敷還是熱敷？","note":"","options":[{"key":"A","text":"依外滲的藥品種類決定，要查「各類化療藥品外滲處置方法」"},{"key":"B","text":"一律冰敷，因為可以消腫止痛"},{"key":"C","text":"一律熱敷，因為可以促進吸收"}],"answer":"A","explain_ok":"答對了。冰敷或熱敷不是看腫不腫，是看藥品。多數起疱性藥品用冰敷讓藥品局限在局部；少數藥品（例如 Vinca alkaloid 類、Oxaliplatin）反而要熱敷幫助擴散吸收，冰敷會加重傷害。所以一定要查表，不憑印象。","explain_ng":"正確答案是依藥品種類決定並查表。冰敷或熱敷不是看腫不腫，是看藥品：多數起疱性藥品用冰敷，但 Vinca alkaloid 類與 Oxaliplatin 要熱敷，用錯方向會加重傷害。不憑印象，查「各類化療藥品外滲處置方法」。","img":"s316–322、s329–332（敷療／敷療方式）","form_item":"15","text_hash":{"ok":"d24b96a5","ng":"39462f54","stem":"2675d46f"}},{"id":20,"block":"E","block_name":"初步處理","use":["handson","test"],"stem":"哪一類化療藥品外滲時，可依醫囑在局部塗抹 DMSO？","note":"","options":[{"key":"A","text":"Anthracycline 類（Doxorubicin、Idarubicin、Epirubicin、Daunorubicin）與抗生素類（Mitomycin-C）"},{"key":"B","text":"所有起疱性化療藥品都可以"},{"key":"C","text":"鉑類藥品（Cisplatin、Oxaliplatin）"}],"answer":"A","explain_ok":"答對了。DMSO 是針對 Anthracycline 類與 Mitomycin-C 外滲的局部處置，依醫囑塗抹，使用方法要看「DMSO 化療藥品外滲使用需知」。其他藥品外滲不是用 DMSO 處理。","explain_ng":"正確答案是 Anthracycline 類與 Mitomycin-C。DMSO 不是所有起疱性藥品通用，鉑類也不是它的適應症；只有 Anthracycline 類與 Mitomycin-C 外滲時依醫囑局部塗抹，用法看「DMSO 化療藥品外滲使用需知」。","img":"s329–332（敷療方式）※待核是否有 DMSO 頁","form_item":"16","text_hash":{"ok":"6bfc4627","ng":"12d0fd23","stem":"170b23f4"}},{"id":21,"block":"F","block_name":"後續處置","use":["coach","test"],"stem":"周邊靜脈外滲後，患肢要抬高多久？","note":"","options":[{"key":"A","text":"至少 48 小時，以減少腫脹"},{"key":"B","text":"抬高到不痛就可以放下"},{"key":"C","text":"不需要抬高，保持平放讓藥品擴散吸收"}],"answer":"A","explain_ok":"答對了。周邊外滲的患肢至少抬高 48 小時，讓組織液與藥品靠重力回流、減少腫脹。抬高的高度要超過心臟，睡覺時墊枕頭也算。","explain_ng":"正確答案是至少 48 小時。抬高是靠重力幫組織液回流、減少腫脹，不痛不代表腫脹已經消退；平放讓藥品擴散反而是我們要避免的事。抬高的高度要超過心臟。","img":"s316–326（肢端抬高）","form_item":"17","text_hash":{"ok":"117fcc68","ng":"eab7174a","stem":"307fec5c"}},{"id":22,"block":"F","block_name":"後續處置","use":["coach","test"],"stem":"病人住院期間，外滲部位每天要觀察並記錄哪些項目？若症狀沒有改善要怎麼辦？","note":"","options":[{"key":"A","text":"皮膚顏色、溫度、完整性、腫脹、水泡、分泌物、疼痛指數、灼熱感或麻木感、患肢活動狀況、體溫升高或其他感染徵象；沒有改善或惡化要告知醫師，必要時照會外科部或皮膚部"},{"key":"B","text":"只要看有沒有紅腫就好，紅腫消了就不用再記錄"},{"key":"C","text":"觀察三天，三天後交給病人自己看"}],"answer":"A","explain_ok":"答對了。每天要看的是十件事：顏色、溫度、完整性、腫脹、水泡、分泌物、疼痛指數、灼熱或麻木、患肢活動、體溫與感染徵象，可以直接用護理過程的預設內容帶出來，記到症狀改善為止。沒有改善或惡化，要告知醫師，必要時照會外科部或皮膚部。","explain_ng":"正確答案是十項全部每天記錄到症狀改善為止，惡化要告知醫師並視需要照會外科部或皮膚部。外滲的組織傷害常在幾天後才浮現，只看紅腫、或觀察三天就停，會錯過惡化的時間點。護理過程有預設內容可以帶出來，不用自己記十項。","img":"s336–344（護理過程記錄）※待核觀察項目頁","form_item":"18","text_hash":{"ok":"c2f3587a","ng":"fbf06311","stem":"b477a346"}},{"id":23,"block":"F","block_name":"後續處置","use":["coach","test"],"stem":"外滲處理後，對病人與家屬要做什麼？","note":"","options":[{"key":"A","text":"提供化療藥品外滲處理相關的照護指導：怎麼抬高、怎麼冰敷或熱敷、要注意哪些惡化徵象、什麼情況要回診"},{"key":"B","text":"不用特別說明，以免病人擔心"}],"answer":"A","explain_ok":"答對了。病人與家屬會接手後續照護，尤其返家後。指導內容包含抬高患肢、冰敷或熱敷的方式與時間、每天自己看哪些惡化徵象、症狀惡化時要就醫。說清楚，病人才會在家做對。","explain_ng":"正確答案是要提供照護指導。病人與家屬會接手後續照護，尤其返家後；不說反而讓病人不知道抬高、敷療怎麼做，也不知道哪些徵象要回診。指導內容包含抬高、敷療方式、惡化徵象、就醫時機。","img":"s255–262、s327–332（護理指導）","form_item":"19","text_hash":{"ok":"3002be05","ng":"dc3c904b","stem":"ba660edd"}},{"id":24,"block":"G","block_name":"紀錄與通報","use":["learn_g","test"],"stem":"外滲事件要記錄在哪裡？","note":"","options":[{"key":"A","text":"護理過程紀錄"},{"key":"B","text":"只要口頭交班就好"},{"key":"C","text":"寫在給藥單背面"}],"answer":"A","explain_ok":"答對了。外滲事件要在護理過程記錄：發生時間、藥品、部位、外滲範圍、剩餘藥量與回抽量、處置、病人反應。這份紀錄是後續每天觀察的比對基準，也是事件回溯的依據。","explain_ng":"正確答案是護理過程紀錄。口頭交班會流失細節，給藥單不是紀錄外滲事件的地方。護理過程要記發生時間、藥品、部位、範圍、剩餘藥量與回抽量、處置、病人反應，這是後續比對與回溯的依據。","img":"s336–344（發生當下紀錄／護理過程記錄）","form_item":"20","text_hash":{"ok":"61ab9686","ng":"b25d37cd","stem":"4e4758fe"}},{"id":25,"block":"G","block_name":"紀錄與通報","use":["learn_g","test"],"stem":"起疱性化療藥品外滲時，除了文字紀錄，還要做什麼？","note":"","options":[{"key":"A","text":"把外滲部位皮膚拍照上傳 Portal 系統；之後皮膚症狀惡化時也要再拍照上傳"},{"key":"B","text":"不用拍照，文字描述就夠了"},{"key":"C","text":"只拍照存在自己手機備查"}],"answer":"A","explain_ok":"答對了。起疱性藥品外滲當下就拍照上傳 Portal，症狀惡化時再拍一次上傳。照片配合油性筆畫的邊界，範圍變化一看就知道，也讓醫師與腫瘤品管能遠端判讀。","explain_ng":"正確答案是拍照上傳 Portal，惡化時再拍再傳。文字描述無法呈現範圍與顏色變化；存在自己手機不在病歷系統裡，醫師與腫瘤品管看不到，也有個資問題。照片配合油性筆邊界，範圍變化一看就知道。","img":"s345–346（務必拍照情境）","form_item":"21","text_hash":{"ok":"c309977b","ng":"40c75f90","stem":"e9db914d"}},{"id":26,"block":"G","block_name":"紀錄與通報","use":["learn_g","test"],"stem":"外滲事件的異常事件通報，誰在什麼時候完成？","note":"","options":[{"key":"A","text":"發生外滲的當班就要完成通報"},{"key":"B","text":"等病人症狀確定惡化再通報"},{"key":"C","text":"由護理長在一週內通報"}],"answer":"A","explain_ok":"答對了。異常事件通報是當班完成，不等結果。通報不是追究責任，是讓事件進入系統，後面的追蹤機制與改善才會啟動。","explain_ng":"正確答案是當班完成。等症狀惡化再通報，會漏掉沒有惡化但確實發生的事件；通報是護理師當班的責任，不是護理長一週內的事。通報是讓事件進入系統，追蹤與改善才會啟動。","img":"s335–344（紀錄）※待核通報頁","form_item":"22","text_hash":{"ok":"abb645a4","ng":"473521b3","stem":"5ee71306"}},{"id":27,"block":"G","block_name":"紀錄與通報","use":["learn_g","test"],"stem":"起疱性化療藥品外滲後，返家病人的追蹤機制是什麼？","note":"","options":[{"key":"A","text":"症狀未改善而返家自我照護的病人，返家第一週由病房護理師電訪追蹤，第二週起由腫瘤品管護理師每週追蹤一次，追蹤到外滲後 6 週且症狀未惡化，或外科處置後改善為止"},{"key":"B","text":"出院就結案，病人不舒服自己回診"},{"key":"C","text":"只追蹤到出院後一週"}],"answer":"A","explain_ok":"答對了。追蹤對象是外滲後症狀還沒改善、要回家自我照護的病人。第一週病房護理師依「起疱性化療藥品外滲持續追蹤紀錄表」電訪；第二週起交給腫瘤品管護理師每週一次；追到外滲後 6 週且症狀沒有惡化，或接受外科處置後改善，才結束。電訪中病人說惡化，要指導就醫。","explain_ng":"正確答案是病房追蹤第一週、腫瘤品管第二週起每週一次、追到 6 週或外科處置後改善。起疱性藥品的組織壞死可能在出院後才浮現，出院就結案或只追一週都會漏掉。依「起疱性化療藥品外滲持續追蹤紀錄表」電訪，病人主訴惡化要指導就醫。","img":"s360–361（起疱性化療藥品外滲後續追蹤機制）","form_item":"23","text_hash":{"ok":"ab9a3e7c","ng":"dddaf651","stem":"02df77b7"}}]}</script>
+
+<script>
+(function(){
+'use strict';
+const IMG='../assets/img/', AUD='../assets/audio/', DATA='../assets/data/questions.json', KEY='xr_learn_v1';
+// 首頁五個方塊（UI 標籤依分工檔規格；題目文字一律來自 JSON）
+const TILES=[
+  {b:'A',name:'導管與監測',ic:'🩺'},
+  {b:'B',name:'留置針管徑',ic:'💉'},
+  {b:'C',name:'注射部位',ic:'💪'},
+  {b:'D',name:'徵象辨識',ic:'👀'},
+  {b:'G',name:'紀錄與追蹤',ic:'📋'}
+];
+// ⑤ 四張圖卡標題＝規格檔 7-4 所列主題；每卡配 1 題自我檢核（依序對應 use 含 learn_g 的題）
+const CARDS=[
+  {id:'g01',title:'護理過程記錄要寫什麼',sub:'發生時間、藥品、部位、範圍、剩餘藥量與回抽量、處置、病人反應'},
+  {id:'g02',title:'起疱性外滲拍照上傳 Portal',sub:'發生當下拍照上傳；皮膚症狀惡化時再拍再傳'},
+  {id:'g03',title:'當班完成異常事件通報',sub:'讓事件進入系統，追蹤與改善才會啟動'},
+  {id:'g04',title:'6 週追蹤機制',sub:'返家第 1 週病房、第 2 週起品管每週電訪、結束時機'}
+];
+
+let Q=[], byId={}, learnQ=[], gQ=[], blocks={};
+let st=load();
+let curAudio=null;
+const $=id=>document.getElementById(id);
+const app=$('app');
+
+function load(){ try{ const s=JSON.parse(localStorage.getItem(KEY)||'null'); if(s&&s.ans) return Object.assign({auto:true,gans:{}},s);}catch(e){} return {ans:{},gans:{},auto:true}; }
+function save(){ try{ localStorage.setItem(KEY,JSON.stringify(st)); }catch(e){} }
+function el(tag,cls,html){ const e=document.createElement(tag); if(cls) e.className=cls; if(html!=null) e.innerHTML=html; return e; }
+function esc(s){ return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function stopAudio(){ if(curAudio){ try{curAudio.pause();}catch(e){} curAudio=null; } }
+function go(h){ location.hash=h; }
+function qid(q){ return 'q'+String(q.id).padStart(2,'0'); }
+
+/* ── 資料載入：先 fetch，失敗再讀內嵌 #qdata ── */
+async function loadData(){
+  try{
+    const r=await fetch(DATA,{cache:'no-store'});
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    return await r.json();
+  }catch(e){
+    const t=($('qdata').textContent||'').trim();
+    if(t) return JSON.parse(t);
+    throw e;
+  }
+}
+
+/* ── 圖片：qNN.png → qNN.jpg → 灰底佔位（不報錯） ── */
+function imgEl(base,alt){
+  const box=el('div','fig'); const im=new Image(); im.alt=alt||'';
+  const cands=[IMG+base+'.png',IMG+base+'.jpg']; let i=0;
+  im.onerror=()=>{ i++; if(i<cands.length){ im.src=cands[i]; } else { box.innerHTML=''; box.classList.add('ph'); box.textContent='🖼 圖片準備中'; } };
+  im.src=cands[0]; box.appendChild(im); return box;
+}
+
+/* ── 音檔：候選清單依序嘗試；全部失敗顯示提示；autoplay 可關 ── */
+function audioEl(cands,autoplay,label){
+  const wrap=el('div','aud'); const a=document.createElement('audio'); a.controls=true; a.preload='auto'; a.setAttribute('aria-label',label||'講解音檔');
+  const note=el('div','audnote',''); let i=0;
+  a.addEventListener('error',()=>{
+    i++;
+    if(i<cands.length){ if(cands[i].fallbackNote) note.textContent=cands[i].fallbackNote; a.src=cands[i].src; if(autoplay&&st.auto) a.play().catch(()=>{}); }
+    else { a.remove(); note.textContent='🔇 音檔尚未提供（素材到位後自動出現）'; }
+  });
+  a.addEventListener('play',()=>{ if(curAudio&&curAudio!==a){ try{curAudio.pause();}catch(e){} } curAudio=a; });
+  a.src=cands[0].src; wrap.appendChild(a); wrap.appendChild(note);
+  if(autoplay&&st.auto){ a.play().catch(()=>{ note.textContent='▶ 點播放鍵聽講解'; }); }
+  return wrap;
+}
+
+/* ── 進度條 ── */
+function setProg(show,lbl,done,total){
+  const p=$('prog'); if(!show){ p.classList.remove('show'); return; }
+  p.classList.add('show'); $('plbl').textContent=lbl; $('pnum').textContent=done+'／'+total;
+  $('pbar').style.width=(total?Math.round(done/total*100):0)+'%';
+}
+function setHead(title,back){ $('ttl').textContent=title; $('back').textContent=back; }
+
+/* ── 題目卡（A–D 計入總複習；G 自我檢核不計） ── */
+function questionCard(q,opts){
+  const counted=opts.counted!==false; const store=counted?st.ans:st.gans;
+  const card=el('section','card'); card.style.setProperty('--c','var(--c'+q.block+')');
+  card.appendChild(el('div','qno','Q'+q.id+'・'+esc(q.block_name||'')));
+  card.appendChild(el('h2','stem',esc(q.stem)));
+  const imgWithStem=!!(q.note&&q.note.trim());       // 規格標「搭配圖片」的題（note 非空），圖隨題幹先出現
+  if(imgWithStem) card.appendChild(imgEl(qid(q),'Q'+q.id+' 圖'));
+  const optsBox=el('div','opts'); card.appendChild(optsBox);
+  const btns=[];
+  q.options.forEach(o=>{
+    const b=el('button','opt'); b.type='button'; b.dataset.key=o.key;
+    b.innerHTML='<span class="k">'+esc(o.key)+'</span><span class="t">'+esc(o.text)+'</span>';
+    b.addEventListener('click',()=>answer(o.key,true)); optsBox.appendChild(b); btns.push(b);
+  });
+  let expBox=null;
+  function answer(key,fresh){
+    if(expBox) return;
+    store[q.id]=key; save();
+    const right=key===q.answer;
+    btns.forEach(b=>{ b.disabled=true; if(b.dataset.key===q.answer) b.classList.add('ok'); else if(b.dataset.key===key) b.classList.add('ng'); });
+    expBox=el('div','exp '+(right?'ok':'ng'));
+    expBox.appendChild(el('div','ttl',right?'✅ 答對了':'❌ 答錯了，正解是 '+esc(q.answer)));
+    expBox.appendChild(el('p',null,esc(right?q.explain_ok:q.explain_ng)));
+    if(!imgWithStem) expBox.appendChild(imgEl(qid(q),'Q'+q.id+' 講解圖'));
+    expBox.appendChild(audioEl([{src:AUD+qid(q)+(right?'_ok':'_ng')+'.mp3'}],fresh,'Q'+q.id+' 講解音檔'));
+    const row=el('div','row');
+    (opts.actions||[]).forEach(ac=>{ const b=el('button','btn'+(ac.sec?' sec':'')+(ac.lite?' lite':''),ac.label); b.type='button'; b.addEventListener('click',()=>{stopAudio();ac.go();}); row.appendChild(b); });
+    expBox.appendChild(row); card.appendChild(expBox);
+    if(fresh) setTimeout(()=>expBox.scrollIntoView({behavior:'smooth',block:'start'}),60);
+    if(opts.onAnswer) opts.onAnswer(right);
+  }
+  if(store[q.id]&&opts.showPrev!==false) answer(store[q.id],false);   // 回看已答過的題：直接鎖定並顯示講解，不自動播
+  return card;
+}
+
+/* ── 首頁 ── */
+function renderHome(){
+  stopAudio(); setHead('自學：預防與辨識','← 回首頁'); setProg(false);
+  app.innerHTML='';
+  app.appendChild(el('div','hint','先選答案再看講解，答對答錯各有一版講解與語音。區塊 A–D 共 '+learnQ.length+' 題，做完出總複習；區塊 G 是圖卡＋自我檢核，不計分。'));
+  const grid=el('div','grid');
+  TILES.forEach(t=>{
+    const list=t.b==='G'?gQ:(blocks[t.b]||[]); const store=t.b==='G'?st.gans:st.ans;
+    const done=list.filter(q=>store[q.id]).length; const total=list.length;
+    const b=el('button','tile t'+t.b); b.type='button';
+    let stCls='',stTxt=done?done+'／'+total:'開始';
+    if(total&&done===total){ stCls='done'; stTxt='✓ 完成'; } else if(done){ stCls='part'; }
+    const sub=t.b==='G'?(CARDS.length+' 張圖卡・'+total+' 題自我檢核'):(total+' 題');
+    b.innerHTML='<span class="bl">'+t.b+'</span><span class="tx"><h2>'+t.ic+' '+esc(t.name)+'</h2><div class="sub">'+esc(sub)+'</div></span><span class="st '+stCls+'">'+esc(stTxt)+'</span>';
+    b.addEventListener('click',()=>go('#'+t.b)); grid.appendChild(b);
+  });
+  app.appendChild(grid);
+  const doneAll=learnQ.filter(q=>st.ans[q.id]).length;
+  const rv=el('section','card');
+  rv.appendChild(el('div','mut','總複習（區塊 A–D）'));
+  const row=el('div','rev');
+  row.appendChild(el('span','num',doneAll+'／'+learnQ.length+' 題已作答'));
+  const b1=el('button','btn',doneAll===learnQ.length?'看總複習':'全部做完才能看總複習'); b1.type='button'; b1.disabled=doneAll!==learnQ.length; b1.style.flex='1 1 100%'; b1.addEventListener('click',()=>go('#review'));
+  const b2=el('button','btn lite','重新開始'); b2.type='button'; b2.style.flex='1 1 100%'; b2.addEventListener('click',()=>{ if(!doneAll&&!Object.keys(st.gans).length) return; st.ans={}; st.gans={}; save(); renderHome(); });
+  row.appendChild(b1); row.appendChild(b2); rv.appendChild(row); app.appendChild(rv);
+  window.scrollTo(0,0);
+}
+
+/* ── 區塊 A–D 逐題 ── */
+function nextBlockWithGap(after){
+  const order=['A','B','C','D']; const i=order.indexOf(after);
+  for(let k=1;k<=order.length;k++){ const b=order[(i+k)%order.length]; if((blocks[b]||[]).some(q=>!st.ans[q.id])) return b; }
+  return null;
+}
+function renderQuiz(block,idx){
+  stopAudio();
+  const list=blocks[block]||[]; if(!list.length){ go('#home'); return; }
+  if(idx==null){ idx=list.findIndex(q=>!st.ans[q.id]); if(idx<0) idx=0; }
+  idx=Math.max(0,Math.min(idx,list.length-1));
+  const q=list[idx]; const tile=TILES.find(t=>t.b===block);
+  setHead('區塊 '+block+'・'+tile.name,'← 區塊列表');
+  const lbl='區塊 '+block+' 第 '+(idx+1)+'／'+list.length+' 題・A–D 進度';
+  setProg(true,lbl,learnQ.filter(x=>st.ans[x.id]).length,learnQ.length);
+  app.innerHTML='';
+  const last=idx===list.length-1;
+  const allDone=()=>learnQ.every(x=>st.ans[x.id]);
+  const actions=[];
+  if(!last) actions.push({label:'下一題 →',go:()=>go('#'+block+'/'+(idx+2))});
+  else{
+    // 這一區做完：A–D 全答完 → 看總複習；否則帶去下一個還有未答題的區塊
+    actions.push({label:'繼續 →',go:()=>{ const nb=nextBlockWithGap(block); if(allDone()) go('#review'); else if(nb) go('#'+nb); else go('#home'); }});
+    actions.push({label:'回區塊列表',sec:true,go:()=>go('#home')});
+  }
+  const card=questionCard(q,{counted:true,actions,onAnswer:()=>{
+    setProg(true,lbl,learnQ.filter(x=>st.ans[x.id]).length,learnQ.length);
+    if(last){ const b=app.querySelector('.exp .row .btn'); if(b){ const nb=nextBlockWithGap(block); b.textContent=allDone()?'看總複習 →':(nb?'下一區塊 '+nb+' →':'回首頁'); } }
+  }});
+  app.appendChild(card);
+  if(idx>0){ const r=el('div','row'); const b=el('button','btn lite','← 上一題'); b.type='button'; b.addEventListener('click',()=>go('#'+block+'/'+idx)); r.appendChild(b); app.appendChild(r); }
+  window.scrollTo(0,0);
+}
+
+/* ── 總複習 ── */
+function renderReview(){
+  stopAudio(); setHead('總複習','← 回首頁'); setProg(false); app.innerHTML='';
+  const done=learnQ.filter(q=>st.ans[q.id]); const wrong=learnQ.filter(q=>st.ans[q.id]&&st.ans[q.id]!==q.answer);
+  const right=done.length-wrong.length;
+  const s=el('section','card');
+  s.appendChild(el('div','mut','區塊 A–D 作答結果'));
+  s.appendChild(el('div','rev','<span class="num">答對 '+right+'／'+learnQ.length+'</span><span class="mut">已作答 '+done.length+' 題・答錯 '+wrong.length+' 題</span>'));
+  app.appendChild(s);
+  const w=el('section','card');
+  if(!wrong.length){ w.appendChild(el('div',null,done.length===learnQ.length?'🎉 全部答對，沒有需要重做的題目。':'目前沒有答錯的題目，還有 '+(learnQ.length-done.length)+' 題未作答。')); }
+  else{
+    w.appendChild(el('div','mut','答錯的題目（點「重做」再做一次，重做結果會覆蓋原紀錄）'));
+    w.style.paddingBottom='8px';
+    wrong.forEach(q=>{
+      const r=el('div','wrong'); r.appendChild(el('div','q','<b>Q'+q.id+'</b>・區塊 '+q.block+'<span>'+esc(q.stem)+'</span>'));
+      const b=el('button',null,'重做'); b.type='button'; b.addEventListener('click',()=>go('#redo/'+q.id)); r.appendChild(b); w.appendChild(r);
+    });
+  }
+  app.appendChild(w);
+  const row=el('div','row');
+  const b1=el('button','btn sec','回首頁'); b1.type='button'; b1.addEventListener('click',()=>go('#home'));
+  const b2=el('button','btn','前往 G 紀錄與追蹤 →'); b2.type='button'; b2.addEventListener('click',()=>go('#G'));
+  const b3=el('button','btn lite','A–D 全部重做'); b3.type='button'; b3.style.flex='1 1 100%'; b3.addEventListener('click',()=>{ st.ans={}; save(); go('#A'); });
+  row.appendChild(b1); row.appendChild(b2); row.appendChild(b3); app.appendChild(row);
+  window.scrollTo(0,0);
+}
+
+/* ── 重做單題（來自總複習） ── */
+function renderRedo(id){
+  stopAudio(); const q=byId[id]; if(!q){ go('#review'); return; }
+  setHead('重做 Q'+id,'← 總複習'); setProg(false); app.innerHTML='';
+  delete st.ans[id]; save();
+  app.appendChild(questionCard(q,{counted:true,showPrev:false,actions:[{label:'回總複習 →',go:()=>go('#review')}]}));
+  window.scrollTo(0,0);
+}
+
+/* ── ⑤ 區塊 G：4 張圖卡＋各 1 題自我檢核（不計分） ── */
+function renderCards(idx){
+  stopAudio();
+  idx=Math.max(0,Math.min(idx||0,CARDS.length-1));
+  const c=CARDS[idx]; const q=gQ[idx];
+  setHead('區塊 G・紀錄與追蹤','← 區塊列表');
+  const lbl='圖卡 第 '+(idx+1)+'／'+CARDS.length+' 張';
+  setProg(true,lbl,idx,CARDS.length);
+  app.innerHTML='';
+  const card=el('section','card gcard');
+  card.appendChild(el('div','num','圖卡 '+(idx+1)+'／'+CARDS.length));
+  card.appendChild(el('h2',null,esc(c.title)));
+  card.appendChild(el('div','sub',esc(c.sub)));
+  card.appendChild(imgEl(c.id,c.title));
+  // 卡片旁白 g0N.mp3；尚未供應時暫播同主題自我檢核題的講解-對音檔
+  const cands=[{src:AUD+c.id+'.mp3'}];
+  if(q) cands.push({src:AUD+qid(q)+'_ok.mp3',fallbackNote:'（卡片旁白音檔尚未供應，暫播 Q'+q.id+' 講解音檔）'});
+  card.appendChild(audioEl(cands,false,'圖卡 '+(idx+1)+' 旁白'));
+  app.appendChild(card);
+  if(q){
+    const chk=el('section','card check'); chk.style.borderTop='0';
+    chk.appendChild(el('div','tag','✍️ 自我檢核（不計分）'));
+    const last=idx===CARDS.length-1;
+    const actions=last?[{label:'完成，回區塊列表 →',go:()=>go('#home')}]:[{label:'下一張圖卡 →',go:()=>go('#G/'+(idx+2))}];
+    chk.appendChild(questionCard(q,{counted:false,actions,onAnswer:()=>setProg(true,lbl,idx+1,CARDS.length)}));
+    app.appendChild(chk);
+  }
+  const r=el('div','row');
+  if(idx>0){ const b=el('button','btn lite','← 上一張'); b.type='button'; b.addEventListener('click',()=>go('#G/'+idx)); r.appendChild(b); }
+  if(idx<CARDS.length-1){ const b=el('button','btn lite','跳到下一張 →'); b.type='button'; b.addEventListener('click',()=>go('#G/'+(idx+2))); r.appendChild(b); }
+  if(r.children.length) app.appendChild(r);
+  window.scrollTo(0,0);
+}
+
+/* ── 路由（hash） ── */
+function route(){
+  const h=(location.hash||'#home').slice(1); const [a,b]=h.split('/');
+  if(a==='review') return renderReview();
+  if(a==='redo'&&b) return renderRedo(+b);
+  if(a==='G') return renderCards(b?+b-1:0);
+  if(blocks[a]) return renderQuiz(a,b?+b-1:null);
+  renderHome();
+}
+$('back').addEventListener('click',()=>{ stopAudio(); const h=location.hash||'#home'; if(h==='#home'){ location.href='../'; } else if(h.startsWith('#redo')){ go('#review'); } else go('#home'); });
+function paintAuto(){ const b=$('auto'); b.textContent=st.auto?'🔊 自動播放 開':'🔇 自動播放 關'; b.classList.toggle('off',!st.auto); b.setAttribute('aria-pressed',String(st.auto)); }
+$('auto').addEventListener('click',()=>{ st.auto=!st.auto; save(); paintAuto(); if(!st.auto) stopAudio(); });
+paintAuto();
+
+loadData().then(d=>{
+  Q=(Array.isArray(d)?d:(d.questions||[])).slice().sort((x,y)=>x.id-y.id);
+  Q.forEach(q=>byId[q.id]=q);
+  learnQ=Q.filter(q=>(q.use||[]).includes('learn'));
+  gQ=Q.filter(q=>(q.use||[]).includes('learn_g'));
+  learnQ.forEach(q=>{ (blocks[q.block]=blocks[q.block]||[]).push(q); });
+  window.addEventListener('hashchange',route); route();
+}).catch(e=>{
+  app.innerHTML='<div class="err"><b>題目資料載入失敗。</b><br>請經由網站網址開啟（GitHub Pages 或本機 http 伺服器）；以 file:// 直接開啟時需先由 build 腳本注入題目資料。<br><span class="mut">'+esc(e&&e.message||e)+'</span></div>';
+});
+})();
+</script>
+</body>
+</html>

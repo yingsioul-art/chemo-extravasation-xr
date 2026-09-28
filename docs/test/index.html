@@ -136,7 +136,7 @@ textarea{width:100%;min-height:90px;font-size:1rem;padding:10px;border:2px solid
     <div id="sat-list"></div>
     <div class="sq hide" id="sq-V_WHY"><p class="t">沒有使用另一個版本的主要原因是？</p><div class="choice" id="why"></div></div>
     <div class="sq hide" id="sq-V_PREF"><p class="t">兩個版本相比，你比較喜歡哪一個？</p><div class="choice" id="pref"></div></div>
-    <div class="sq hide" id="sq-OPEN"><p class="t">最喜歡的地方，或建議改進的地方（選填）</p><textarea id="open" maxlength="500"></textarea></div>
+    <div class="sq" id="sq-OPEN"><p class="t">這套教材有哪裡建議調整？歡迎寫下你的想法（選填，可留白）</p><textarea id="open" maxlength="1000" placeholder="例如：哪一段不清楚、操作卡住的地方、希望增加的內容……"></textarea></div>
     <div id="sat-err" class="err" aria-live="polite"></div>
     <button type="button" class="btn" id="btn-sat-next">送出全部作答</button>
   </div>
@@ -375,7 +375,6 @@ function renderSat() {
   const single = S.sat.V0 === "2d" || S.sat.V0 === "vr";
   $("sq-V_WHY").classList.toggle("hide", !single);
   $("sq-V_PREF").classList.toggle("hide", S.sat.V0 !== "both");
-  $("sq-OPEN").classList.toggle("hide", !S.sat.V0);
   choiceBox("why", WHY_OPTS, S.sat.V_WHY, v => { S.sat.V_WHY = v; saveState(); renderSat(); });
   choiceBox("pref", PREF_OPTS, S.sat.V_PREF, v => { S.sat.V_PREF = v; saveState(); renderSat(); });
   if (document.activeElement !== $("open")) $("open").value = S.sat.OPEN || "";

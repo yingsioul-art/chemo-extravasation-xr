@@ -1,6 +1,6 @@
 <!DOCTYPE html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>練習：對 AI 病人做衛教</title>
-<meta name="description" content="化療藥品外滲後續處置（表單 17–19）：把提示詞貼給 Copilot，AI 扮演外滲病人，你用口語做出院衛教，AI 依六項檢核表逐項回饋。">
+<meta name="description" content="化療藥品外滲後續處置（表單 17–19）：把提示詞貼給生成式 AI（Copilot、ChatGPT、Gemini 等），AI 扮演外滲病人，你用口語做出院衛教，AI 依六項檢核表逐項回饋。">
 <style>
 :root{--bg:#f4f7fb;--card:#fff;--ink:#1c2430;--mut:#5b6675;--line:#e3e8ef;--navy:#123a6b;--red:#c81e3a;--cold:#1f6fd0;--warm:#d9541e;--dmso:#7a3fb5;--ok:#2e8b57;--soft:#fff4f6;--gold:#b7791f}
 *{box-sizing:border-box}
@@ -96,12 +96,29 @@ summary::after{content:"＋";color:var(--mut)}details[open] summary::after{conte
 .dock .btn{flex:none}
 footer{text-align:center;color:var(--mut);font-size:.8rem;padding:16px}
 .hide{display:none!important}
+.guide{border:2px dashed #bcd0ea;border-radius:14px;padding:12px 14px;margin:12px 0;background:#f7faff}
+.guide>summary{cursor:pointer;font-weight:700;color:var(--navy);font-size:1rem;list-style:none}
+.guide>summary::before{content:"▶ ";font-size:.8rem}.guide[open]>summary::before{content:"▼ "}
+.tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin:10px 0}
+.tools a{display:block;border:1px solid var(--line);border-radius:12px;background:#fff;padding:10px;text-decoration:none;color:var(--ink);text-align:center;font-size:.9rem}
+.tools a b{display:block;font-size:1rem;color:var(--navy)}.tools a small{color:var(--mut)}
+.howto{counter-reset:h;list-style:none;padding:0;margin:8px 0}
+.howto li{counter-increment:h;position:relative;padding:8px 10px 8px 44px;margin:6px 0;background:#fff;border:1px solid var(--line);border-radius:12px;font-size:.92rem}
+.howto li::before{content:counter(h);position:absolute;left:10px;top:8px;width:24px;height:24px;border-radius:50%;background:var(--navy);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;font-size:.85rem}
+.mock{background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px;margin:8px 0}
+.mock .row{display:flex;margin:6px 0}.mock .row.me{justify-content:flex-end}
+.mock .bub{max-width:82%;padding:8px 12px;border-radius:14px;font-size:.9rem;line-height:1.5}
+.mock .ai .bub{background:#eef2f7;border-top-left-radius:4px}.mock .me .bub{background:#1f6fd0;color:#fff;border-top-right-radius:4px}
+.mock .who{font-size:.72rem;color:var(--mut);margin:0 6px}
+.mock .tip{font-size:.8rem;color:var(--gold);margin:2px 0 8px;text-align:center}
+.faq dt{font-weight:700;margin-top:8px;font-size:.92rem}.faq dd{margin:2px 0 0 0;font-size:.9rem;color:var(--ink)}
+
 .stepbar a.lock{opacity:.45;cursor:default}
 .sec.wiz{animation:fadein .25s ease}@keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 @media (max-width:480px){.sec{padding:14px}.stepbar a{font-size:.8rem}.stepbar a .txt{display:none}.stepbar a.on .txt{display:inline}}
 </style></head>
 <body>
-<header><div class="wrap"><a href="../">← 回首頁</a><h1>🗣️ 練習：對 AI 病人做衛教</h1><div class="flow"><div><span>🧊🔥</span>選案例</div><i>›</i><div><span>📋</span>複製提示詞</div><i>›</i><div><span>🤖</span>貼給 Copilot</div><i>›</i><div><span>🗣️</span>講衛教</div><i>›</i><div><span>✅</span>看回饋</div></div></div></header>
+<header><div class="wrap"><a href="../">← 回首頁</a><h1>🗣️ 練習：對 AI 病人做衛教</h1><div class="flow"><div><span>🧊🔥</span>選案例</div><i>›</i><div><span>📋</span>複製提示詞</div><i>›</i><div><span>🤖</span>貼給 AI</div><i>›</i><div><span>🗣️</span>講衛教</div><i>›</i><div><span>✅</span>看回饋</div></div></div></header>
 
 <nav class="stepbar"><div class="wrap">
 <a href="#" id="nav1" data-step="1" class="on"><span class="n">1</span><span class="txt">選案例</span></a>
@@ -115,6 +132,11 @@ footer{text-align:center;color:var(--mut);font-size:.8rem;padding:16px}
 <section class="sec wiz" id="s1">
 <div class="step"><span class="n">1</span><h2>選一個案例，決定 AI 扮誰</h2></div>
 <p class="sub">兩個案例敷法不同（一冷一熱），建議都練。</p>
+<details class="guide" open><summary>第一次用 AI 練習？先看這裡（1 分鐘）</summary>
+<p style="margin:8px 0 4px"><b>這個練習在做什麼：</b>我們準備好一段「提示詞」（給 AI 的說明書）。你把它貼給 AI，AI 就會<b>變成一位外滲的病人</b>，等你來做出院衛教。你講完後，AI 會依院內六個重點告訴你哪裡講得好、哪裡漏了。</p>
+<p style="margin:4px 0"><b>你不需要會寫提示詞</b>，也不用改任何字，只要「複製 → 貼上 → 開始聊天」。</p>
+<p style="margin:4px 0" class="note">🔒 AI 扮演的是虛擬病人，全部是示範資料。請不要在對話中輸入任何真實病人的姓名、病歷號等資料。</p>
+</details>
 <div class="cases" id="caseSeg">
 <button class="casecard c1 on" data-case="1"><div class="ic">🧊</div><h3>案例一｜Doxorubicin 外滲</h3><p>小紅莓・明天出院</p><div class="tags"><span class="tag tC">冷敷</span><span class="tag tD">DMSO</span></div></button>
 <button class="casecard c2" data-case="2"><div class="ic">🔥</div><h3>案例二｜Vincristine 外滲</h3><p>長春新鹼・後天出院</p><div class="tags"><span class="tag tW">熱敷</span></div></button>
@@ -123,23 +145,65 @@ footer{text-align:center;color:var(--mut);font-size:.8rem;padding:16px}
 <div class="pill" id="roleSeg"><button data-role="p" class="on">病人本人</button><button data-role="f">家屬（選配）</button></div>
 </div>
 <div class="casebox" id="caseBox"></div>
-<div class="hint ok" id="hint1">✅ <div><b>已選好。</b>下一步：把提示詞複製、貼給 Copilot。</div></div>
+<div class="hint ok" id="hint1">✅ <div><b>已選好。</b>下一步：把提示詞複製、貼給你慣用的 AI。</div></div>
 <div class="btnrow"><button class="btn big" id="go2">下一步：複製提示詞 ▶</button></div>
 </section>
 
 <!-- STEP 2 -->
 <section class="sec wiz hide" id="s2">
-<div class="step"><span class="n">2</span><h2>複製提示詞，貼給 Copilot</h2></div>
+<div class="step"><span class="n">2</span><h2>複製提示詞，貼給生成式 AI</h2></div>
 <p class="sub">提示詞已依你選的案例與角色組好，不用改任何字。</p>
 <button class="btn big" id="copyBtn">📋 複製提示詞</button>
 <div class="btnrow"><button class="btn line" id="dlBtn">⬇ 下載 .txt</button><button class="btn ghost" id="toggleBtn">看提示詞全文 ▾</button><span id="copied"></span></div>
 <div class="prewrap" id="prewrap"><pre id="promptBox"></pre><div class="fade"></div></div>
+<details class="guide" open><summary>要貼到哪裡？任何一個生成式 AI 都可以</summary>
+<div class="tools">
+<a href="https://copilot.microsoft.com/" target="_blank" rel="noopener"><b>Microsoft Copilot</b><small>院內帳號可登入</small></a>
+<a href="https://chatgpt.com/" target="_blank" rel="noopener"><b>ChatGPT</b><small>免費版即可</small></a>
+<a href="https://gemini.google.com/" target="_blank" rel="noopener"><b>Google Gemini</b><small>用 Google 帳號</small></a>
+<a href="https://claude.ai/" target="_blank" rel="noopener"><b>Claude</b><small>免費版即可</small></a>
+</div>
+<p class="note" style="margin:0">手機上也可以用這些 AI 的 App。挑一個你打得開的就好，效果差不多。</p>
+<ol class="howto">
+<li>按上面的 <b>📋 複製提示詞</b>（看到「✅ 已複製」就成功了）。</li>
+<li>點一個 AI 的連結打開，找到最下面的<b>輸入框</b>（通常寫著「詢問任何問題」「傳送訊息」）。</li>
+<li>在輸入框<b>長按（手機）或按右鍵（電腦）→ 貼上</b>，再按<b>送出</b>（紙飛機或 ↑ 按鈕）。</li>
+<li>AI 會先用病人的口氣跟你打招呼。接著<b>把它當成真的病人</b>，一句一句講衛教；可以打字，也可以按麥克風用說的。</li>
+<li>講完所有重點後，輸入 <b>「我說完了」</b>，AI 就會停止扮演，逐項給你回饋。</li>
+</ol>
+</details>
+
+<details class="guide"><summary>看範例：對話大概長這樣</summary>
+<div class="mock">
+<div class="tip">① 貼上提示詞送出後，AI 會開始扮演病人</div>
+<div class="row ai"><span class="who">AI</span><div class="bub">護理師你好……我手臂這裡還是有點脹脹的，明天就要回家了，回去要怎麼照顧啊？</div></div>
+<div class="tip">② 你像對病人一樣講（一次講一兩個重點就好）</div>
+<div class="row me"><div class="bub">王阿姨，回家後手要抬高，睡覺時可以墊一個枕頭，讓它高過心臟，至少 48 小時喔。</div><span class="who">你</span></div>
+<div class="row ai"><span class="who">AI</span><div class="bub">抬高……那我洗澡的時候也要抬嗎？冰敷要敷多久？</div></div>
+<div class="row me"><div class="bub">洗澡時盡量抬著就好。冰敷每次 20 分鐘，一天 4 次，敷兩天，記得不要壓、不要揉。</div><span class="who">你</span></div>
+<div class="tip">③ 繼續回答病人的問題……全部講完後輸入「我說完了」</div>
+<div class="row me"><div class="bub">我說完了</div><span class="who">你</span></div>
+<div class="row ai"><span class="who">AI</span><div class="bub">【回饋】✅ 抬高 48 小時：有講到。✅ 冷敷方式：有講到次數與時間。⬜ 回診時機：沒有提到哪些症狀要馬上回來……</div></div>
+</div>
+<p class="note">範例只示範流程，實際對話內容會依你講的而不同。</p>
+</details>
+
+<details class="guide"><summary>卡住了怎麼辦？</summary>
+<dl class="faq">
+<dt>😵 貼上後 AI 開始講一大段課，沒有當病人</dt><dd>回它一句：「請照提示詞的規則，扮演病人，用病人口氣、三句以內回答。」</dd>
+<dt>📋 按了複製，貼上沒東西</dt><dd>按「看提示詞全文」，用手指長按文字 → 全選 → 複製；或按「⬇ 下載 .txt」再打開複製。</dd>
+<dt>🔑 AI 網站要我登入</dt><dd>換另一個 AI 試試（ChatGPT、Gemini、Claude 用一般帳號即可），或用院內帳號登入 Copilot。</dd>
+<dt>🤔 不知道要講什麼</dt><dd>往下看「參考資料」的六項衛教重點，照著一項一項講就好，講錯了 AI 會在回饋裡告訴你。</dd>
+<dt>🔁 想重來</dt><dd>在 AI 網站開「新對話」，再貼一次提示詞。</dd>
+</dl>
+</details>
+
 <div class="next3">
-<div><b>🤖</b>打開 Copilot<br>貼上、送出</div>
+<div><b>🤖</b>打開 AI<br>貼上、送出</div>
 <div><b>🗣️</b>像對病人那樣講<br>打字或口說都可以</div>
 <div><b>🏁</b>講完打「我說完了」<br>AI 逐項回饋</div>
 </div>
-<div class="hint">💡 <div><b>小提醒：</b>最多 20 輪。AI 回得太長或開始教你，回它一句「請照提示詞的規則，用病人口氣、三句以內」。</div></div>
+<div class="hint">💡 <div><b>小提醒：</b>最多 20 輪（你講一次、AI 回一次算一輪）。練完回到這一頁，按下面的按鈕做自評。</div></div>
 <div class="btnrow"><button class="btn ghost" id="back1">◀ 上一步</button><button class="btn big" id="go3" style="flex:1">練完了 → 下一步：自評 ▶</button></div>
 </section>
 
@@ -270,7 +334,7 @@ function renderCase(){
  <div style="margin-top:4px">張示範，58 歲，${C.when}${C.site}外滲。${C.done} ${C.home}</div>
  <div class="note" style="margin-top:4px">本案敷法：${C.comp}<br>DMSO：${C.dmso}</div>`;
  $("#promptBox").textContent=buildPrompt(curCase,curRole);
- $("#hint1").innerHTML=`✅ <div><b>已選好：${C.short}・${R.short}。</b>下一步：把提示詞複製、貼給 Copilot。</div>`;
+ $("#hint1").innerHTML=`✅ <div><b>已選好：${C.short}・${R.short}。</b>下一步：把提示詞複製、貼給你慣用的 AI。</div>`;
  $("#dockLab").textContent=`${C.short}・${R.short}`;
  $("#copied").textContent="";
 }
@@ -284,7 +348,7 @@ async function copyText(t){
 }
 async function doCopy(){
  const ok=await copyText($("#promptBox").textContent);
- $("#copied").textContent=ok?"✅ 已複製，去 Copilot 貼上":"⚠️ 無法自動複製，請展開全文長按複製";
+ $("#copied").textContent=ok?"✅ 已複製，打開 AI 貼上":"⚠️ 無法自動複製，請展開全文長按複製";
  [$("#copyBtn"),$("#dockCopy")].forEach(b=>{b.textContent=ok?"✅ 已複製":"📋 複製提示詞";});
  setTimeout(()=>{[$("#copyBtn"),$("#dockCopy")].forEach(b=>b.textContent="📋 複製提示詞");},2500);
 }

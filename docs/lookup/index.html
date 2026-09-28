@@ -102,12 +102,13 @@ document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{document.que
 // 一覽表
 $("#table").innerHTML=`<table style="width:100%;border-collapse:collapse;font-size:.9rem"><thead><tr style="background:#eef2f7"><th style="text-align:left;padding:6px">學名</th><th style="text-align:left;padding:6px">商品名</th><th style="text-align:left;padding:6px">特性</th><th style="text-align:left;padding:6px">處置</th><th style="text-align:left;padding:6px">作法</th></tr></thead><tbody>${DATA.map(d=>`<tr style="border-bottom:1px solid #e3e8ef"><td style="padding:6px">${d.g}</td><td style="padding:6px">${d.b}</td><td style="padding:6px"><span class="tag ${tagCls(d.cc)}">${d.cls}</span></td><td style="padding:6px"><span class="tag t${d.tc}">${d.tx}</span></td><td style="padding:6px;font-size:.82rem;color:#5b6675">${d.txd||"—"}</td></tr>`).join("")}</tbody></table>`;
 // 原理頁小測驗
+const xrMark=k=>{try{const p=JSON.parse(localStorage.getItem('xrprog')||'{}');if(!p[k]){p[k]=Date.now();localStorage.setItem('xrprog',JSON.stringify(p));}}catch(e){}};
 const Q=[{q:"Vincristine 外滲，局部要怎麼敷？",o:["冷敷","熱敷"],a:1,why:"長春花鹼類要熱敷：血管擴張讓藥品被帶走稀釋；冷敷會讓藥留在原處、加重潰瘍。"},
 {q:"Doxorubicin 外滲，除了冰敷還可依醫囑加什麼？",o:["熱敷","99% DMSO 外用","按摩患部"],a:1,why:"Anthracycline 類可用 DMSO（自由基清除劑），塗患部兩倍範圍、風乾、一天 4 次 × 7 天；任何藥品都不可按摩或壓迫。"},
 {q:"Oxaliplatin 外滲為什麼不冷敷？",o:["冷會讓藥品結晶","冷會誘發或加重神經毒性，且應讓藥品散開","沒有原因，習慣而已"],a:1,why:"Oxaliplatin 有冷誘發神經病變的特性，院內建議熱敷 44–50℃。"},
 {q:"冰敷一次要敷多久、持續幾天？",o:["5 分鐘、當天即可","20 分鐘、一天 3–4 次、持續 24–48 小時","整天不間斷"],a:1,why:"0℃ 冰敷袋每次 20 分鐘，一天 3–4 次，持續 24–48 小時。"}];
 let qi=0;function quiz(){const q=Q[qi];$("#quiz").innerHTML=`<b>動手試試（${qi+1}/${Q.length}）</b><div>${q.q}</div>${q.o.map((o,i)=>`<button data-i="${i}">${o}</button>`).join("")}<div class="why"></div>`;
   $("#quiz").querySelectorAll("button").forEach(b=>b.onclick=()=>{const ok=+b.dataset.i===q.a;$("#quiz").querySelectorAll("button").forEach(x=>{x.disabled=true;if(+x.dataset.i===q.a)x.classList.add("ok")});if(!ok)b.classList.add("ng");
-    $("#quiz .why").innerHTML=(ok?"✅ 答對了。":"❌ 不對。")+q.why+(qi<Q.length-1?` <button id="nx">下一題</button>`:" 🎉 完成。");const n=$("#nx");if(n)n.onclick=()=>{qi++;quiz()};});}
+    $("#quiz .why").innerHTML=(ok?"✅ 答對了。":"❌ 不對。")+q.why+(qi<Q.length-1?` <button id="nx">下一題</button>`:" 🎉 完成。");if(qi===Q.length-1)xrMark("lookup");const n=$("#nx");if(n)n.onclick=()=>{qi++;quiz()};});}
 quiz();render();
 </script></body></html>

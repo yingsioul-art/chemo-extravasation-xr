@@ -311,6 +311,7 @@ $("#back1").onclick=()=>show(1);
 $("#back2").onclick=()=>show(2);
 
 /* 自評（勾選只存本機瀏覽器，失敗也不影響使用） */
+const xrMark=k=>{try{const p=JSON.parse(localStorage.getItem('xrprog')||'{}');if(!p[k]){p[k]=Date.now();localStorage.setItem('xrprog',JSON.stringify(p));}}catch(e){}};
 const KEY="coach_chk_v1";
 let saved={};try{saved=JSON.parse(localStorage.getItem(KEY)||"{}")||{};}catch(e){saved={};}
 function renderChk(){
@@ -325,7 +326,7 @@ function sumChk(){
  const v=Object.values(saved);const y=v.filter(x=>x==="y").length,n=v.filter(x=>x==="n").length,x=v.filter(x=>x==="x").length;
  $("#chkSum").innerHTML=v.length?`<span class="chip y">有講到 ${y}</span><span class="chip">沒講到 ${n}</span><span class="chip x">講錯 ${x}</span><span class="note">／共 6 項${v.length<6?`，還有 ${6-v.length} 項沒勾`:""}</span>`:`<span class="note">還沒勾選。練完後每項選一個。</span>`;
 }
-$("#chkList").addEventListener("change",e=>{if(e.target.name){saved[e.target.name]=e.target.value;try{localStorage.setItem(KEY,JSON.stringify(saved));}catch(err){}sumChk();}});
+$("#chkList").addEventListener("change",e=>{if(e.target.name){saved[e.target.name]=e.target.value;try{localStorage.setItem(KEY,JSON.stringify(saved));}catch(err){}sumChk();if(Object.keys(saved).length>=6)xrMark("coach");}});
 $("#clearChk").onclick=()=>{saved={};try{localStorage.removeItem(KEY);}catch(e){}renderChk();};
 
 /* 知識底稿 Q21–Q23：讀題庫檔（單一來源），不手抄 */

@@ -270,6 +270,7 @@ async function loadQuestions() {
 }
 
 /* ===== 開始頁 ===== */
+const xrMark=k=>{try{const p=JSON.parse(localStorage.getItem('xrprog')||'{}');if(!p[k]){p[k]=Date.now();localStorage.setItem('xrprog',JSON.stringify(p));}}catch(e){}};
 let phase = null;
 function setPhase(p) { phase = p; $("ph-pre").setAttribute("aria-pressed", p === "pre"); $("ph-post").setAttribute("aria-pressed", p === "post"); $("start-err").textContent = ""; }
 $("ph-pre").onclick = () => setPhase("pre");
@@ -447,6 +448,7 @@ function submit() {
     ua: navigator.userAgent,
   };
   S.submitted = true; S.result = payload; saveState();
+  xrMark(S.phase);   // 首頁進度：前測／後測已送出
   renderResult(payload);
   send(payload);
 }
@@ -494,7 +496,7 @@ function dropPending(sid) { const q = (lsGet(PENDING_KEY) || []).filter(x => x.s
 $("btn-retry").onclick = () => { if (S && S.result) send(S.result); };
 $("btn-again").onclick = () => { S = null; setPhase(null); show("s-start"); };
 
-loadQuestions();
+loadQuestions().then(() => { const ph = new URLSearchParams(location.search).get("phase"); if (ph === "pre" || ph === "post") setPhase(ph); });
 </script>
 </body>
 </html>

@@ -546,7 +546,9 @@ RENDER.comp = () => {
 };
 
 /* 案例一總覽 */
+const xrMark=k=>{try{const p=JSON.parse(localStorage.getItem('xrprog')||'{}');if(!p[k]){p[k]=Date.now();localStorage.setItem('xrprog',JSON.stringify(p));}}catch(e){}};
 RENDER.sum1 = () => {
+  xrMark('handson');   // 首頁進度：案例一走完
   const seen = [].concat(...Object.values(result).map(r=>r.seen));
   const rows = STEPS9.map((s,i) => {
     const r = result[s.key]; let st = '—';

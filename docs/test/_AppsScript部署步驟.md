@@ -189,3 +189,12 @@ function testPost() {
 - `fetch(ENDPOINT, {method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'}, body: JSON})`：`text/plain` 屬簡單請求，不會觸發 CORS 預檢；Apps Script 會 302 轉到 `script.googleusercontent.com`，fetch 自動跟隨並讀到 `{ok:true,row:N}`。
 - 讀不到回應時，網頁自動改 `mode:'no-cors'` 再送一次（伺服器端以 `submission_id` 去重），並提供「重新送出成績」按鈕。
 - 送出失敗的成績會留在學員手機的 localStorage（`xrtest:pending`），成績頁截圖也可作備援。
+
+---
+
+## 九、v2（2026-09-28 22:07 部署第 2 版，網址不變）
+
+- 程式碼改為 `_Code_v2.gs`（本資料夾）：依標題名稱寫入、缺的欄位自動補在最右邊。
+- 新增欄位：開放建議、使用版本、未用另一版原因、版本偏好、自我效能平均、SE1–SE10、2D_*／VR_* 滿意度各題。
+- 已執行 `backfill()` 一次，從「原始JSON」回填舊列（173 格）。
+- 代號欄改存文字（保留開頭的 0）。

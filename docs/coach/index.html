@@ -314,6 +314,7 @@ $("#back2").onclick=()=>show(2);
 const xrMark=k=>{try{const p=JSON.parse(localStorage.getItem('xrprog')||'{}');if(!p[k]){p[k]=Date.now();localStorage.setItem('xrprog',JSON.stringify(p));}}catch(e){}};
 const KEY="coach_chk_v1";
 let saved={};try{saved=JSON.parse(localStorage.getItem(KEY)||"{}")||{};}catch(e){saved={};}
+if(Object.keys(saved).length>=6)xrMark("coach");   // 之前已勾完六項者，開頁即補記完成
 function renderChk(){
  $("#chkList").innerHTML=CHECK.map((c,i)=>`<div class="chkcard"><div class="no">${i+1}</div><div><div class="t">${c.t}</div><div class="d">${c.d}</div>
  <div class="segc">

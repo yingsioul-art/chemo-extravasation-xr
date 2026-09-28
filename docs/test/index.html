@@ -56,11 +56,29 @@ input[type=text]:focus{outline:none;border-color:var(--selb)}
 footer{text-align:center;color:var(--mut);font-size:.78rem;padding:10px 16px 24px}
 a{color:var(--navy)}
 .hide{display:none!important}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.two label.f{margin-top:10px}
+.sq{border-top:1px solid var(--line);padding:14px 0 6px}
+.sq:first-child{border-top:0}
+.sq .t{font-weight:700;margin:0 0 8px}
+.sq .code{color:var(--mut);font-size:.8rem;font-weight:400;margin-right:6px}
+.scale{display:grid;gap:4px}
+.scale.s11{grid-template-columns:repeat(11,1fr)}
+.scale.s5{grid-template-columns:repeat(5,1fr)}
+.scale button{font-size:.95rem;padding:9px 0;border:2px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);font-family:inherit;cursor:pointer;min-width:0}
+.scale button[aria-pressed=true]{background:var(--selb);border-color:var(--selb);color:#fff;font-weight:700}
+.anch{display:flex;justify-content:space-between;font-size:.75rem;color:var(--mut);margin-top:3px}
+.sq.miss .t{color:var(--red)}
+.choice{display:grid;gap:8px}
+.choice button{text-align:left;font-size:1rem;padding:11px 14px;border:2px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);font-family:inherit;cursor:pointer}
+.choice button[aria-pressed=true]{background:var(--sel);border-color:var(--selb);font-weight:700}
+textarea{width:100%;min-height:90px;font-size:1rem;padding:10px;border:2px solid var(--line);border-radius:12px;font-family:inherit}
+.sech{margin:18px 0 4px;font-size:1rem;color:var(--navy)}
 @media (min-width:600px){header h1{font-size:1.4rem}.stem{font-size:1.15rem}}
 </style>
 </head>
 <body>
-<header><h1>前後測</h1><p>化療藥品外滲預防與處理｜27 題單選</p></header>
+<header><h1>前後測</h1><p>化療藥品外滲預防與處理｜自我效能 10 題＋知識題 27 題（後測另加課程滿意度）</p></header>
 <main>
 
 <!-- 載入中／錯誤 -->
@@ -70,10 +88,14 @@ a{color:var(--navy)}
 <!-- 開始頁 -->
 <section id="s-start" class="card hide">
   <h2>開始前請填寫</h2>
-  <p class="mut">共 27 題單選，約 10 分鐘。作答過程<b>不會顯示對錯</b>，全部作答後送出才看得到成績。題目與選項順序皆隨機。</p>
-  <label class="f" for="code">學員代號（4 碼）</label>
-  <input id="code" type="text" maxlength="4" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="例：A123" aria-describedby="code-help">
-  <p id="code-help" class="mut">請輸入講師發給您的 4 碼代號（英文或數字）。前測與後測請用同一個代號。</p>
+  <p class="mut">先填<b>自我效能</b> 10 題（0–10 分，沒有對錯），再作答<b>知識題</b> 27 題單選；後測最後另有<b>課程滿意度</b>。全程約 15 分鐘。知識題作答過程<b>不會顯示對錯</b>，送出後才看得到成績。</p>
+  <div class="two">
+    <div><label class="f" for="ph4">手機號碼末 4 碼</label>
+      <input id="ph4" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="off" placeholder="5678"></div>
+    <div><label class="f" for="bd4">生日月日</label>
+      <input id="bd4" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="off" placeholder="0315"></div>
+  </div>
+  <p id="code-help" class="mut">生日月日例：3 月 15 日填 0315。這兩組數字<b>只用來比對你的前測與後測</b>，前後測請填一樣的。</p>
   <label class="f">這一次是</label>
   <div class="seg" role="group" aria-label="前測或後測">
     <button type="button" id="ph-pre" aria-pressed="false">前測</button>
@@ -82,6 +104,34 @@ a{color:var(--navy)}
   <div id="start-err" class="err" aria-live="polite"></div>
   <button type="button" class="btn" id="btn-start">開始作答</button>
   <a class="btn ghost" href="../">回首頁</a>
+</section>
+
+<!-- 自我效能頁 -->
+<section id="s-se" class="hide">
+  <div class="top"><span><span id="se-phase" class="tag"></span> <span id="se-code"></span></span><span>第一部分｜自我效能</span></div>
+  <div class="card">
+    <h2>處理化療藥品外滲：你有多少信心？</h2>
+    <p class="mut">以下是處理化療藥品外滲時的各個步驟。請依你<b>現在</b>的狀況，點選你有多少信心能做到：<b>0＝完全沒信心、5＝還算有信心、10＝非常有信心</b>。沒有對錯，不計分。</p>
+    <div id="se-list"></div>
+    <div id="se-err" class="err" aria-live="polite"></div>
+    <button type="button" class="btn" id="btn-se-next">下一步：知識題</button>
+  </div>
+</section>
+
+<!-- 課程滿意度頁（後測） -->
+<section id="s-sat" class="hide">
+  <div class="top"><span><span id="sat-phase" class="tag"></span> <span id="sat-code"></span></span><span>最後一部分｜課程滿意度</span></div>
+  <div class="card">
+    <h2>課程滿意度（③ 立即處理：2D 動手版／3D VR）</h2>
+    <p class="mut">請依你的使用經驗作答：1＝非常不同意、3＝普通、5＝非常同意。</p>
+    <div class="sq" id="sq-V0"><p class="t">你這次用了哪個版本？</p><div class="choice" id="v0"></div></div>
+    <div id="sat-list"></div>
+    <div class="sq hide" id="sq-V_WHY"><p class="t">沒有使用另一個版本的主要原因是？</p><div class="choice" id="why"></div></div>
+    <div class="sq hide" id="sq-V_PREF"><p class="t">兩個版本相比，你比較喜歡哪一個？</p><div class="choice" id="pref"></div></div>
+    <div class="sq hide" id="sq-OPEN"><p class="t">最喜歡的地方，或建議改進的地方（選填）</p><textarea id="open" maxlength="500"></textarea></div>
+    <div id="sat-err" class="err" aria-live="polite"></div>
+    <button type="button" class="btn" id="btn-sat-next">送出全部作答</button>
+  </div>
 </section>
 
 <!-- 作答頁 -->
@@ -107,6 +157,7 @@ a{color:var(--navy)}
     <div class="top"><span><span id="r-phase" class="tag"></span> <span id="r-code"></span></span><span id="r-time"></span></div>
     <div class="total"><b id="r-total">0</b> <span>/ <span id="r-max">27</span> 分</span></div>
     <p class="mut" style="text-align:center">答對題數（每題 1 分）</p>
+    <p class="mut" style="text-align:center" id="r-se"></p>
     <div id="r-groups"></div>
     <div id="r-status" class="status" aria-live="polite">處理中…</div>
     <button type="button" class="btn sec hide" id="btn-retry">重新送出成績</button>
@@ -116,7 +167,7 @@ a{color:var(--navy)}
 </section>
 
 </main>
-<footer>臺大醫院護理部 AI 與 XR 數位教材工作坊｜題目依院內技術評核表單 23 項改寫｜教學示範，無病人資料｜v1 2026-09-26</footer>
+<footer>臺大醫院護理部 AI 與 XR 數位教材工作坊｜題目依院內技術評核表單 23 項改寫｜教學示範，無病人資料｜v2 2026-09-28（代號改手機末 4 碼＋生日；加自我效能／課程滿意度）</footer>
 
 <script>
 /* ===== 設定 =====
@@ -125,8 +176,44 @@ a{color:var(--navy)}
  */
 const ENDPOINT = "https://script.google.com/macros/s/AKfycby8y3kZ0DrQeeNRm7CpHuokuO8F1g4Q3WRfuE_zmEq8q91G2vdbyC0pp7wX7BEHx6RuVA/exec";
 const DATA_URL = "../assets/data/questions.json";
-const VERSION = "test-v1-20260926";
-const CODE_RE = /^[A-Z0-9]{4}$/;
+const VERSION = "test-v2-20260928";
+/* 代號＝手機末 4 碼＋"_"＋生日月日（底線讓試算表當文字存，保留開頭的 0） */
+const CODE_RE = /^[0-9]{4}_(0[1-9]|1[0-2])(0[1-9]|[12][0-9]|3[01])$/;
+const LAST_CODE_KEY = "xrtest:lastcode";
+/* 自我效能（評核表第 7–16 項；定稿：競賽報告/20260928_自我效能題_③立即處理_定稿v1.md） */
+const SE_ITEMS = [
+  ["SE1", "在給藥中辨識出外滲的早期徵象（疼痛燒灼、紅腫、無回血、推注阻力）"],
+  ["SE2", "懷疑外滲時，立即停止給藥、不拔除留置針，並估計剩餘藥量"],
+  ["SE3", "處理前正確穿戴防護裝備（防水隔離衣、雙層手套、口罩，必要時護目鏡）"],
+  ["SE4", "換接無菌 10 mL 空針，從原注射處回抽到抽不出為止，並估計回抽量"],
+  ["SE5", "回抽完成後，依醫囑正確處理留置針（給解毒劑後再拔，或直接拔除）"],
+  ["SE6", "即使家屬要求，仍堅持不壓迫、不按摩外滲部位，並向家屬說明原因"],
+  ["SE7", "用油性筆標示外滲範圍並測量大小"],
+  ["SE8", "依醫囑執行敷療（冷敷或熱敷）"],
+  ["SE9", "依醫囑執行 DMSO 塗抹"],
+  ["SE10", "病人喊痛、家屬在旁催促時，仍能依順序完成整套立即處理"],
+];
+/* 課程滿意度（TAM＋ARCS；後測專用）：[代號, 面向, 題目或 {2d,vr}, 只給 VR] */
+const SAT_ITEMS = [
+  ["PU1", "TAM 知覺有用", "這個教材幫助我記住外滲立即處理的步驟順序"],
+  ["PU2", "TAM 知覺有用", "這個教材讓我更知道臨床遇到外滲時該怎麼做"],
+  ["EU1", "TAM 知覺易用", "這個教材的操作方式容易上手"],
+  ["EU2", "TAM 知覺易用", "我在手機或平板上使用時很順暢"],
+  ["BI1", "TAM 使用意願", "臨床上遇到疑問時，我願意再回來使用這個教材"],
+  ["A1", "ARCS 注意", "「選錯會看到後果」的設計讓我更專注"],
+  ["R1", "ARCS 關聯", "教材情境和我在病房的實際工作相關"],
+  ["R2", "ARCS 關聯", "我可以把學到的步驟用在照顧化療病人"],
+  ["C1", "ARCS 信心", "教材的難易度適中，我能順利完成"],
+  ["S1", "ARCS 滿足", "整體而言，我對這個教材感到滿意"],
+  ["M1", "多媒體", { "2d": "圖卡與文字說明清楚易懂", "vr": "語音說明清楚、有助理解" }],
+  ["M2", "多媒體", { "2d": "拖曳、長按等互動讓我更投入", "vr": "「停止語音」鈕讓我能照自己的步調學習" }],
+  ["IM1", "VR 沉浸", "360 度病室場景讓我有身歷其境的感覺", true],
+  ["IM2", "VR 沉浸", "在 VR 情境中做決定，比讀文字更接近真實臨床的壓力", true],
+];
+const VER_LABEL = { "2d": "2D 動手版", "vr": "3D VR（MAKAR）" };
+const V0_OPTS = [["2d", "只有 2D 動手版"], ["vr", "只有 3D VR（MAKAR）"], ["both", "兩個都用了"], ["none", "兩個都沒用"]];
+const WHY_OPTS = ["沒時間", "不知道有另一個版本", "裝置或網路問題", "覺得一個就夠", "其他"];
+const PREF_OPTS = ["比較喜歡 2D 動手版", "比較喜歡 3D VR", "差不多"];
 /* 成績頁四組：依 questions.json 的 block 字母歸組（題號範圍由資料決定，不寫死） */
 const GROUPS = [
   { key: "learn",   label: "自學題",       blocks: "ABCD" },
@@ -141,7 +228,7 @@ let QS = [];          // 題庫（依 id 排序）
 let byId = {};
 let S = null;         // 進行中的作答狀態 {code, phase, sid, order:[id...], opt:{id:[key...]}, ans:{id:key}, started, pos, submitted, result}
 const $ = (id) => document.getElementById(id);
-const show = (id) => { for (const s of ["s-load","s-error","s-start","s-quiz","s-result"]) $(s).classList.toggle("hide", s !== id); window.scrollTo(0,0); };
+const show = (id) => { for (const s of ["s-load","s-error","s-start","s-se","s-quiz","s-sat","s-result"]) $(s).classList.toggle("hide", s !== id); window.scrollTo(0,0); };
 const lsGet = (k) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : null; } catch (e) { return null; } };
 const lsSet = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
 const lsDel = (k) => { try { localStorage.removeItem(k); } catch (e) {} };
@@ -187,21 +274,109 @@ let phase = null;
 function setPhase(p) { phase = p; $("ph-pre").setAttribute("aria-pressed", p === "pre"); $("ph-post").setAttribute("aria-pressed", p === "post"); $("start-err").textContent = ""; }
 $("ph-pre").onclick = () => setPhase("pre");
 $("ph-post").onclick = () => setPhase("post");
-$("code").addEventListener("input", () => { $("code").value = $("code").value.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 4); $("start-err").textContent = ""; });
+for (const id of ["ph4", "bd4"]) $(id).addEventListener("input", () => { $(id).value = $(id).value.replace(/[^0-9]/g, "").slice(0, 4); $("start-err").textContent = ""; if (id === "ph4" && $(id).value.length === 4) $("bd4").focus(); });
+(() => { const last = lsGet(LAST_CODE_KEY); if (last && CODE_RE.test(last)) { const [a, b] = last.split("_"); $("ph4").value = a; $("bd4").value = b; } })();   // 同一支手機再開會自動帶入上次的號碼
 $("btn-start").onclick = () => {
-  const code = $("code").value.trim().toUpperCase();
-  if (!CODE_RE.test(code)) { $("start-err").textContent = "學員代號要剛好 4 碼（英文或數字）。"; $("code").focus(); return; }
+  const ph = $("ph4").value.trim(), bd = $("bd4").value.trim();
+  if (!/^[0-9]{4}$/.test(ph)) { $("start-err").textContent = "手機號碼末 4 碼請填 4 個數字。"; $("ph4").focus(); return; }
+  const code = `${ph}_${bd}`;
+  if (!CODE_RE.test(code)) { $("start-err").textContent = "生日月日請填 4 個數字，例如 3 月 15 日填 0315。"; $("bd4").focus(); return; }
+  lsSet(LAST_CODE_KEY, code);
   if (!phase) { $("start-err").textContent = "請選擇這一次是前測還是後測。"; return; }
   const saved = lsGet(stateKey(code, phase));
   if (saved && !saved.submitted && saved.order && saved.order.length === QS.length && saved.order.every(id => byId[id])) {
     S = saved; S.pos = Math.min(S.pos || 0, QS.length - 1);   // 接續未完成的作答
   } else {
-    S = { code, phase, sid: uuid(), order: orderWithFollowups(shuffle(QS.map(q => q.id))), opt: {}, ans: {}, started: localISO(new Date()), pos: 0, submitted: false };
+    S = { code, phase, sid: uuid(), order: orderWithFollowups(shuffle(QS.map(q => q.id))), opt: {}, ans: {}, started: localISO(new Date()), pos: 0, submitted: false, stage: "se", se: {}, sat: {} };
     for (const q of QS) S.opt[q.id] = shuffle(q.options.map(o => o.key));   // 選項也隨機（JSON 內正解一律是 A，不打亂會被看穿）
   }
+  S.stage = S.stage || "quiz"; S.se = S.se || {}; S.sat = S.sat || {};
   saveState();
-  renderQ();
-  show("s-quiz");
+  goStage();
+};
+function goStage() {
+  if (S.stage === "se") { renderSE(); show("s-se"); }
+  else if (S.stage === "sat") { renderSat(); show("s-sat"); }
+  else { renderQ(); show("s-quiz"); }
+}
+const tagIt = (tagEl, codeEl) => { $(tagEl).textContent = PHASE_LABEL[S.phase]; $(tagEl).className = "tag " + S.phase; $(codeEl).textContent = S.code; };
+function scaleRow(n0, n1, cur, onPick) {
+  const d = document.createElement("div"); d.className = "scale " + (n1 - n0 === 10 ? "s11" : "s5");
+  for (let v = n0; v <= n1; v++) {
+    const b = document.createElement("button"); b.type = "button"; b.textContent = v;
+    b.setAttribute("aria-pressed", cur === v); b.onclick = () => onPick(v); d.appendChild(b);
+  }
+  return d;
+}
+function anchors(a, b, c) { const d = document.createElement("div"); d.className = "anch"; for (const t of [a, b, c]) { const s = document.createElement("span"); s.textContent = t; d.appendChild(s); } return d; }
+function markMissing(scope, miss) { document.querySelectorAll(scope + " .sq").forEach(el => el.classList.toggle("miss", miss.includes(el.id.slice(3)))); }
+
+/* ===== 自我效能頁（前後測都有） ===== */
+function renderSE() {
+  tagIt("se-phase", "se-code");
+  const box = $("se-list"); box.innerHTML = "";
+  SE_ITEMS.forEach(([code, text], i) => {
+    const q = document.createElement("div"); q.className = "sq"; q.id = "sq-" + code;
+    q.innerHTML = `<p class="t"><span class="code">${i + 1}.</span><span></span></p>`;
+    q.querySelector(".t span:last-child").textContent = "我有信心能" + text;
+    q.appendChild(scaleRow(0, 10, S.se[code], v => { S.se[code] = v; saveState(); renderSE(); }));
+    q.appendChild(anchors("0 完全沒信心", "5 還算有信心", "10 非常有信心"));
+    box.appendChild(q);
+  });
+}
+$("btn-se-next").onclick = () => {
+  const miss = SE_ITEMS.filter(([c]) => S.se[c] == null).map(([c]) => c);
+  markMissing("#s-se", miss);
+  if (miss.length) { $("se-err").textContent = `還有 ${miss.length} 題沒有選分數（標紅字的題目）。`; $("sq-" + miss[0]).scrollIntoView({ behavior: "smooth", block: "center" }); return; }
+  $("se-err").textContent = ""; S.stage = "quiz"; saveState(); goStage();
+};
+
+/* ===== 課程滿意度頁（後測） ===== */
+const usedVers = () => S.sat.V0 === "both" ? ["2d", "vr"] : (S.sat.V0 === "2d" || S.sat.V0 === "vr") ? [S.sat.V0] : [];
+function satKeys() { const ks = []; for (const v of usedVers()) for (const [c, , , vrOnly] of SAT_ITEMS) if (!vrOnly || v === "vr") ks.push(`${v.toUpperCase()}_${c}`); return ks; }
+function choiceBox(id, opts, cur, onPick) {
+  const box = $(id); box.innerHTML = "";
+  for (const o of opts) {
+    const [val, label] = Array.isArray(o) ? o : [o, o];
+    const b = document.createElement("button"); b.type = "button"; b.textContent = label;
+    b.setAttribute("aria-pressed", cur === val); b.onclick = () => onPick(val); box.appendChild(b);
+  }
+}
+function renderSat() {
+  tagIt("sat-phase", "sat-code");
+  choiceBox("v0", V0_OPTS, S.sat.V0, v => { S.sat.V0 = v; saveState(); renderSat(); });
+  const list = $("sat-list"); list.innerHTML = "";
+  for (const v of usedVers()) {
+    const h = document.createElement("h3"); h.className = "sech"; h.textContent = `【${VER_LABEL[v]}】`; list.appendChild(h);
+    for (const [c, dim, text, vrOnly] of SAT_ITEMS) {
+      if (vrOnly && v !== "vr") continue;
+      const key = `${v.toUpperCase()}_${c}`;
+      const q = document.createElement("div"); q.className = "sq"; q.id = "sq-" + key;
+      q.innerHTML = `<p class="t"><span class="code"></span><span></span></p>`;
+      q.querySelector(".code").textContent = dim;
+      q.querySelector(".t span:last-child").textContent = typeof text === "string" ? text : text[v];
+      q.appendChild(scaleRow(1, 5, S.sat[key], val => { S.sat[key] = val; saveState(); renderSat(); }));
+      q.appendChild(anchors("1 非常不同意", "3 普通", "5 非常同意"));
+      list.appendChild(q);
+    }
+  }
+  const single = S.sat.V0 === "2d" || S.sat.V0 === "vr";
+  $("sq-V_WHY").classList.toggle("hide", !single);
+  $("sq-V_PREF").classList.toggle("hide", S.sat.V0 !== "both");
+  $("sq-OPEN").classList.toggle("hide", !S.sat.V0);
+  choiceBox("why", WHY_OPTS, S.sat.V_WHY, v => { S.sat.V_WHY = v; saveState(); renderSat(); });
+  choiceBox("pref", PREF_OPTS, S.sat.V_PREF, v => { S.sat.V_PREF = v; saveState(); renderSat(); });
+  if (document.activeElement !== $("open")) $("open").value = S.sat.OPEN || "";
+}
+$("open").addEventListener("input", () => { S.sat.OPEN = $("open").value; saveState(); });
+$("btn-sat-next").onclick = () => {
+  const need = ["V0", ...satKeys()];
+  if (S.sat.V0 === "2d" || S.sat.V0 === "vr") need.push("V_WHY");
+  if (S.sat.V0 === "both") need.push("V_PREF");
+  const miss = need.filter(k => S.sat[k] == null || S.sat[k] === "");
+  markMissing("#s-sat", miss);
+  if (miss.length) { $("sat-err").textContent = `還有 ${miss.length} 題沒有作答（標紅字的題目）。`; $("sq-" + miss[0]).scrollIntoView({ behavior: "smooth", block: "center" }); return; }
+  $("sat-err").textContent = ""; submit();
 };
 
 /* ===== 作答頁 ===== */
@@ -234,7 +409,7 @@ function renderQ() {
   });
   const last = S.pos === QS.length - 1;
   $("btn-prev").disabled = S.pos === 0;
-  $("btn-next").textContent = last ? "送出作答" : "下一題";
+  $("btn-next").textContent = last ? (S.phase === "post" ? "下一步：課程滿意度" : "送出作答") : "下一題";
   $("btn-next").disabled = !S.ans[id];
   $("quiz-err").textContent = "";
 }
@@ -245,6 +420,7 @@ $("btn-next").onclick = () => {
   if (S.pos < QS.length - 1) { S.pos++; saveState(); renderQ(); return; }
   const missing = S.order.map((qid, i) => S.ans[qid] ? -1 : i).filter(i => i >= 0);
   if (missing.length) { S.pos = missing[0]; saveState(); renderQ(); $("quiz-err").textContent = `尚有 ${missing.length} 題未作答，已跳到第一題未作答的題目。`; return; }
+  if (S.phase === "post") { S.stage = "sat"; saveState(); goStage(); return; }
   submit();
 };
 
@@ -265,6 +441,9 @@ function submit() {
     total: sc.total, max: sc.max,
     groups: Object.fromEntries(sc.groups.map(g => [g.key, { label: g.label, range: g.range, score: g.score, max: g.max }])),
     answers: sc.answers.sort((a, b) => a.id - b.id),
+    self_efficacy: Object.fromEntries(SE_ITEMS.map(([c]) => [c, S.se[c]])),
+    se_mean: Math.round(SE_ITEMS.reduce((t, [c]) => t + (S.se[c] || 0), 0) / SE_ITEMS.length * 100) / 100,
+    satisfaction: S.phase === "post" ? S.sat : null,
     ua: navigator.userAgent,
   };
   S.submitted = true; S.result = payload; saveState();
@@ -276,6 +455,7 @@ function renderResult(p) {
   $("r-code").textContent = p.code;
   $("r-time").textContent = fmtTime(new Date(p.submitted_at));
   $("r-total").textContent = p.total; $("r-max").textContent = p.max;
+  $("r-se").textContent = p.se_mean != null ? `自我效能平均 ${p.se_mean} / 10（不計分）` : "";
   const box = $("r-groups"); box.innerHTML = "";
   for (const k of Object.keys(p.groups)) {
     const g = p.groups[k];
@@ -312,7 +492,7 @@ async function send(payload) {
 function addPending(p) { const q = lsGet(PENDING_KEY) || []; if (!q.some(x => x.submission_id === p.submission_id)) { q.push(p); lsSet(PENDING_KEY, q); } }
 function dropPending(sid) { const q = (lsGet(PENDING_KEY) || []).filter(x => x.submission_id !== sid); if (q.length) lsSet(PENDING_KEY, q); else lsDel(PENDING_KEY); }
 $("btn-retry").onclick = () => { if (S && S.result) send(S.result); };
-$("btn-again").onclick = () => { S = null; setPhase(null); $("code").value = ""; show("s-start"); };
+$("btn-again").onclick = () => { S = null; setPhase(null); show("s-start"); };
 
 loadQuestions();
 </script>

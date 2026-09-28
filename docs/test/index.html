@@ -130,7 +130,7 @@ textarea{width:100%;min-height:90px;font-size:1rem;padding:10px;border:2px solid
 <section id="s-sat" class="hide">
   <div class="top"><span><span id="sat-phase" class="tag"></span> <span id="sat-code"></span></span><span>最後一部分｜課程滿意度</span></div>
   <div class="card">
-    <h2>課程滿意度（③ 立即處理：2D 動手版／3D VR）</h2>
+    <h2>課程滿意度</h2>
     <p class="mut">請依你的使用經驗作答：1＝非常不同意、3＝普通、5＝非常同意。</p>
     <div class="sq" id="sq-V0"><p class="t">你這次用了哪個版本？</p><div class="choice" id="v0"></div></div>
     <div id="sat-list"></div>
@@ -364,8 +364,7 @@ function renderSat() {
       if (vrOnly && v !== "vr") continue;
       const key = `${v.toUpperCase()}_${c}`;
       const q = document.createElement("div"); q.className = "sq"; q.id = "sq-" + key;
-      q.innerHTML = `<p class="t"><span class="code"></span><span></span></p>`;
-      q.querySelector(".code").textContent = dim;
+      q.innerHTML = `<p class="t"><span></span></p>`;   // 理論構面（dim）只留在送出資料的代號，不顯示給作答者
       q.querySelector(".t span:last-child").textContent = typeof text === "string" ? text : text[v];
       q.appendChild(scaleRow(1, 5, S.sat[key], val => { S.sat[key] = val; saveState(); renderSat(); }));
       q.appendChild(anchors("1 非常不同意", "3 普通", "5 非常同意"));

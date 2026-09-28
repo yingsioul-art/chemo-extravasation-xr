@@ -78,7 +78,7 @@ textarea{width:100%;min-height:90px;font-size:1rem;padding:10px;border:2px solid
 </style>
 </head>
 <body>
-<header><h1>前後測</h1><p>化療藥品外滲預防與處理｜自我效能 10 題＋知識題 27 題（後測另加課程滿意度）</p></header>
+<header><h1>前後測</h1><p>化療藥品外滲預防與處理｜知識題 27 題＋自我效能 10 題（後測另加課程滿意度）</p></header>
 <main>
 
 <!-- 載入中／錯誤 -->
@@ -88,7 +88,7 @@ textarea{width:100%;min-height:90px;font-size:1rem;padding:10px;border:2px solid
 <!-- 開始頁 -->
 <section id="s-start" class="card hide">
   <h2>開始前請填寫</h2>
-  <p class="mut">先填<b>自我效能</b> 10 題（0–10 分，沒有對錯），再作答<b>知識題</b> 27 題單選；後測最後另有<b>課程滿意度</b>。全程約 15 分鐘。知識題作答過程<b>不會顯示對錯</b>，送出後才看得到成績。</p>
+  <p class="mut">先作答<b>知識題</b> 27 題單選，再填<b>自我效能</b> 10 題（0–10 分，沒有對錯）；後測最後另有<b>課程滿意度</b>。全程約 15 分鐘。知識題作答過程<b>不會顯示對錯</b>，送出後才看得到成績。</p>
   <div class="two">
     <div><label class="f" for="ph4">手機號碼末 4 碼</label>
       <input id="ph4" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="off" placeholder="5678"></div>
@@ -108,13 +108,13 @@ textarea{width:100%;min-height:90px;font-size:1rem;padding:10px;border:2px solid
 
 <!-- 自我效能頁 -->
 <section id="s-se" class="hide">
-  <div class="top"><span><span id="se-phase" class="tag"></span> <span id="se-code"></span></span><span>第一部分｜自我效能</span></div>
+  <div class="top"><span><span id="se-phase" class="tag"></span> <span id="se-code"></span></span><span>第二部分｜自我效能</span></div>
   <div class="card">
     <h2>處理化療藥品外滲：你有多少信心？</h2>
     <p class="mut">以下是處理化療藥品外滲時的各個步驟。請依你<b>現在</b>的狀況，點選你有多少信心能做到：<b>0＝完全沒信心、5＝還算有信心、10＝非常有信心</b>。沒有對錯，不計分。</p>
     <div id="se-list"></div>
     <div id="se-err" class="err" aria-live="polite"></div>
-    <button type="button" class="btn" id="btn-se-next">下一步：知識題</button>
+    <button type="button" class="btn" id="btn-se-next">下一步</button>
   </div>
 </section>
 
@@ -288,7 +288,7 @@ $("btn-start").onclick = () => {
   if (saved && !saved.submitted && saved.order && saved.order.length === QS.length && saved.order.every(id => byId[id])) {
     S = saved; S.pos = Math.min(S.pos || 0, QS.length - 1);   // 接續未完成的作答
   } else {
-    S = { code, phase, sid: uuid(), order: orderWithFollowups(shuffle(QS.map(q => q.id))), opt: {}, ans: {}, started: localISO(new Date()), pos: 0, submitted: false, stage: "se", se: {}, sat: {} };
+    S = { code, phase, sid: uuid(), order: orderWithFollowups(shuffle(QS.map(q => q.id))), opt: {}, ans: {}, started: localISO(new Date()), pos: 0, submitted: false, stage: "quiz", se: {}, sat: {} };
     for (const q of QS) S.opt[q.id] = shuffle(q.options.map(o => o.key));   // 選項也隨機（JSON 內正解一律是 A，不打亂會被看穿）
   }
   S.stage = S.stage || "quiz"; S.se = S.se || {}; S.sat = S.sat || {};
@@ -315,6 +315,7 @@ function markMissing(scope, miss) { document.querySelectorAll(scope + " .sq").fo
 /* ===== 自我效能頁（前後測都有） ===== */
 function renderSE() {
   tagIt("se-phase", "se-code");
+  $("btn-se-next").textContent = S.phase === "post" ? "下一步：課程滿意度" : "送出全部作答";
   const box = $("se-list"); box.innerHTML = "";
   SE_ITEMS.forEach(([code, text], i) => {
     const q = document.createElement("div"); q.className = "sq"; q.id = "sq-" + code;
@@ -329,7 +330,9 @@ $("btn-se-next").onclick = () => {
   const miss = SE_ITEMS.filter(([c]) => S.se[c] == null).map(([c]) => c);
   markMissing("#s-se", miss);
   if (miss.length) { $("se-err").textContent = `還有 ${miss.length} 題沒有選分數（標紅字的題目）。`; $("sq-" + miss[0]).scrollIntoView({ behavior: "smooth", block: "center" }); return; }
-  $("se-err").textContent = ""; S.stage = "quiz"; saveState(); goStage();
+  $("se-err").textContent = "";
+  if (S.phase === "post") { S.stage = "sat"; saveState(); goStage(); return; }
+  submit();
 };
 
 /* ===== 課程滿意度頁（後測） ===== */
@@ -410,7 +413,7 @@ function renderQ() {
   });
   const last = S.pos === QS.length - 1;
   $("btn-prev").disabled = S.pos === 0;
-  $("btn-next").textContent = last ? (S.phase === "post" ? "下一步：課程滿意度" : "送出作答") : "下一題";
+  $("btn-next").textContent = last ? "下一步：自我效能" : "下一題";
   $("btn-next").disabled = !S.ans[id];
   $("quiz-err").textContent = "";
 }
@@ -421,8 +424,7 @@ $("btn-next").onclick = () => {
   if (S.pos < QS.length - 1) { S.pos++; saveState(); renderQ(); return; }
   const missing = S.order.map((qid, i) => S.ans[qid] ? -1 : i).filter(i => i >= 0);
   if (missing.length) { S.pos = missing[0]; saveState(); renderQ(); $("quiz-err").textContent = `尚有 ${missing.length} 題未作答，已跳到第一題未作答的題目。`; return; }
-  if (S.phase === "post") { S.stage = "sat"; saveState(); goStage(); return; }
-  submit();
+  S.stage = "se"; saveState(); goStage();
 };
 
 /* ===== 計分與送出 ===== */

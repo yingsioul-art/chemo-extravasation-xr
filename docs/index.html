@@ -43,7 +43,7 @@ const mark = k => { try { P[k] = P[k] || Date.now(); localStorage.setItem("xrpro
 const STATIONS = [
   ["learn", "自學", "作答完 12 題"],
   ["handson", "動手", "走完 2D 案例一，或開啟 3D VR"],
-  ["lookup", "查詢", "做完原理頁 4 題小測驗"],
+  ["lookup", "查詢", "做完「小測驗」分頁 4 題"],
   ["coach", "練習", "完成自評六項"],
 ];
 function tag(id, cls, txt) { const t = document.querySelector(`#${id} .tag`); t.className = "tag " + cls; t.textContent = txt; }

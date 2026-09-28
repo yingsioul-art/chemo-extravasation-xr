@@ -3,7 +3,7 @@
 <style>
 :root{--bg:#f6f8fb;--card:#fff;--ink:#1c2430;--mut:#5b6675;--line:#e3e8ef;--cold:#1f6fd0;--warm:#d9541e;--dmso:#7a3fb5;--ves:#c81e3a;--irr:#d98a00;--none:#2e8b57;--na:#7d8794}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:"Microsoft JhengHei","PingFang TC","Noto Sans TC",system-ui,sans-serif;line-height:1.55}
-header{background:#123a6b;color:#fff;padding:18px 16px 14px}header h1{margin:0;font-size:1.35rem}header p{margin:6px 0 0;font-size:.85rem;opacity:.85}
+header{background:#123a6b;color:#fff;padding:18px 16px 14px}.home{display:inline-block;margin-bottom:8px;padding:5px 14px;border-radius:999px;background:rgba(255,255,255,.18);color:#fff;text-decoration:none;font-size:.9rem;font-weight:700}.home:hover{background:rgba(255,255,255,.3)}header h1{margin:0;font-size:1.35rem}header p{margin:6px 0 0;font-size:.85rem;opacity:.85}
 main{max-width:980px;margin:0 auto;padding:14px 16px 60px}
 .tabs{display:flex;gap:8px;margin:10px 0 14px;flex-wrap:wrap}.tabs button{border:1px solid var(--line);background:#fff;padding:8px 14px;border-radius:999px;font-size:.95rem;cursor:pointer}.tabs button.on{background:#123a6b;color:#fff;border-color:#123a6b}
 .search{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px}.search input{flex:1;min-width:200px;font-size:1.05rem;padding:10px 12px;border:1px solid var(--line);border-radius:10px}
@@ -27,9 +27,9 @@ main{max-width:980px;margin:0 auto;padding:14px 16px 60px}
 .src{font-size:.78rem;color:var(--mut);margin-top:16px}
 .count{color:var(--mut);font-size:.85rem;margin:4px 0 8px}
 </style></head><body>
-<header><h1>化療藥品外滲處置查詢</h1><p>資料來源：本院〈化療藥品外滲處置建議〉2023.5 版（<a href="extravasation_guideline_2023-05.pdf" target="_blank" rel="noopener">📄 文件原稿 PDF</a>）｜57 個藥品｜輸入學名或商品名，或用分類篩選</p></header>
+<header><a class="home" href="https://yingsioul-art.github.io/chemo-extravasation-xr/">← 回教材首頁</a><h1>化療藥品外滲處置查詢</h1><p>資料來源：本院〈化療藥品外滲處置建議〉2023.5 版｜57 個藥品｜輸入學名或商品名，或用分類篩選</p></header>
 <main>
-<div class="tabs"><button class="on" data-t="q">🔍 藥品查詢</button><button data-t="p">🧊🔥 冷敷／熱敷原理</button><button data-t="s">📋 處置一覽表</button><button data-t="o">📄 文件原稿</button></div>
+<div class="tabs"><button class="on" data-t="q">🔍 藥品查詢</button><button data-t="p">🧊🔥 冷敷／熱敷原理</button><button data-t="s">📋 處置一覽表</button><button data-t="z">✏️ 小測驗（4 題）</button></div>
 
 <section id="tab-q">
 <div class="search"><input id="kw" placeholder="輸入學名或商品名，例如 Doxorubicin、Adriamycin、小紅莓…" autocomplete="off"></div>
@@ -60,15 +60,14 @@ main{max-width:980px;margin:0 auto;padding:14px 16px 60px}
 <p>Carboplatin、Cisplatin、Paclitaxel、Abraxane、Cabazitaxel 目前文獻對冷敷或熱敷沒有一致結論，院內建議兩者皆可；<b>Cisplatin 大體積未稀釋外滲</b>另可依醫囑用 4%（1/6 M）sodium thiosulfate 2 mL 注入 IV line（配製：25% sodium thiosulfate 1.6 mL 加注射用水 8.4 mL）。</p>
 <h3>三個現場常見錯誤</h3>
 <ul><li><b>冷熱敷弄反</b>：長春花鹼類冷敷會加重潰瘍。給藥前先看藥品屬性，不要等外滲了才查。</li><li><b>敷的時間不夠</b>：一次 20 分鐘、一天 4 次、連續 1–2 天，不是敷一次就結束。</li><li><b>直接壓迫</b>：不管冷熱，敷的時候都不可加壓，壓迫會把藥品推向周圍組織（表單第 13 題）。</li></ul>
-<div class="quiz" id="quiz"></div>
 </div>
 </section>
 
 <section id="tab-s" hidden>
 <div class="sec"><h2>處置一覽表</h2><div id="table"></div></div>
 </section>
-<section id="tab-o" hidden>
-<div class="sec"><h2>文件原稿：本院〈化療藥品外滲處置建議〉2023.5</h2><p>本站所有處置文字都由這份院內文件逐列轉錄；有疑義以原稿為準。<a href="extravasation_guideline_2023-05.pdf" target="_blank" rel="noopener">開啟／下載 PDF（3 頁）</a></p><p style="font-size:.9rem;color:#8a4b00">⚠️ 原稿第 1 頁最後一列 Docetaxel（Taxotere）的「處置」欄為空白，非本站轉錄遺漏；本站標示「原稿未載」，不代填處置。</p><div style="display:grid;gap:12px"><img src="src/p1.png" alt="原稿第 1 頁" loading="lazy" style="width:100%;border:1px solid #d9dee6;border-radius:8px"><img src="src/p2.png" alt="原稿第 2 頁" loading="lazy" style="width:100%;border:1px solid #d9dee6;border-radius:8px"><img src="src/p3.png" alt="原稿第 3 頁" loading="lazy" style="width:100%;border:1px solid #d9dee6;border-radius:8px"></div></div>
+<section id="tab-z" hidden>
+<div class="sec"><h2>✏️ 小測驗：冷敷還是熱敷？</h2><p>讀完「冷敷／熱敷原理」後試試看，共 4 題，每題答完會看到解說。</p><div class="quiz" id="quiz"></div></div>
 </section>
 
 <p class="src">參考文獻（依院內文件）：1. BC Cancer Extravasation guidelines（Canada）2. Drug Information Handbook for Oncology 17th Ed. 3. ESMO-EONS Guidelines 4. Support Care Cancer (2015) 23:1459–1471 5. NHS Trust (Salisbury, Thames Valley) 6. UpToDate 7. Cancer Institute NSW 8. Dermatol Ther. 2022;35(10):e15751。本頁為教學用途，臨床處置依醫囑與院內現行文件。</p>
@@ -98,7 +97,7 @@ $("#grid").addEventListener("click",e=>{const c=e.target.closest(".card");if(c)s
 $("#kw").addEventListener("input",render);
 $("#chips").addEventListener("click",e=>{const c=e.target.closest(".chip");if(!c)return;const [k,v]=c.dataset.f.split(":");
   if(filters[k]===v){delete filters[k];c.classList.remove("on")}else{filters[k]=v;[...$("#chips").children].forEach(x=>{if(x.dataset.f.startsWith(k+":"))x.classList.remove("on")});c.classList.add("on")}render();});
-document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tabs button").forEach(x=>x.classList.toggle("on",x===b));["q","p","s","o"].forEach(t=>$("#tab-"+t).hidden=(b.dataset.t!==t));});
+document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tabs button").forEach(x=>x.classList.toggle("on",x===b));["q","p","s","z"].forEach(t=>$("#tab-"+t).hidden=(b.dataset.t!==t));});
 // 一覽表
 $("#table").innerHTML=`<table style="width:100%;border-collapse:collapse;font-size:.9rem"><thead><tr style="background:#eef2f7"><th style="text-align:left;padding:6px">學名</th><th style="text-align:left;padding:6px">商品名</th><th style="text-align:left;padding:6px">特性</th><th style="text-align:left;padding:6px">處置</th><th style="text-align:left;padding:6px">作法</th></tr></thead><tbody>${DATA.map(d=>`<tr style="border-bottom:1px solid #e3e8ef"><td style="padding:6px">${d.g}</td><td style="padding:6px">${d.b}</td><td style="padding:6px"><span class="tag ${tagCls(d.cc)}">${d.cls}</span></td><td style="padding:6px"><span class="tag t${d.tc}">${d.tx}</span></td><td style="padding:6px;font-size:.82rem;color:#5b6675">${d.txd||"—"}</td></tr>`).join("")}</tbody></table>`;
 // 原理頁小測驗

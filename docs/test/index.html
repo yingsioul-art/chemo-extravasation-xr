@@ -34,7 +34,11 @@ input[type=text]:focus{outline:none;border-color:var(--selb)}
 .bar{height:8px;background:var(--line);border-radius:999px;overflow:hidden;margin-bottom:14px}
 .bar i{display:block;height:100%;background:var(--selb);width:0;transition:width .25s}
 .stem{font-size:1.08rem;font-weight:700;margin:0 0 12px}
-.qimg{width:100%;border-radius:12px;border:1px solid var(--line);margin:0 0 12px;display:none}
+.qimg{width:100%;max-height:22vh;max-height:22dvh;object-fit:contain;background:#fff;border-radius:12px;border:1px solid var(--line);margin:0 0 4px;display:none;cursor:zoom-in}
+.zoomhint{font-size:.78rem;color:var(--mut);text-align:right;margin:0 0 10px}
+.lb{position:fixed;inset:0;background:rgba(10,20,35,.92);z-index:999;display:flex;align-items:center;justify-content:center;padding:12px;cursor:zoom-out}
+.lb img{max-width:100%;max-height:100%;object-fit:contain;border-radius:8px;background:#fff}
+.lb span{position:absolute;top:10px;right:14px;color:#fff;background:rgba(255,255,255,.18);padding:6px 14px;border-radius:999px}
 .opts{display:grid;gap:10px;margin:0;padding:0;list-style:none}
 .opts button{width:100%;text-align:left;font-size:1rem;line-height:1.5;padding:12px 14px;border:2px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);font-family:inherit;cursor:pointer;display:flex;gap:10px;align-items:flex-start}
 .opts button .n{flex:0 0 26px;height:26px;border-radius:50%;border:2px solid var(--line);display:inline-flex;align-items:center;justify-content:center;font-size:.85rem;color:var(--mut)}
@@ -56,6 +60,10 @@ input[type=text]:focus{outline:none;border-color:var(--selb)}
 footer{text-align:center;color:var(--mut);font-size:.78rem;padding:10px 16px 24px}
 a{color:var(--navy)}
 .hide{display:none!important}
+body.compact header{padding:8px 16px}
+body.compact header p{display:none}
+body.compact header h1{font-size:1.05rem}
+@media (max-height:720px){body.compact main{padding-top:10px}.qimg{max-height:17vh;max-height:17dvh}.opts{gap:7px}.opts button{padding:9px 12px}.stem{margin-bottom:8px}.nav{margin-top:10px}.zoomhint{margin-bottom:6px}}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .two label.f{margin-top:10px}
 .sq{border-top:1px solid var(--line);padding:14px 0 6px}
@@ -140,7 +148,7 @@ textarea{width:100%;min-height:90px;font-size:1rem;padding:10px;border:2px solid
   <div class="bar"><i id="q-bar"></i></div>
   <div class="card">
     <p class="stem" id="q-stem"></p>
-    <img id="q-img" class="qimg" alt="題目附圖">
+    <img id="q-img" class="qimg" alt="題目附圖"><p class="zoomhint hide" id="q-zoom">🔍 點圖可放大</p>
     <ul class="opts" id="q-opts"></ul>
     <div class="nav">
       <button type="button" class="btn ghost" id="btn-prev">上一題</button>
@@ -228,7 +236,7 @@ let QS = [];          // 題庫（依 id 排序）
 let byId = {};
 let S = null;         // 進行中的作答狀態 {code, phase, sid, order:[id...], opt:{id:[key...]}, ans:{id:key}, started, pos, submitted, result}
 const $ = (id) => document.getElementById(id);
-const show = (id) => { for (const s of ["s-load","s-error","s-start","s-se","s-quiz","s-sat","s-result"]) $(s).classList.toggle("hide", s !== id); window.scrollTo(0,0); };
+const show = (id) => { for (const s of ["s-load","s-error","s-start","s-se","s-quiz","s-sat","s-result"]) $(s).classList.toggle("hide", s !== id); document.body.classList.toggle("compact", ["s-se","s-quiz","s-sat"].includes(id)); window.scrollTo(0,0); };
 const lsGet = (k) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : null; } catch (e) { return null; } };
 const lsSet = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
 const lsDel = (k) => { try { localStorage.removeItem(k); } catch (e) {} };
@@ -393,12 +401,13 @@ function renderQ() {
   $("q-bar").style.width = `${Math.round((S.pos) / QS.length * 100)}%`;
   $("q-stem").textContent = q.stem;
   const img = $("q-img");
-  img.style.display = "none"; img.onload = () => { img.style.display = "block"; };
+  img.style.display = "none"; $("q-zoom").classList.add("hide"); img.onload = () => { img.style.display = "block"; $("q-zoom").classList.remove("hide"); };
   if ((q.note || "").includes("圖")) {   // 只有看圖題才帶圖，避免講解圖洩題；副檔名／大小寫依序嘗試（Pages 區分大小寫）
     const nn = String(q.id).padStart(2, "0");
     const cands = [`q${nn}.png`, `q${nn}.jpg`, `Q${nn}.jpg`, `Q${nn}.png`];
     img.onerror = () => { const nx = cands.shift(); if (nx) img.src = `../assets/img/${nx}`; else img.style.display = "none"; };
     img.src = `../assets/img/${cands.shift()}`;
+    if (img.complete && img.naturalWidth) img.onload();   // 同一張圖重畫時瀏覽器不會再觸發 load（點選項後圖會消失）
   } else { img.onerror = null; img.removeAttribute("src"); }
   const ul = $("q-opts"); ul.innerHTML = "";
   const optText = Object.fromEntries(q.options.map(o => [o.key, o.text]));
@@ -498,6 +507,7 @@ function dropPending(sid) { const q = (lsGet(PENDING_KEY) || []).filter(x => x.s
 $("btn-retry").onclick = () => { if (S && S.result) send(S.result); };
 $("btn-again").onclick = () => { S = null; setPhase(null); show("s-start"); };
 
+$("q-img").addEventListener("click", () => { const im = $("q-img"); if (!im.src) return; const lb = document.createElement("div"); lb.className = "lb"; const big = new Image(); big.src = im.src; big.alt = im.alt; const x = document.createElement("span"); x.textContent = "✕ 關閉"; lb.append(big, x); lb.onclick = () => lb.remove(); document.body.appendChild(lb); });
 loadQuestions().then(() => { const ph = new URLSearchParams(location.search).get("phase"); if (ph === "pre" || ph === "post") setPhase(ph); });
 </script>
 </body>

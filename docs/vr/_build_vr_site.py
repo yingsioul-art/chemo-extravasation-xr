@@ -29,7 +29,7 @@ A = HERE / "assets"
 for d in ("sky", "cards", "audio"):
     (A / d).mkdir(parents=True, exist_ok=True)
 Q = {q["id"]: q for q in json.load(open(DOCS / "assets/data/questions.json", encoding="utf-8"))["questions"]}
-MAXW = 2048   # 圖卡最大寬（高解析重製版 3200 寬會縮到這裡，VR 內已足夠清楚）
+MAXW = 2560   # 圖卡最大寬（高解析重製版 3200 寬會縮到這裡，VR 內已足夠清楚）
 
 # ---------- 環景 ----------
 for k, src in SKYS.items():
@@ -145,7 +145,7 @@ steps = [
               ("LA01", "LA02", "LA03", "LB00", "LB01", "LB02", "LB03", "LB04", "LB05", "LP1", "LP2", "LP3", "LP4", "LP5", "LQR")]},
 ]
 common = {"mute": card("MUTE"), "listen": card("LISTENQ"), "start": card("W_START")}
-json.dump({"steps": steps, "common": common, "paint": PAINT, "sizes": {v["f"]: [v["w"], v["h"]] for v in SIZES.values()}},
+json.dump({"ver": int(__import__("time").time()), "steps": steps, "common": common, "paint": PAINT, "sizes": {v["f"]: [v["w"], v["h"]] for v in SIZES.values()}},
           open(A / "scenes.json", "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 
 # 清掉已不用的舊圖卡

@@ -104,7 +104,7 @@ $("#muteBtn").onclick=stopAudio;
 function mk(parent,f,{x=0,y=1.6,z=-4,ry=0,rx=0,w,click,cls=true}={}){
   const [pw,ph]=D.sizes[f]; const W=w||3.2, H=W*ph/pw;
   const e=document.createElement("a-image");
-  e.setAttribute("src",`assets/cards/${f}`);
+  e.setAttribute("src",`assets/cards/${f}?v=${D.ver||0}`);
   e.setAttribute("width",W); e.setAttribute("height",H);
   e.setAttribute("position",`${x} ${y} ${z}`); e.setAttribute("rotation",`${rx} ${ry} 0`);
   e.setAttribute("material","shader:flat;transparent:true;alphaTest:0.01");
@@ -116,7 +116,7 @@ function mk(parent,f,{x=0,y=1.6,z=-4,ry=0,rx=0,w,click,cls=true}={}){
 function arc(deg,r=4.2){ const a=deg*Math.PI/180; return {x:Math.sin(a)*r, z:-Math.cos(a)*r, ry:-deg}; }
 /* 預抓下一站的圖（進瀏覽器快取），切換場景時不會空白太久；一次只抓一站，避免同時開太多連線 */
 const PRE=[];
-function stepImgs(s){ const L=[`assets/sky/${s.sky}.jpg`]; JSON.stringify(s).replace(/"([^"]+\.(?:jpg|png))"/g,(m,f)=>{if(D.sizes[f])L.push(`assets/cards/${f}`);}); return L; }
+function stepImgs(s){ const L=[`assets/sky/${s.sky}.jpg`]; JSON.stringify(s).replace(/"([^"]+\.(?:jpg|png))"/g,(m,f)=>{if(D.sizes[f])L.push(`assets/cards/${f}?v=${D.ver||0}`);}); return L; }
 function preloadNext(){ const n=D.steps[(cur+1)%D.steps.length]; stepImgs(n).forEach(u=>{const im=new Image(); im.src=u; PRE.push(im);}); }
 /* 場景切換時把相機轉回正前方＋預設俯角 */
 const PORTRAIT=()=>innerWidth/innerHeight<0.8;   // 手機直拿：水平視角只有約 40°，改單欄版面
@@ -197,7 +197,7 @@ function go(i,quiet){
   const st=$("#stage"); clear(st); clear($("#overlay")); st.object3D.visible=true;
   /* 床旁環景的預設視角往下看（對準入針處），卡片整組往下移，才不會擠在畫面上緣 */
   st.setAttribute("position",`0 ${s.sky==="bed"?(PORTRAIT()?-0.45:-0.9):0} 0`);
-  $("#sky").setAttribute("src",`assets/sky/${s.sky}.jpg`); $("#sky").setAttribute("rotation",`0 ${skyYaw(s.sky)} 0`); resetView(VIEW[s.sky].pitch);
+  $("#sky").setAttribute("src",`assets/sky/${s.sky}.jpg?v=${D.ver||0}`); $("#sky").setAttribute("rotation",`0 ${skyYaw(s.sky)} 0`); resetView(VIEW[s.sky].pitch);
   const cs=D.steps.filter(x=>(x.case||1)===(s.case||1)); $("#ttl").textContent=s.title;
   $("#prog").textContent=`${["","案例一","案例二","案例三","查詢站"][s.case||1]} ${cs.indexOf(s)+1}/${cs.length}`;
   const nextFn=()=>go(cur+1);
@@ -259,10 +259,11 @@ function layMcq(st,s,P){
 function layMulti(st,s,P){
   const sel=new Set(), frames=[]; let fails=0; const Z=-4.2;
   const toggle=k=>{ sel.has(k)?sel.delete(k):sel.add(k); frames[k].setAttribute("visible",sel.has(k)); };
-  if(P) mk(st,s.q,{x:0,y:2.6,z:Z,w:2.6}); else mk(st,s.q,{x:0,y:2.95,z:-4.4,w:3.0});
+  /* 9/29 使用者：用物卡放大為前一版兩倍 → 橫式 2 排×4 張拉開到左右 ±60°；直式改成 8 張環繞四周（轉手機看） */
+  if(P) mk(st,s.q,{x:0,y:2.85,z:-3.6,w:2.4}); else mk(st,s.q,{...arc(-100,3.6),y:2.1,w:2.6});
   s.items.forEach((it,k)=>{ const r=Math.floor(k/4), c=k%4; let pos, w;
-    if(P){ w=0.7; pos={x:(c-1.5)*0.74,y:1.8-r*0.58,z:Z,ry:0}; }
-    else { w=1.5; const a=arc((c-1.5)*22,4.0); pos={...a,y:1.65-r*1.2}; }
+    if(P){ w=1.9; pos={...arc(-157.5+k*45,3.0),y:1.35}; }
+    else { w=2.9; const a=arc((c-1.5)*40,4.3); pos={...a,y:2.55-r*2.35}; }
     const f=document.createElement("a-plane"); f.setAttribute("width",w*1.1); f.setAttribute("height",w*0.75*1.12);
     f.setAttribute("color","#1f8a4c"); f.setAttribute("visible",false); f.setAttribute("material","shader:flat");
     const a=(pos.ry||0)*Math.PI/180;   // 綠框放在卡片正後方 2 公分
@@ -277,8 +278,8 @@ function layMulti(st,s,P){
       return popup(s.show.img,s.show.au,()=>go(cur+1)); }
     popup(s.ng.img,s.ng.au);
   };
-  if(P) mk(st,s.check,{x:0,y:0.95,z:Z,w:1.1,click:check}); else mk(st,s.check,{...arc(-50,3.6),y:0.9,w:1.4,click:check});
-  if(s.poster&&!P){ mk(st,s.poster.img,{...arc(-72,3.6),y:1.6,w:1.3,click:()=>play(s.poster.au)}); }
+  if(P) mk(st,s.check,{x:0,y:0.2,z:-3.3,rx:-20,w:1.3,click:check}); else mk(st,s.check,{...arc(-100,3.6),y:0.55,w:1.8,click:check});
+  if(s.poster&&!P){ mk(st,s.poster.img,{...arc(100,3.6),y:1.6,w:1.5,click:()=>play(s.poster.au)}); }
 }
 /* 回抽：按住按鈕（滑鼠／手指按住、頭顯按住扳機），量筒升到滿＝抽不出；太早放開＝提醒並歸零 */
 let HOLD=null;
@@ -382,7 +383,7 @@ function answer(s,k){
 }
 
 /* ---------- 啟動 ---------- */
-fetch("assets/scenes.json").then(r=>r.json()).then(d=>{
+fetch("assets/scenes.json",{cache:"no-store"}).then(r=>r.json()).then(d=>{
   D=d; const sc=$("#scene");
   const boot=()=>go(0);
   if(sc.hasLoaded) boot(); else sc.addEventListener("loaded",boot);

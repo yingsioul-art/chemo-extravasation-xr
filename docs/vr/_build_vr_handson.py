@@ -76,9 +76,10 @@ ul{margin:14px 0 0 1.1em;padding:0}
 .opt{display:flex;gap:34px;align-items:center}.key{flex:none;width:140px;height:140px;border-radius:34px;background:#123a6b;color:#fff;font-size:96px;font-weight:800;display:flex;align-items:center;justify-content:center}
 .opt p{font-size:72px;line-height:1.3}
 .io{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center}
-.io img{height:430px;max-width:760px;object-fit:contain;border-radius:18px;background:#fff}
-.io b{font-size:74px}.io span{font-size:50px;color:#5b6675}
+.io img{height:360px;max-width:740px;object-fit:contain;border-radius:18px;background:#fff}
+.io b{font-size:96px;line-height:1.15}.io span{font-size:62px;line-height:1.2;color:#5b6675}
 .btn{display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;text-align:center;padding:0 30px;white-space:nowrap}
+.big .kick{font-size:56px}.big h1{font-size:100px}.big p{font-size:76px!important;line-height:1.45}
 .grid9{display:grid;grid-template-columns:repeat(3,1fr);gap:12px 16px;margin-top:6px}
 .grid9 div{display:flex;flex-direction:column;gap:8px;align-items:center;text-align:center;font-size:48px;line-height:1.3;background:#fff;border-radius:16px;padding:8px}
 .grid9 img{width:240px;height:170px;object-fit:contain;flex:none}.grid9 i{font-style:normal;font-weight:800;color:#123a6b;font-size:44px}
@@ -186,7 +187,7 @@ def build(card):
     C("HS_ASP_OK", fbcard("ok", asp_t, q15["explain_ok"].removeprefix("答對了。"), "文字來源：規格檔 Q15（表單 11）"), asp_t + "。" + q15["explain_ok"].removeprefix("答對了。"))
     # ---- 解毒劑（先查查詢站）----
     C("HS_ANTI_GATE", infocard(f"判斷（表單 {q16['form_item']}）", "先查：本案 Cisplatin 稀釋滴注，有沒有適用的解毒劑？",
-                               "開查詢站，輸入 <b>Cisplatin</b>，看「處置」欄。查完回來按「我查過了」。"),
+                               "開查詢站，輸入 <b>Cisplatin</b>，看「處置」欄。查完回來按「我查過了」。", cls="info big"),
       "先查：本案 Cisplatin 稀釋滴注，有沒有適用的解毒劑？開查詢站，輸入 Cisplatin，看處置欄。查完回來按我查過了。")
     C("HS_OPEN_CIS", btncard("🔍 開查詢站查 Cisplatin", "#123a6b", 1000, 300, 70))
     C("HS_CHECKED", btncard("我查過了 ▶", "#1f8a4c", 800, 300, 80))
@@ -197,7 +198,7 @@ def build(card):
     C("HS_ANTI_NG", fbcard("warn", H["antiTitleNg"], q16["explain_ng"], f"文字來源：規格檔 Q16（表單 {q16['form_item']}）", hint="retry"), H["antiTitleNg"] + "。" + q16["explain_ng"])
     # ---- 敷療（先查）----
     C("HS_COMP_GATE", infocard(f"查詢後決策（表單 {q19['form_item']}）", "本案 Cisplatin 外滲，敷什麼？",
-                               "不憑印象，先查：開查詢站，輸入 <b>Cisplatin</b>，看它是冷敷、熱敷還是 DMSO。查完回來按「我查過了」。"),
+                               "不憑印象，先查：開查詢站，輸入 <b>Cisplatin</b>，看它是冷敷、熱敷還是 DMSO。查完回來按「我查過了」。", cls="info big"),
       "本案 Cisplatin 外滲，敷什麼？不憑印象，先查。開查詢站輸入 Cisplatin，看它是冷敷、熱敷還是 DMSO。")
     C("HS_COMP_Q", qcard("查詢後決策", "本案 Cisplatin 外滲，敷什麼？"), "本案 Cisplatin 外滲，敷什麼？點選你的答案。")
     for c in H["COMP"]: C(f"HS_{c['id']}", imgopt(f"h_{c['id']}.png", c["name"], c.get("sub", "")))
@@ -224,7 +225,7 @@ def build(card):
     # ---- 案例二 DMSO ----
     C("HS_C2_INTRO", infocard("案例二｜情境", "Doxorubicin（小紅莓）外滲", e(H["sc2"]), img="h_sc02.png", cls="dm"), "案例二。" + H["sc2"])
     C("HS_C2_GATE", infocard("查詢（表單 16）", "Doxorubicin 外滲，查詢站說要怎麼敷？",
-                             "開查詢站，輸入 <b>Doxorubicin</b>（或 Adriamycin、小紅莓），記住：塗多大範圍、風乾還是覆蓋、幾天。", cls="dm"),
+                             "開查詢站，輸入 <b>Doxorubicin</b>（或 Adriamycin、小紅莓），記住：塗多大範圍、風乾還是覆蓋、幾天。", cls="dm big"),
       "Doxorubicin 外滲，查詢站說要怎麼敷？開查詢站，輸入 Doxorubicin，記住：塗多大範圍、風乾還是覆蓋、幾天。")
     C("HS_OPEN_DOX", btncard("🔍 開查詢站查 Doxorubicin", "#7a3fb5", 1100, 300, 66))
     C("HS_C2_FOUND", fbcard("dm", "查到了：DMSO＋冷敷", H["LOOKUP_DOXO"], "查詢站 Doxorubicin 列（院內 2023.5 版）", hint="點這張卡片 ▶ 開始三題",
@@ -269,7 +270,7 @@ def build(card):
     # ---- 渲染 ----
     with sync_playwright() as p:
         br = p.chromium.launch(channel="chrome", headless=True)
-        pg = br.new_page(device_scale_factor=1.0)
+        pg = br.new_page(device_scale_factor=1.6)   # 9/29：提高解析度（1600→2560 寬）
         shrunk = []
         for name, (html, (w, h)) in cards.items():
             pg.set_viewport_size({"width": w, "height": h})

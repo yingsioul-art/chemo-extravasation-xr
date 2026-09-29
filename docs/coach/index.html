@@ -1,6 +1,6 @@
 <!DOCTYPE html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>發生外滲後的指導</title>
-<meta name="description" content="化療藥品外滲後續處置（表單 17–19）：把提示詞貼給生成式 AI（Copilot、ChatGPT、Gemini 等），AI 扮演外滲病人，你用口語做外滲後的出院指導，AI 依四項檢核表逐項回饋。">
+<meta name="description" content="化療藥品外滲後續處置（表單 17–19）：把提示詞貼給生成式 AI（Copilot、ChatGPT、Gemini 等），AI 扮演外滲病人，你用口語做外滲後的住院衛教，AI 依四項檢核表逐項回饋。">
 <style>
 :root{--bg:#f4f7fb;--card:#fff;--ink:#1c2430;--mut:#5b6675;--line:#e3e8ef;--navy:#123a6b;--red:#c81e3a;--cold:#1f6fd0;--warm:#d9541e;--dmso:#7a3fb5;--ok:#2e8b57;--soft:#fff4f6;--gold:#b7791f}
 *{box-sizing:border-box}
@@ -146,7 +146,7 @@ footer{text-align:center;color:var(--mut);font-size:.8rem;padding:16px}
 <div class="uc-h">💡 這個練習做什麼？</div>
 <div class="uc-row">
 <div><b>🤖</b>AI 扮<br>外滲病人</div><i>›</i>
-<div><b>🗣️</b>你做<br>出院指導</div><i>›</i>
+<div><b>🗣️</b>你做<br>住院衛教</div><i>›</i>
 <div><b>✅</b>AI 依重點<br>逐項回饋</div>
 </div>
 <div class="uc-foot"><span>📋 不用寫提示詞，複製貼上即可</span><span>🔒 不輸入真實病人資料</span></div>
@@ -159,8 +159,8 @@ footer{text-align:center;color:var(--mut);font-size:.8rem;padding:16px}
 <div class="step"><span class="n">1</span><h2>選一個案例，決定 AI 扮誰</h2></div>
 <p class="sub">兩個都是刺激性藥品（非起疱性），一冷一熱，建議都練。</p>
 <div class="cases" id="caseSeg">
-<button class="casecard c1 on" data-case="1"><div class="ic">🧊</div><h3>案例一｜5-FU 外滲</h3><p>Fluorouracil・刺激性・明天出院</p><div class="tags"><span class="tag tC">冷敷</span></div></button>
-<button class="casecard c2" data-case="2"><div class="ic">🔥</div><h3>案例二｜Etoposide 外滲</h3><p>刺激性・後天出院</p><div class="tags"><span class="tag tW">熱敷</span></div></button>
+<button class="casecard c1 on" data-case="1"><div class="ic">🧊</div><h3>案例一｜5-FU 外滲</h3><p>Fluorouracil・刺激性・住院中</p><div class="tags"><span class="tag tC">冷敷</span></div></button>
+<button class="casecard c2" data-case="2"><div class="ic">🔥</div><h3>案例二｜Etoposide 外滲</h3><p>刺激性・住院中</p><div class="tags"><span class="tag tW">熱敷</span></div></button>
 </div>
 <div class="rolerow"><span style="font-size:.9rem">AI 扮演：</span>
 <div class="pill" id="roleSeg"><button data-role="p" class="on">病人本人</button><button data-role="f">家屬（選配）</button></div>
@@ -199,14 +199,14 @@ footer{text-align:center;color:var(--mut);font-size:.8rem;padding:16px}
 <div class="hdet hide" id="h3d"><p><b>看範例：對話大概長這樣</b></p>
 <div class="mock">
 <div class="tip">① 貼上提示詞送出後，AI 會開始扮演病人</div>
-<div class="row ai"><span class="who">AI</span><div class="bub">護理師你好……我手臂這裡還是有點脹脹的，明天就要回家了，回去要怎麼照顧啊？</div></div>
+<div class="row ai"><span class="who">AI</span><div class="bub">護理師你好……我手臂這裡還是有點脹脹的，接下來這幾天要怎麼照顧啊？</div></div>
 <div class="tip">② 你像對病人一樣講（一次講一兩個重點就好）</div>
-<div class="row me"><div class="bub">王阿姨，回家後手要抬高，睡覺時可以墊一個枕頭，讓它高過心臟，至少 48 小時喔。</div><span class="who">你</span></div>
+<div class="row me"><div class="bub">王阿姨，這隻手要抬高，睡覺時可以墊一個枕頭，讓它高過心臟，至少 48 小時喔。</div><span class="who">你</span></div>
 <div class="row ai"><span class="who">AI</span><div class="bub">抬高……那我洗澡的時候也要抬嗎？冰敷要敷多久？</div></div>
 <div class="row me"><div class="bub">洗澡時盡量抬著就好。冰敷每次 20 分鐘，一天 4 次，敷兩天，記得不要壓、不要揉。</div><span class="who">你</span></div>
 <div class="tip">③ 繼續回答病人的問題……全部講完後輸入「我說完了」</div>
 <div class="row me"><div class="bub">我說完了</div><span class="who">你</span></div>
-<div class="row ai"><span class="who">AI</span><div class="bub">【回饋】✅ 抬高 48 小時：有講到。✅ 冷敷方式：有講到次數與時間。⬜ 回診時機：沒有提到哪些症狀要馬上回來……</div></div>
+<div class="row ai"><span class="who">AI</span><div class="bub">【回饋】✅ 抬高 48 小時：有講到。✅ 冷敷方式：有講到次數與時間。⬜ 惡化要告知：沒有提到哪些症狀要馬上跟護理師說……</div></div>
 </div>
 <p class="note">範例只示範流程，實際對話內容會依你講的而不同。</p>
 <details class="guide"><summary>卡住了怎麼辦？</summary>
@@ -267,7 +267,7 @@ footer{text-align:center;color:var(--mut);font-size:.8rem;padding:16px}
 const CHECK=[
  {t:"抬高患肢至少 48 小時",d:"高於心臟；睡覺用枕頭墊高也算。不是「不痛就放下」。"},
  {t:"每天自己看九項＋發燒",d:"皮膚顏色、溫度、完整性（有沒有破皮）、腫脹、水泡、分泌物、疼痛、灼熱或麻木、手能不能正常活動；加上有沒有發燒。"},
- {t:"惡化就回診或聯絡",d:"範圍變大、變黑變硬、起水泡、破皮、越來越痛、發燒 → 回診或打電話回病房，不要等下次回診。"},
+ {t:"惡化要馬上告訴醫療團隊",d:"範圍變大、變黑變硬、起水泡、破皮、越來越痛、發燒 → 馬上按鈴或告訴護理師，讓住院醫療團隊處理。"},
  {t:"敷療五要素＋不可壓迫",d:"冷還是熱、幾度、每次幾分鐘、一天幾次、敷幾天；並說「不可以壓、不可以揉」。"}
 ];
 
@@ -275,15 +275,15 @@ const CHECK=[
 const CASES={
  1:{short:"案例一 5-FU",name:"案例一｜5-FU（Fluorouracil）外滲",drug:"5-FU（Fluorouracil）",vesicant:"刺激性藥品（不是起疱性藥品）",site:"左前臂周邊靜脈留置針",when:"今天上午打第一次化療時",
     done:"護理師已停藥、換 10 mL 空針盡量回抽、拔針、油性筆畫了範圍、開始冰敷。",
-    home:"明天上午出院回家。",day:"明天",
+    home:"這幾天仍住院治療。",day:"這幾天",
     comp:"冷敷：冰敷袋或冰塊包毛巾 0℃，每次 20 分鐘，一天 4 次，持續 1–2 天（24–48 小時）。",
     dmso:"不適用。5-FU 是刺激性藥品，不使用 DMSO。",
     dmsoRule:"本案不用 DMSO。學生若主動說明「這個藥不需要塗 DMSO」或「只要冰敷」＝「有講到」；沒提 DMSO 也算「有講到」（因為不適用）；若學生說要塗 DMSO 或要熱敷＝「講錯」。",
     tag:'<span class="tag tC">冷敷</span>',
-    worry:"擔心手臂會不會爛掉、明天出院回家要怎麼弄冰敷、冰塊可不可以直接放在皮膚上、能不能揉一揉讓它散掉。"},
+    worry:"擔心手臂會不會爛掉、住院這幾天要怎麼弄冰敷、冰塊可不可以直接放在皮膚上、能不能揉一揉讓它散掉。"},
  2:{short:"案例二 Etoposide",name:"案例二｜Etoposide 外滲",drug:"Etoposide",vesicant:"刺激性藥品（不是起疱性藥品）",site:"右前臂周邊靜脈留置針",when:"今天下午打化療時",
     done:"護理師已停藥、換 10 mL 空針盡量回抽、拔針、油性筆畫了範圍、開始溫熱敷。",
-    home:"後天上午出院回家。",day:"後天",
+    home:"這幾天仍住院治療。",day:"這幾天",
     comp:"熱敷：44–50℃ 溫熱敷，每次 20–30 分鐘，一天 4 次，持續 1–2 天（24–48 小時）。熱敷讓血管擴張，藥品被血流帶走稀釋。",
     dmso:"不適用。Etoposide 是刺激性藥品，不使用 DMSO。",
     dmsoRule:"本案不用 DMSO。學生若主動說明「這個藥不需要塗 DMSO」或「只要熱敷」＝「有講到」；沒提 DMSO 也算「有講到」（因為不適用）；若學生說要塗 DMSO 或要冰敷＝「講錯」。",
@@ -292,14 +292,14 @@ const CASES={
 };
 const ROLES={
  p:{short:"AI 扮病人",who:"病人本人「張示範」，58 歲，第一次打化療，不太懂醫療名詞，會用生活化的話問問題，有點緊張。",say:"張示範本人"},
- f:{short:"AI 扮家屬",who:"病人的太太「張太太」，回家後主要由她照顧。她沒有醫療背景，會幫先生問，也會問自己要注意什麼。病人張示範 58 歲，第一次打化療。",say:"張示範的太太"}
+ f:{short:"AI 扮家屬",who:"病人的太太「張太太」，住院期間在旁陪病照顧。她沒有醫療背景，會幫先生問，也會問自己要注意什麼。病人張示範 58 歲，第一次打化療。",say:"張示範的太太"}
 };
 
 function buildPrompt(c,r){
  const C=CASES[c],R=ROLES[r];
- return `【角色扮演練習：化療藥品外滲後的出院衛教】
+ return `【角色扮演練習：化療藥品外滲後的住院衛教】
 
-你現在要扮演一位病人${r==="f"?"的家屬":""}，配合我（護理師）練習「出院衛教」。
+你現在要扮演一位病人${r==="f"?"的家屬":""}，配合我（護理師）練習「外滲後的住院衛教」。
 
 🔒 最重要的規則（整段練習都有效，優先於其他一切）
 從你的第一句回覆開始，你就是「${R.say}」，不是 AI、不是老師、不是助理。在我輸入「我說完了」或「結束」之前，你說的每一句話都只能是${r==="f"?"病人家屬":"病人"}會說的話：
@@ -322,7 +322,7 @@ ${R.who}
 3. 我講得太專業、太快、或用了你聽不懂的詞：像真的病人一樣反問「那是什麼意思？」。
 4. 我講錯（冷熱、溫度、時間與下面的「敷療說明」不同）：不糾正、不暗示，照我說的接受，頂多疑惑地問一句「是這樣喔？」。錯誤留到最後回饋。
 5. 我問你「我講得對嗎？」「還漏了什麼？」「你教我好不好？」或叫你跳出角色：還是用病人口氣回答，例如「我也不懂耶，你是護理師，聽你的啦」，然後繼續當病人。
-6. 我講的內容跟衛教無關：用病人口氣把話題拉回「回家這隻手要怎麼顧」。
+6. 我講的內容跟衛教無關：用病人口氣把話題拉回「這幾天這隻手要怎麼顧」。
 7. 整段練習裡，你最多只能用病人的口氣問一次「還有什麼要注意的嗎？」。
 
 ■ 每次送出回覆前，先在心裡檢查（不要寫出來）
@@ -345,13 +345,13 @@ ${R.who}
 檢核表四項：
 1. 抬高患肢至少 48 小時（高於心臟；睡覺用枕頭墊高也算）。
 2. 每天自己觀察九項＋發燒：皮膚顏色、溫度、完整性（有沒有破皮）、腫脹、水泡、分泌物、疼痛、灼熱或麻木、手的活動；加上有沒有發燒。至少講到其中 5 項且提到「每天看」才算有講到。
-3. 惡化就回診或聯絡：講到「哪些情況」（範圍變大、變黑變硬、起水泡、破皮、更痛、發燒）以及「要做什麼」（回診或打電話回病房），兩者都有才算有講到。
+3. 惡化要馬上告訴醫療團隊：講到「哪些情況」（範圍變大、變黑變硬、起水泡、破皮、更痛、發燒）以及「要做什麼」（馬上按鈴或告訴護理師，讓住院醫療團隊處理），兩者都有才算有講到。本案病人住院中，不需要講回診或打電話回病房。
 4. 敷療五要素＋不可壓迫：冷或熱、幾度、每次幾分鐘、一天幾次、敷幾天，並說不可以壓、不可以揉。五要素缺 1–2 項＝沒講到（在說明寫出缺哪些）；冷熱、溫度、時間任一與敷療說明不符＝講錯。
 
 四項之後，加一行「💡 最重要的一句建議：」，只給一句、針對我最該先改的地方（例如講了敷法卻沒講幾天、用了病人聽不懂的詞、沒確認病人聽懂）。最後一行寫「可以再用另一個案例練一次。」
 
 再提醒一次：在我輸入「我說完了」或「結束」之前，你只是${R.say}，不是老師。
-現在開始：不要寫任何說明或開場白，直接用${R.say}的口氣說一句話，例如「護理師，${r==="f"?"我先生":"我"}${C.day}就要回家了，這隻手要怎麼顧啊？」，然後等我回答。`;
+現在開始：不要寫任何說明或開場白，直接用${R.say}的口氣說一句話，例如「護理師，${r==="f"?"我先生":"我"}這隻手這幾天要怎麼顧啊？」，然後等我回答。`;
 }
 
 /* ---------- 畫面 ---------- */

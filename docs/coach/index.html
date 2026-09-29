@@ -122,14 +122,17 @@ footer{text-align:center;color:var(--mut);font-size:.8rem;padding:16px}
 .uc-foot{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:8px;font-size:.84rem;color:var(--mut)}
 .howicons{margin:0}
 @media (max-width:480px){.uc-row.howicons{display:grid;grid-template-columns:1fr 1fr;gap:6px}.uc-row.howicons i{display:none}.uc-row div{font-size:.84rem;padding:8px 4px}.uc-row div b{font-size:1.6rem}}
+.howicons div{cursor:pointer}.howicons div.on{border-color:var(--red);background:var(--soft);font-weight:700}
+.hdet{margin-top:10px;font-size:.92rem}.hdet p{margin:4px 0}
+#s0 .usecard{margin:0 0 6px}#s0 .uc-row div{font-size:1rem}
 .stepbar a.lock{opacity:.45;cursor:default}
 .sec.wiz{animation:fadein .25s ease}@keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 @media (max-width:480px){.sec{padding:14px}.stepbar a{font-size:.8rem}.stepbar a .txt{display:none}.stepbar a.on .txt{display:inline}}
 </style></head>
 <body>
-<header><div class="wrap"><a href="../">← 回首頁</a><h1>🗣️ 發生外滲後的指導</h1><div class="flow"><div><span>🧊🔥</span>選案例</div><i>›</i><div><span>📋</span>複製提示詞</div><i>›</i><div><span>🤖</span>貼給 AI</div><i>›</i><div><span>🗣️</span>做指導</div><i>›</i><div><span>✅</span>看回饋</div></div></div></header>
+<header><div class="wrap"><a href="../">← 回首頁</a><h1>🗣️ 發生外滲後的指導</h1></div></header>
 
-<nav class="stepbar"><div class="wrap">
+<nav class="stepbar hide" id="stepbar"><div class="wrap">
 <a href="#" id="nav1" data-step="1" class="on"><span class="n">1</span><span class="txt">選案例</span></a>
 <a href="#" id="nav2" data-step="2" class="lock"><span class="n">2</span><span class="txt">複製提示詞</span></a>
 <a href="#" id="nav3" data-step="3" class="lock"><span class="n">3</span><span class="txt">練完自評</span></a>
@@ -137,19 +140,24 @@ footer{text-align:center;color:var(--mut);font-size:.8rem;padding:16px}
 
 <main>
 
-<!-- STEP 1 -->
-<section class="sec wiz" id="s1">
-<div class="step"><span class="n">1</span><h2>選一個案例，決定 AI 扮誰</h2></div>
-<p class="sub">兩個都是刺激性藥品（非起疱性），一冷一熱，建議都練。</p>
+<!-- STEP 0：首屏只放用途卡＋進入鈕 -->
+<section class="sec wiz" id="s0">
 <div class="usecard">
 <div class="uc-h">💡 這個練習做什麼？</div>
 <div class="uc-row">
-<div><b>🤖</b>AI 扮演<br>外滲的病人</div><i>›</i>
+<div><b>🤖</b>AI 扮<br>外滲病人</div><i>›</i>
 <div><b>🗣️</b>你做<br>出院指導</div><i>›</i>
-<div><b>✅</b>AI 依 4 重點<br>逐項回饋</div>
+<div><b>✅</b>AI 依重點<br>逐項回饋</div>
 </div>
 <div class="uc-foot"><span>📋 不用寫提示詞，複製貼上即可</span><span>🔒 不輸入真實病人資料</span></div>
 </div>
+<div class="btnrow"><button class="btn big" id="go1">進入練習 ▶</button></div>
+</section>
+
+<!-- STEP 1 -->
+<section class="sec wiz hide" id="s1">
+<div class="step"><span class="n">1</span><h2>選一個案例，決定 AI 扮誰</h2></div>
+<p class="sub">兩個都是刺激性藥品（非起疱性），一冷一熱，建議都練。</p>
 <div class="cases" id="caseSeg">
 <button class="casecard c1 on" data-case="1"><div class="ic">🧊</div><h3>案例一｜5-FU 外滲</h3><p>Fluorouracil・刺激性・明天出院</p><div class="tags"><span class="tag tC">冷敷</span></div></button>
 <button class="casecard c2" data-case="2"><div class="ic">🔥</div><h3>案例二｜Etoposide 外滲</h3><p>刺激性・後天出院</p><div class="tags"><span class="tag tW">熱敷</span></div></button>
@@ -169,15 +177,17 @@ footer{text-align:center;color:var(--mut);font-size:.8rem;padding:16px}
 <button class="btn big" id="copyBtn">📋 複製提示詞</button>
 <div class="btnrow"><button class="btn line" id="dlBtn">⬇ 下載 .txt</button><button class="btn ghost" id="toggleBtn">看提示詞全文 ▾</button><span id="copied"></span></div>
 <div class="prewrap" id="prewrap"><pre id="promptBox"></pre><div class="fade"></div></div>
-<div class="usecard"><div class="uc-h">🧭 怎麼練（4 步）</div>
-<div class="uc-row howicons">
-<div><b>📋</b>按「複製」</div><i>›</i>
-<div><b>🤖</b>開 AI<br>貼上送出</div><i>›</i>
-<div><b>🗣️</b>把它當病人<br>一句一句講</div><i>›</i>
-<div><b>⌨️</b>打「我說完了」<br>看回饋</div>
+
+<button class="btn line big" id="howBtn" style="margin-top:12px">🧭 怎麼練（4 步）▾</button>
+<div class="usecard hide" id="howBox">
+<div class="uc-row howicons" id="howTabs">
+<div data-h="1" role="button" tabindex="0"><b>📋</b>① 按「複製」</div><i>›</i>
+<div data-h="2" role="button" tabindex="0"><b>🤖</b>② 開 AI<br>貼上送出</div><i>›</i>
+<div data-h="3" role="button" tabindex="0"><b>🗣️</b>③ 把它當病人<br>一句一句講</div><i>›</i>
+<div data-h="4" role="button" tabindex="0"><b>⌨️</b>④ 打「我說完了」<br>看回饋</div>
 </div>
-</div>
-<details class="guide" open><summary>要貼到哪裡？任何一個生成式 AI 都可以</summary>
+<div class="hdet" id="h1d"><p>按上面紅色的 <b>📋 複製提示詞</b>，看到「✅ 已複製」就成功，會自動跳到第 ② 步。</p><p class="note">貼上沒東西？按「看提示詞全文」長按全選複製，或下載 .txt。</p></div>
+<div class="hdet hide" id="h2d"><p><b>要貼到哪裡？任何一個生成式 AI 都可以</b>——點一個打開，在最下面輸入框<b>貼上 → 送出</b>。</p>
 <div class="tools">
 <a href="https://copilot.microsoft.com/" target="_blank" rel="noopener"><b>Microsoft Copilot</b><small>院內帳號可登入</small></a>
 <a href="https://chatgpt.com/" target="_blank" rel="noopener"><b>ChatGPT</b><small>免費版即可</small></a>
@@ -185,9 +195,8 @@ footer{text-align:center;color:var(--mut);font-size:.8rem;padding:16px}
 <a href="https://claude.ai/" target="_blank" rel="noopener"><b>Claude</b><small>免費版即可</small></a>
 </div>
 <p class="note" style="margin:0">手機上也可以用這些 AI 的 App。挑一個你打得開的就好，效果差不多。</p>
-</details>
-
-<details class="guide"><summary>看範例：對話大概長這樣</summary>
+</div>
+<div class="hdet hide" id="h3d"><p><b>看範例：對話大概長這樣</b></p>
 <div class="mock">
 <div class="tip">① 貼上提示詞送出後，AI 會開始扮演病人</div>
 <div class="row ai"><span class="who">AI</span><div class="bub">護理師你好……我手臂這裡還是有點脹脹的，明天就要回家了，回去要怎麼照顧啊？</div></div>
@@ -200,36 +209,21 @@ footer{text-align:center;color:var(--mut);font-size:.8rem;padding:16px}
 <div class="row ai"><span class="who">AI</span><div class="bub">【回饋】✅ 抬高 48 小時：有講到。✅ 冷敷方式：有講到次數與時間。⬜ 回診時機：沒有提到哪些症狀要馬上回來……</div></div>
 </div>
 <p class="note">範例只示範流程，實際對話內容會依你講的而不同。</p>
-</details>
-
 <details class="guide"><summary>卡住了怎麼辦？</summary>
 <dl class="faq">
 <dt>😵 AI 開始講課、教你、糾正你，沒有當病人</dt><dd>直接輸入「<b>回到角色</b>」，它就會接著用病人口氣講。還是不行的話，開「新對話」重新貼一次提示詞。</dd>
 <dt>📋 按了複製，貼上沒東西</dt><dd>按「看提示詞全文」，用手指長按文字 → 全選 → 複製；或按「⬇ 下載 .txt」再打開複製。</dd>
 <dt>🔑 AI 網站要我登入</dt><dd>換另一個 AI 試試（ChatGPT、Gemini、Claude 用一般帳號即可），或用院內帳號登入 Copilot。</dd>
-<dt>🤔 不知道要講什麼</dt><dd>往下看「參考資料」的四項衛教重點，照著一項一項講就好，講錯了 AI 會在回饋裡告訴你。</dd>
+<dt>🤔 不知道要講什麼</dt><dd>打開本頁下方「📚 參考資料」看四項衛教重點，照著一項一項講就好，講錯了 AI 會在回饋裡告訴你。</dd>
 <dt>🔁 想重來</dt><dd>在 AI 網站開「新對話」，再貼一次提示詞。</dd>
 </dl>
 </details>
+</div>
+<div class="hdet hide" id="h4d"><p>講完所有重點，輸入 <b>「我說完了」</b>，AI 會停止扮演、逐項回饋。最多 20 輪；AI 跑出角色就打「<b>回到角色</b>」。</p>
+<div class="btnrow"><button class="btn big" id="go3b">練完了 → 自評 ▶</button></div></div>
+</div>
 
-<div class="hint">💡 <div>最多 20 輪｜AI 開始教你 → 打「<b>回到角色</b>」｜練完回來做自評</div></div>
-<div class="btnrow"><button class="btn ghost" id="back1">◀ 上一步</button><button class="btn big" id="go3" style="flex:1">練完了 → 下一步：自評 ▶</button></div>
-</section>
-
-<!-- STEP 3 -->
-<section class="sec wiz hide" id="s3">
-<div class="step"><span class="n">3</span><h2>練完了？自己勾一次，再對 AI 的回饋</h2></div>
-<p class="sub">四項就是 AI 回饋用的檢核表。先憑印象勾，再看 AI 怎麼說。</p>
-<div id="chkList"></div>
-<div class="sumrow" id="chkSum"></div>
-<div class="btnrow"><button class="btn ghost" id="back2">◀ 上一步</button><button class="btn line" id="clearChk">清除勾選</button><button class="btn" id="swapBtn">換另一個案例再練 🔁</button></div>
-<div class="hint" id="hint3">📌 <div><b>對照方法：</b>你勾「有講到」但 AI 說「沒講到」→ 通常是講得不完整（例如講了冷敷，沒講幾天）。</div></div>
-</section>
-
-<!-- 參考資料 -->
-<section class="sec ref">
-<div class="step"><span class="n" style="background:var(--navy)">📚</span><h2>參考資料</h2></div>
-
+<details class="guide" id="refBox"><summary>📚 參考資料（敷療速查、評核表第 17–19 項）</summary>
 <details open><summary>敷療速查：本頁兩案例（皆為刺激性藥品，不用 DMSO）</summary>
 <div class="grid3">
 <div class="box cold"><b>🧊 冷敷（案例一 5-FU）</b><ul><li>冰敷袋或冰塊包毛巾 0℃</li><li>每次 20 分鐘，一天 4 次</li><li>持續 1–2 天（24–48 小時）</li><li>血管收縮，把藥侷限在原處</li></ul></div>
@@ -246,7 +240,22 @@ footer{text-align:center;color:var(--mut);font-size:.8rem;padding:16px}
 </ol>
 <div id="qArea"></div>
 </details>
+</details>
+
+<div class="btnrow"><button class="btn ghost" id="back1">◀ 上一步</button><button class="btn big" id="go3" style="flex:1">練完了 → 下一步：自評 ▶</button></div>
 </section>
+
+<!-- STEP 3 -->
+<section class="sec wiz hide" id="s3">
+<div class="step"><span class="n">3</span><h2>練完了？自己勾一次，再對 AI 的回饋</h2></div>
+<p class="sub">四項就是 AI 回饋用的檢核表。先憑印象勾，再看 AI 怎麼說。</p>
+<div id="chkList"></div>
+<div class="sumrow" id="chkSum"></div>
+<div class="btnrow"><button class="btn ghost" id="back2">◀ 上一步</button><button class="btn line" id="clearChk">清除勾選</button><button class="btn" id="swapBtn">換另一個案例再練 🔁</button></div>
+<div class="hint" id="hint3">📌 <div><b>對照方法：</b>你勾「有講到」但 AI 說「沒講到」→ 通常是講得不完整（例如講了冷敷，沒講幾天）。</div></div>
+</section>
+
+
 
 </main>
 <footer>化療藥品外滲預防與處理 XR 教材｜④ 後續處置｜版本 2026-09-26</footer>
@@ -368,6 +377,7 @@ async function copyText(t){
 }
 async function doCopy(){
  const ok=await copyText($("#promptBox").textContent);
+ if(ok)openHow(2);
  $("#copied").textContent=ok?"✅ 已複製，打開 AI 貼上":"⚠️ 無法自動複製，請展開全文長按複製";
  [$("#copyBtn"),$("#dockCopy")].forEach(b=>{b.textContent=ok?"✅ 已複製":"📋 複製提示詞";});
  setTimeout(()=>{[$("#copyBtn"),$("#dockCopy")].forEach(b=>b.textContent="📋 複製提示詞");},2500);
@@ -380,6 +390,8 @@ $("#toggleBtn").onclick=()=>{const w=$("#prewrap");w.classList.toggle("open");$(
 let unlocked=1;
 function show(n){
  if(n>unlocked)unlocked=n;
+ document.getElementById("s0").classList.toggle("hide",n!==0);
+ $("#stepbar").classList.toggle("hide",n===0);
  [1,2,3].forEach(i=>{
   document.getElementById("s"+i).classList.toggle("hide",i!==n);
   const a=document.getElementById("nav"+i);
@@ -389,7 +401,16 @@ function show(n){
  window.scrollTo({top:0,behavior:"smooth"});
 }
 document.querySelectorAll(".stepbar a").forEach(a=>a.onclick=e=>{e.preventDefault();const n=+a.dataset.step;if(n<=unlocked)show(n);});
+$("#go1").onclick=()=>show(1);
 $("#go2").onclick=()=>show(2);
+$("#go3b").onclick=()=>show(3);
+function openHow(h){
+ $("#howBox").classList.remove("hide");$("#howBtn").textContent="🧭 怎麼練（4 步）▴";
+ document.querySelectorAll("#howTabs [data-h]").forEach(d=>d.classList.toggle("on",+d.dataset.h===h));
+ [1,2,3,4].forEach(i=>$("#h"+i+"d").classList.toggle("hide",i!==h));
+}
+$("#howBtn").onclick=()=>{const hid=$("#howBox").classList.contains("hide");if(hid)openHow(1);else{$("#howBox").classList.add("hide");$("#howBtn").textContent="🧭 怎麼練（4 步）▾";}};
+document.querySelectorAll("#howTabs [data-h]").forEach(d=>{d.onclick=()=>openHow(+d.dataset.h);d.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();openHow(+d.dataset.h);}};});
 $("#go3").onclick=()=>show(3);
 $("#back1").onclick=()=>show(1);
 $("#back2").onclick=()=>show(2);

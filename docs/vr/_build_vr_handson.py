@@ -76,12 +76,12 @@ ul{margin:14px 0 0 1.1em;padding:0}
 .opt{display:flex;gap:34px;align-items:center}.key{flex:none;width:140px;height:140px;border-radius:34px;background:#123a6b;color:#fff;font-size:96px;font-weight:800;display:flex;align-items:center;justify-content:center}
 .opt p{font-size:72px;line-height:1.3}
 .io{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center}
-.io img{height:380px;max-width:720px;object-fit:contain;border-radius:18px;background:#fff}
+.io img{height:430px;max-width:760px;object-fit:contain;border-radius:18px;background:#fff}
 .io b{font-size:74px}.io span{font-size:50px;color:#5b6675}
 .btn{display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;text-align:center;padding:0 30px;white-space:nowrap}
-.grid9{display:grid;grid-template-columns:repeat(3,1fr);gap:14px 22px;margin-top:10px}
-.grid9 div{display:flex;gap:14px;align-items:center;font-size:40px;line-height:1.3;background:#fff;border-radius:16px;padding:8px}
-.grid9 img{width:120px;height:90px;object-fit:contain;flex:none}.grid9 i{font-style:normal;font-weight:800;color:#123a6b;font-size:44px}
+.grid9{display:grid;grid-template-columns:repeat(3,1fr);gap:12px 16px;margin-top:6px}
+.grid9 div{display:flex;flex-direction:column;gap:8px;align-items:center;text-align:center;font-size:48px;line-height:1.3;background:#fff;border-radius:16px;padding:8px}
+.grid9 img{width:240px;height:170px;object-fit:contain;flex:none}.grid9 i{font-style:normal;font-weight:800;color:#123a6b;font-size:44px}
 """
 FIT_JS = """()=>{const r=document.querySelector('[data-root]');if(!r)return 1;
   const over=()=>{if(r.scrollHeight>r.clientHeight+1||r.scrollWidth>r.clientWidth+1)return true;
@@ -210,9 +210,9 @@ def build(card):
     C("HS_Q19_NG", fbcard("ng", "正解說明", q19["explain_ng"], f"文字來源：規格檔 Q19（表單 {q19['form_item']}）", hint="點這張卡片 ▶ 看九步驟總覽"), q19["explain_ng"])
     # ---- 九步驟總覽 ----
     g9 = "".join(f'<div><img src="{img64("h_" + s["id"] + ".png", 240)}"><span><i>{i + 1}</i> {e(s["t"])}</span></div>' for i, s in enumerate(H["STEPS9"]))
-    C("HS_SUM1", (f'<div class="c ok" data-root style="justify-content:flex-start;padding-top:40px"><div class="bar"></div><div class="kick">完成案例一</div>'
-                  f'<h1 style="font-size:64px">初步處理九步驟總覽</h1><div class="grid9">{g9}</div>'
-                  f'<p style="font-size:40px;color:#5b6675;margin-top:14px">第 9 步 DMSO 在案例二。</p></div>', (1600, 900)),
+    C("HS_SUM1", (f'<div class="c ok" data-root style="justify-content:flex-start;padding-top:40px;height:1400px"><div class="bar"></div><div class="kick">完成案例一</div>'
+                  f'<h1 style="font-size:76px">初步處理九步驟總覽</h1><div class="grid9">{g9}</div>'
+                  f'<p style="font-size:44px;color:#5b6675;margin-top:14px">第 9 步 DMSO 在案例二。</p></div>', (1600, 1400)),
       "完成案例一。初步處理九個步驟：" + "；".join(f"第{i + 1}，{s['t']}" for i, s in enumerate(H["STEPS9"])) + "。第九步 DMSO 在案例二。")
     C("HS_GO_LOOKUP", btncard("下一站：查詢站 ▶", "#123a6b", 1000, 300, 72))
     C("HS_GO_C2", btncard("🟣 案例二 DMSO", "#7a3fb5", 1000, 300, 72))

@@ -165,8 +165,9 @@ $("#pClose").onclick=()=>{$("#panel").classList.remove("on"); $("#pFrame").src="
 /* 直式手機版面：全部放正前方一欄，寬度 ≤2.6 公尺（4.2 公尺外約 36°） */
 function layoutPortrait(st,s,nextFn){
   const Z=-4.2;
-  if(s.type==="info"){ mk(st,s.main,{x:0,y:2.2,z:Z,w:2.6});
-    if(s.btns) s.btns.forEach((b,k)=>mk(st,b.img,{x:0,y:1.2-k*0.42,z:Z,w:1.45,click:()=>to(b.to)}));
+  if(s.type==="info"){ const [mw,mh]=D.sizes[s.main], tall=mh/mw>0.7, cy=tall?2.35:2.2; mk(st,s.main,{x:0,y:cy,z:Z,w:2.6});
+    const by=cy-2.6*mh/mw/2-0.3;
+    if(s.btns) s.btns.forEach((b,k)=>mk(st,b.img,{x:0,y:(tall?by:1.2)-k*0.42,z:Z,w:1.6,click:()=>to(b.to)}));
     else mk(st,s.next,{x:0,y:1.05,z:Z,w:1.3,click:nextFn}); }
   if(s.type==="mcq") layMcq(st,s,true);
   if(s.type==="multi") layMulti(st,s,true);
@@ -202,8 +203,8 @@ function go(i,quiet){
   const nextFn=()=>go(cur+1);
   if(PORTRAIT()) layoutPortrait(st,s,nextFn); else {
   if(s.type==="info"){
-    mk(st,s.main,{x:0,y:1.9,z:-4.2,w:3.4});
-    if(s.next) mk(st,s.next,{x:0,y:0.55,z:-3.6,rx:-20,w:1.4,click:nextFn});
+    if(s.id==="sum1") mk(st,s.main,{x:0,y:1.6,z:-2.7,w:3.0}); else mk(st,s.main,{x:0,y:1.95,z:-4.0,w:3.8});
+    if(s.next) mk(st,s.next,{...(s.id==="sum1"?arc(48,3.3):{x:0,z:-3.3}),y:s.id==="sum1"?1.3:0.4,rx:s.id==="sum1"?0:-22,w:2.2,click:nextFn});
   }
   if(s.type==="clues"){
     mk(st,s.main,{x:0,y:2.4,z:-4.6,w:2.9});
@@ -218,13 +219,14 @@ function go(i,quiet){
       s.opts.forEach((o,k)=>mk(st,o.img,{...Op,y:1.45+((n-1)/2-k)*0.8,w:2.45,click:()=>answer(s,o.k)})); }
     if(s.poster){const p=arc(-70,3.6); mk(st,s.poster.img,{...p,y:1.6,w:1.3,click:()=>play(s.poster.au)});}
   }
-  if(s.type==="info"&&s.btns){ const n=s.btns.length; s.btns.forEach((b,k)=>{const p=arc((k-(n-1)/2)*24,3.8); mk(st,b.img,{...p,y:0.35,rx:-20,w:1.35,click:()=>to(b.to)});}); }
+  if(s.type==="info"&&s.btns){ const n=s.btns.length; s.btns.forEach((b,k)=>{ if(s.id==="sum1"){ mk(st,b.img,{...arc(38+k*16,3.0),y:0.55-k*0.7,w:1.9,click:()=>to(b.to)}); return; }
+    const p=arc((k-(n-1)/2)*36,3.4); mk(st,b.img,{...p,y:0.3,rx:-22,w:2.7,click:()=>to(b.to)});}); }
   if(s.type==="mcq") layMcq(st,s,false);
   if(s.type==="multi") layMulti(st,s,false);
   if(s.type==="hold") layHold(st,s,false);
-  if(s.type==="gate"){ mk(st,s.main,{x:0,y:1.95,z:-4.2,w:3.3});
-    mk(st,s.open,{...arc(-15,3.7),y:0.45,rx:-20,w:1.5,click:()=>open2D(s.url,s.utitle,D.steps.find(x=>x.type==="end"))});
-    mk(st,s.checked,{...arc(15,3.7),y:0.45,rx:-20,w:1.2,click:()=>gateDone(s)}); }
+  if(s.type==="gate"){ mk(st,s.main,{x:0,y:2.0,z:-4.0,w:3.9});
+    mk(st,s.open,{...arc(-17,3.6),y:0.35,rx:-20,w:2.0,click:()=>open2D(s.url,s.utitle,D.steps.find(x=>x.type==="end"))});
+    mk(st,s.checked,{...arc(17,3.6),y:0.35,rx:-20,w:1.7,click:()=>gateDone(s)}); }
   if(s.type==="paint") layPaint(st,s,false);
   if(s.type==="end"){
     mk(st,s.toC2,{...arc(-62,3.6),y:1.45,w:1.4,click:()=>to("c2intro")});
@@ -247,20 +249,20 @@ function layMcq(st,s,P){
   if(P){ mk(st,s.q,{x:0,y:2.45,z:Z,w:2.6});
     if(s.grid) s.opts.forEach((o,k)=>mk(st,o.img,{x:(k-(n-1)/2)*0.9,y:1.3,z:Z,w:0.84,click:()=>fb(o)}));
     else s.opts.forEach((o,k)=>mk(st,o.img,{x:0,y:1.45-k*0.86,z:Z,w:2.6,click:()=>fb(o)})); }
-  else if(s.grid){ mk(st,s.q,{x:0,y:2.35,z:-4.4,w:2.9});
-    s.opts.forEach((o,k)=>{const p=arc((k-(n-1)/2)*20,4.2); mk(st,o.img,{...p,y:0.85,w:1.4,click:()=>fb(o)});}); }
-  else { mk(st,s.q,{...arc(-19,4.2),y:1.55,w:2.8}); const Op=arc(19,4.0);
-    s.opts.forEach((o,k)=>mk(st,o.img,{...Op,y:1.45+((n-1)/2-k)*0.8,w:2.45,click:()=>fb(o)})); }
+  else if(s.grid){ mk(st,s.q,{x:0,y:2.55,z:-4.4,w:3.3});
+    s.opts.forEach((o,k)=>{const p=arc((k-(n-1)/2)*27,4.0); mk(st,o.img,{...p,y:0.75,w:1.9,click:()=>fb(o)});}); }
+  else { mk(st,s.q,{...arc(-22,4.0),y:1.55,w:3.3}); const Op=arc(22,3.8);
+    s.opts.forEach((o,k)=>mk(st,o.img,{...Op,y:1.5+((n-1)/2-k)*1.02,w:3.1,click:()=>fb(o)})); }
   if(s.poster&&!P){ mk(st,s.poster.img,{...arc(-70,3.6),y:1.6,w:1.3,click:()=>play(s.poster.au)}); }   // 直式手機空間不夠，海報只在橫式／頭顯顯示
 }
 /* PPE：點選要穿戴的 4 件（VR 取代拖放；不分順序）→ 檢查；錯兩次直接幫你選好正解 */
 function layMulti(st,s,P){
   const sel=new Set(), frames=[]; let fails=0; const Z=-4.2;
   const toggle=k=>{ sel.has(k)?sel.delete(k):sel.add(k); frames[k].setAttribute("visible",sel.has(k)); };
-  if(P) mk(st,s.q,{x:0,y:2.55,z:Z,w:2.6}); else mk(st,s.q,{x:0,y:2.6,z:-4.4,w:2.7});
+  if(P) mk(st,s.q,{x:0,y:2.6,z:Z,w:2.6}); else mk(st,s.q,{x:0,y:2.95,z:-4.4,w:3.0});
   s.items.forEach((it,k)=>{ const r=Math.floor(k/4), c=k%4; let pos, w;
-    if(P){ w=0.6; pos={x:(c-1.5)*0.64,y:1.75-r*0.5,z:Z,ry:0}; }
-    else { w=1.0; const a=arc((c-1.5)*15,4.1); pos={...a,y:1.55-r*0.82}; }
+    if(P){ w=0.7; pos={x:(c-1.5)*0.74,y:1.8-r*0.58,z:Z,ry:0}; }
+    else { w=1.5; const a=arc((c-1.5)*22,4.0); pos={...a,y:1.65-r*1.2}; }
     const f=document.createElement("a-plane"); f.setAttribute("width",w*1.1); f.setAttribute("height",w*0.75*1.12);
     f.setAttribute("color","#1f8a4c"); f.setAttribute("visible",false); f.setAttribute("material","shader:flat");
     const a=(pos.ry||0)*Math.PI/180;   // 綠框放在卡片正後方 2 公分
@@ -275,7 +277,7 @@ function layMulti(st,s,P){
       return popup(s.show.img,s.show.au,()=>go(cur+1)); }
     popup(s.ng.img,s.ng.au);
   };
-  if(P) mk(st,s.check,{x:0,y:1.0,z:Z,w:1.1,click:check}); else mk(st,s.check,{x:0,y:0.3,z:-3.5,rx:-28,w:1.2,click:check});
+  if(P) mk(st,s.check,{x:0,y:0.95,z:Z,w:1.1,click:check}); else mk(st,s.check,{...arc(-50,3.6),y:0.9,w:1.4,click:check});
   if(s.poster&&!P){ mk(st,s.poster.img,{...arc(-72,3.6),y:1.6,w:1.3,click:()=>play(s.poster.au)}); }
 }
 /* 回抽：按住按鈕（滑鼠／手指按住、頭顯按住扳機），量筒升到滿＝抽不出；太早放開＝提醒並歸零 */

@@ -2,6 +2,7 @@
  "steps": [
   {
    "id": "intro",
+   "case": 1,
    "title": "情境",
    "sky": "room",
    "type": "info",
@@ -11,6 +12,7 @@
   },
   {
    "id": "clues",
+   "case": 1,
    "title": "找線索",
    "sky": "room",
    "type": "clues",
@@ -78,88 +80,169 @@
     }
    },
    "id": "d1",
+   "case": 1,
    "title": "決定一：第一個動作",
    "sky": "room"
   },
   {
-   "type": "quiz",
-   "q": "D4Q.jpg",
-   "nar": "VND4",
-   "opts": [
+   "id": "ppe",
+   "title": "備物・防護：選物",
+   "sky": "store",
+   "type": "multi",
+   "q": "HS_PPE_Q.jpg",
+   "nar": "HS_PPE_Q",
+   "items": [
     {
-     "k": "A",
-     "img": "D4A.jpg"
+     "img": "HS_ppe01.jpg",
+     "need": true
     },
     {
-     "k": "B",
-     "img": "D4B.jpg"
+     "img": "HS_ppe02.jpg",
+     "need": true
     },
     {
-     "k": "C",
-     "img": "D4C.jpg"
+     "img": "HS_ppe03.jpg",
+     "need": true
+    },
+    {
+     "img": "HS_ppe04.jpg",
+     "need": true
+    },
+    {
+     "img": "HS_ppe05.jpg",
+     "need": false
+    },
+    {
+     "img": "HS_ppe06.jpg",
+     "need": false
+    },
+    {
+     "img": "HS_ppe07.jpg",
+     "need": false
+    },
+    {
+     "img": "HS_ppe08.jpg",
+     "need": false
     }
    ],
+   "check": "HS_CHECK.png",
+   "need4": {
+    "img": "HS_NEED4.jpg",
+    "au": "HS_NEED4"
+   },
    "ok": {
     "img": "D4OKh.jpg",
     "au": "VD4OK"
    },
-   "bad": {
-    "B": {
-     "img": "D4XBh.jpg",
-     "au": "VD4XB"
-    },
-    "C": {
-     "img": "D4XCh.jpg",
-     "au": "VD4XC"
-    }
+   "ng": {
+    "img": "D4XBh.jpg",
+    "au": "VD4XB"
    },
-   "id": "d4",
-   "title": "備物・防護",
-   "sky": "store",
+   "show": {
+    "img": "HS_PPE_SHOW.jpg",
+    "au": "VD4XB"
+   },
    "poster": {
     "img": "PPE.jpg",
     "au": "VPPE"
-   }
+   },
+   "case": 1
   },
   {
-   "type": "quiz",
-   "q": "D5Q.jpg",
-   "nar": "VND5",
+   "id": "syr",
+   "title": "回抽：選空針",
+   "sky": "bed",
+   "type": "mcq",
+   "grid": true,
+   "q": "HS_SYR_Q.jpg",
+   "nar": "HS_SYR_Q",
    "opts": [
     {
-     "k": "A",
-     "img": "D5A.jpg"
+     "img": "HS_syr03.jpg",
+     "fb": "HS_syr03_NG.jpg",
+     "au": "HS_syr03_NG",
+     "adv": false
     },
     {
-     "k": "B",
-     "img": "D5B.jpg"
+     "img": "HS_syr10.jpg",
+     "fb": "HS_SYR_OK.jpg",
+     "au": "HS_SYR_OK",
+     "adv": true
     },
     {
-     "k": "C",
-     "img": "D5C.jpg"
+     "img": "HS_syr50.jpg",
+     "fb": "HS_syr50_NG.jpg",
+     "au": "HS_syr50_NG",
+     "adv": false
     }
    ],
-   "ok": {
-    "img": "D5OKh.jpg",
-    "au": "VD5OK"
-   },
-   "bad": {
-    "B": {
-     "img": "D5XBh.jpg",
-     "au": "VD5XB"
-    },
-    "C": {
-     "img": "D5XCh.jpg",
-     "au": "VD5XC"
-    }
-   },
-   "id": "d5",
-   "title": "回抽",
-   "sky": "bed",
    "poster": {
     "img": "SYR.jpg",
     "au": "VSYR"
-   }
+   },
+   "case": 1
+  },
+  {
+   "id": "asp",
+   "title": "回抽：按住回抽",
+   "sky": "bed",
+   "type": "hold",
+   "q": "HS_ASP_Q.jpg",
+   "nar": "HS_ASP_Q",
+   "btn": "HS_ASP_BTN.png",
+   "gauge": "HS_ASP_GAUGE.png",
+   "ms": 3200,
+   "early": {
+    "img": "HS_ASP_EARLY.jpg",
+    "au": "HS_ASP_EARLY"
+   },
+   "done": {
+    "img": "HS_ASP_OK.jpg",
+    "au": "HS_ASP_OK"
+   },
+   "case": 1
+  },
+  {
+   "id": "antig",
+   "title": "解毒劑：先查",
+   "sky": "bed",
+   "type": "gate",
+   "main": "HS_ANTI_GATE.jpg",
+   "nar": "HS_ANTI_GATE",
+   "open": "HS_OPEN_CIS.png",
+   "url": "../lookup/?tab=q&kw=Cisplatin",
+   "utitle": "敷療查詢站：Cisplatin",
+   "checked": "HS_CHECKED.png",
+   "case": 1
+  },
+  {
+   "id": "anti",
+   "title": "解毒劑 → 拔針",
+   "sky": "bed",
+   "type": "mcq",
+   "q": "HS_ANTI_Q.jpg",
+   "nar": "HS_ANTI_Q",
+   "opts": [
+    {
+     "img": "HS_ANTI_A.jpg",
+     "fb": "HS_ANTI_OK.jpg",
+     "au": "HS_ANTI_OK",
+     "adv": true
+    },
+    {
+     "img": "HS_ANTI_B.jpg",
+     "fb": "HS_ANTI_NG.jpg",
+     "au": "HS_ANTI_NG",
+     "adv": false
+    },
+    {
+     "img": "HS_ANTI_C.jpg",
+     "fb": "HS_ANTI_NG.jpg",
+     "au": "HS_ANTI_NG",
+     "adv": false
+    }
+   ],
+   "case": 1
   },
   {
    "type": "quiz",
@@ -186,6 +269,7 @@
     }
    },
    "id": "d2",
+   "case": 1,
    "title": "決定二：可以壓嗎",
    "sky": "bed"
   },
@@ -222,12 +306,402 @@
     }
    },
    "id": "d3",
+   "case": 1,
    "title": "決定三：標示範圍",
    "sky": "bed",
    "grid": true
   },
   {
+   "id": "compg",
+   "title": "敷療：先查",
+   "sky": "bed",
+   "type": "gate",
+   "main": "HS_COMP_GATE.jpg",
+   "nar": "HS_COMP_GATE",
+   "open": "HS_OPEN_CIS.png",
+   "url": "../lookup/?tab=q&kw=Cisplatin",
+   "utitle": "敷療查詢站：Cisplatin",
+   "checked": "HS_CHECKED.png",
+   "case": 1
+  },
+  {
+   "id": "comp",
+   "title": "敷療：本案敷什麼",
+   "sky": "bed",
+   "type": "mcq",
+   "grid": true,
+   "q": "HS_COMP_Q.jpg",
+   "nar": "HS_COMP_Q",
+   "opts": [
+    {
+     "img": "HS_cp01.jpg",
+     "fb": "HS_COMP_OK.jpg",
+     "au": "HS_COMP_OK",
+     "adv": true
+    },
+    {
+     "img": "HS_cp02.jpg",
+     "fb": "HS_COMP_WARN.jpg",
+     "au": "HS_COMP_WARN",
+     "adv": true
+    },
+    {
+     "img": "HS_cp03.jpg",
+     "fb": "HS_COMP_NG.jpg",
+     "au": "HS_COMP_NG",
+     "adv": false
+    }
+   ],
+   "case": 1
+  },
+  {
+   "id": "q19",
+   "title": "敷療：原則題",
+   "sky": "bed",
+   "type": "mcq",
+   "q": "HS_Q19_Q.jpg",
+   "nar": "HS_Q19_Q",
+   "opts": [
+    {
+     "img": "HS_Q19_A.jpg",
+     "fb": "HS_Q19_OK.jpg",
+     "au": "HS_Q19_OK",
+     "adv": true
+    },
+    {
+     "img": "HS_Q19_B.jpg",
+     "fb": "HS_Q19_NG.jpg",
+     "au": "HS_Q19_NG",
+     "adv": true
+    },
+    {
+     "img": "HS_Q19_C.jpg",
+     "fb": "HS_Q19_NG.jpg",
+     "au": "HS_Q19_NG",
+     "adv": true
+    }
+   ],
+   "case": 1
+  },
+  {
+   "id": "sum1",
+   "title": "案例一完成：九步驟總覽",
+   "sky": "store",
+   "type": "info",
+   "main": "HS_SUM1.jpg",
+   "nar": "HS_SUM1",
+   "btns": [
+    {
+     "img": "HS_NEXT_C2.png",
+     "to": "c2intro"
+    }
+   ],
+   "case": 1
+  },
+  {
+   "id": "c2intro",
+   "case": 2,
+   "title": "案例二：情境",
+   "sky": "bed",
+   "type": "info",
+   "main": "HS_C2_INTRO.jpg",
+   "nar": "HS_C2_INTRO",
+   "next": "BTN_ea4482.jpg"
+  },
+  {
+   "id": "c2gate",
+   "case": 2,
+   "title": "案例二：查詢站",
+   "sky": "bed",
+   "type": "gate",
+   "main": "HS_C2_GATE.jpg",
+   "nar": "HS_C2_GATE",
+   "open": "HS_OPEN_DOX.png",
+   "url": "../lookup/?tab=q&kw=Doxorubicin",
+   "utitle": "敷療查詢站：Doxorubicin",
+   "checked": "HS_CHECKED.png",
+   "after": {
+    "img": "HS_C2_FOUND.jpg",
+    "au": "HS_C2_FOUND"
+   }
+  },
+  {
+   "id": "dm1",
+   "case": 2,
+   "title": "案例二：DMSO 1／3",
+   "sky": "bed",
+   "type": "mcq",
+   "q": "HS_dm1_Q.jpg",
+   "nar": "HS_dm1_Q",
+   "opts": [
+    {
+     "img": "HS_dm1_A.jpg",
+     "fb": "HS_dm1_NG.jpg",
+     "au": "HS_dm1_NG",
+     "adv": true
+    },
+    {
+     "img": "HS_dm1_B.jpg",
+     "fb": "HS_dm1_OK.jpg",
+     "au": "HS_dm1_OK",
+     "adv": true
+    },
+    {
+     "img": "HS_dm1_C.jpg",
+     "fb": "HS_dm1_NG.jpg",
+     "au": "HS_dm1_NG",
+     "adv": true
+    }
+   ]
+  },
+  {
+   "id": "paint",
+   "case": 2,
+   "title": "案例二：動手塗 DMSO",
+   "sky": "bed",
+   "type": "paint",
+   "main": "HS_PAINT_Q.jpg",
+   "nar": "HS_PAINT_Q",
+   "btn": "HS_PAINT_BTN.png",
+   "vrq": "HS_PAINT_VRQ.jpg",
+   "vropts": [
+    {
+     "img": "HS_PAINT_A.jpg",
+     "fb": "HS_PAINT_SMALL.jpg",
+     "au": "HS_PAINT_SMALL",
+     "adv": false
+    },
+    {
+     "img": "HS_PAINT_B.jpg",
+     "fb": "HS_PAINT_OK.jpg",
+     "au": "HS_PAINT_OK",
+     "adv": true
+    },
+    {
+     "img": "HS_PAINT_C.jpg",
+     "fb": "HS_PAINT_BIG.jpg",
+     "au": "HS_PAINT_BIG",
+     "adv": false
+    }
+   ]
+  },
+  {
+   "id": "dm2",
+   "case": 2,
+   "title": "案例二：DMSO 2／3",
+   "sky": "bed",
+   "type": "mcq",
+   "q": "HS_dm2_Q.jpg",
+   "nar": "HS_dm2_Q",
+   "opts": [
+    {
+     "img": "HS_dm2_A.jpg",
+     "fb": "HS_dm2_OK.jpg",
+     "au": "HS_dm2_OK",
+     "adv": true
+    },
+    {
+     "img": "HS_dm2_B.jpg",
+     "fb": "HS_dm2_NG.jpg",
+     "au": "HS_dm2_NG",
+     "adv": true
+    },
+    {
+     "img": "HS_dm2_C.jpg",
+     "fb": "HS_dm2_NG.jpg",
+     "au": "HS_dm2_NG",
+     "adv": true
+    }
+   ]
+  },
+  {
+   "id": "dm3",
+   "case": 2,
+   "title": "案例二：DMSO 3／3",
+   "sky": "bed",
+   "type": "mcq",
+   "q": "HS_dm3_Q.jpg",
+   "nar": "HS_dm3_Q",
+   "opts": [
+    {
+     "img": "HS_dm3_A.jpg",
+     "fb": "HS_dm3_NG.jpg",
+     "au": "HS_dm3_NG",
+     "adv": true
+    },
+    {
+     "img": "HS_dm3_B.jpg",
+     "fb": "HS_dm3_OK.jpg",
+     "au": "HS_dm3_OK",
+     "adv": true
+    },
+    {
+     "img": "HS_dm3_C.jpg",
+     "fb": "HS_dm3_NG.jpg",
+     "au": "HS_dm3_NG",
+     "adv": true
+    }
+   ]
+  },
+  {
+   "id": "c2sum",
+   "case": 2,
+   "title": "案例二完成",
+   "sky": "bed",
+   "type": "info",
+   "main": "HS_C2_SUM.jpg",
+   "nar": "HS_C2_SUM",
+   "btns": [
+    {
+     "img": "HS_NEXT_C3.png",
+     "to": "c3intro"
+    }
+   ]
+  },
+  {
+   "id": "c3intro",
+   "case": 3,
+   "title": "案例三：抬高 48 小時",
+   "sky": "room",
+   "type": "info",
+   "main": "HS_C3_INTRO.jpg",
+   "nar": "HS_C3_INTRO",
+   "next": "BTN_ea4482.jpg"
+  },
+  {
+   "id": "el1",
+   "case": 3,
+   "title": "案例三：情境 1／4",
+   "sky": "room",
+   "type": "mcq",
+   "q": "HS_el1_Q.jpg",
+   "nar": "HS_el1_Q",
+   "opts": [
+    {
+     "img": "HS_el1_A.jpg",
+     "fb": "HS_el1_A_FB.jpg",
+     "au": "HS_el1_A_FB",
+     "adv": true
+    },
+    {
+     "img": "HS_el1_B.jpg",
+     "fb": "HS_el1_B_FB.jpg",
+     "au": "HS_el1_B_FB",
+     "adv": false
+    },
+    {
+     "img": "HS_el1_C.jpg",
+     "fb": "HS_el1_C_FB.jpg",
+     "au": "HS_el1_C_FB",
+     "adv": false
+    }
+   ]
+  },
+  {
+   "id": "el2",
+   "case": 3,
+   "title": "案例三：情境 2／4",
+   "sky": "room",
+   "type": "mcq",
+   "q": "HS_el2_Q.jpg",
+   "nar": "HS_el2_Q",
+   "opts": [
+    {
+     "img": "HS_el2_A.jpg",
+     "fb": "HS_el2_A_FB.jpg",
+     "au": "HS_el2_A_FB",
+     "adv": false
+    },
+    {
+     "img": "HS_el2_B.jpg",
+     "fb": "HS_el2_B_FB.jpg",
+     "au": "HS_el2_B_FB",
+     "adv": true
+    },
+    {
+     "img": "HS_el2_C.jpg",
+     "fb": "HS_el2_C_FB.jpg",
+     "au": "HS_el2_C_FB",
+     "adv": false
+    }
+   ]
+  },
+  {
+   "id": "el3",
+   "case": 3,
+   "title": "案例三：情境 3／4",
+   "sky": "room",
+   "type": "mcq",
+   "q": "HS_el3_Q.jpg",
+   "nar": "HS_el3_Q",
+   "opts": [
+    {
+     "img": "HS_el3_A.jpg",
+     "fb": "HS_el3_A_FB.jpg",
+     "au": "HS_el3_A_FB",
+     "adv": false
+    },
+    {
+     "img": "HS_el3_B.jpg",
+     "fb": "HS_el3_B_FB.jpg",
+     "au": "HS_el3_B_FB",
+     "adv": false
+    },
+    {
+     "img": "HS_el3_C.jpg",
+     "fb": "HS_el3_C_FB.jpg",
+     "au": "HS_el3_C_FB",
+     "adv": true
+    }
+   ]
+  },
+  {
+   "id": "el4",
+   "case": 3,
+   "title": "案例三：情境 4／4",
+   "sky": "room",
+   "type": "mcq",
+   "q": "HS_el4_Q.jpg",
+   "nar": "HS_el4_Q",
+   "opts": [
+    {
+     "img": "HS_el4_A.jpg",
+     "fb": "HS_el4_A_FB.jpg",
+     "au": "HS_el4_A_FB",
+     "adv": true
+    },
+    {
+     "img": "HS_el4_B.jpg",
+     "fb": "HS_el4_B_FB.jpg",
+     "au": "HS_el4_B_FB",
+     "adv": false
+    },
+    {
+     "img": "HS_el4_C.jpg",
+     "fb": "HS_el4_C_FB.jpg",
+     "au": "HS_el4_C_FB",
+     "adv": false
+    }
+   ]
+  },
+  {
+   "id": "c3sum",
+   "case": 3,
+   "title": "案例三完成",
+   "sky": "room",
+   "type": "info",
+   "main": "HS_C3_SUM.jpg",
+   "nar": "HS_C3_SUM",
+   "btns": [
+    {
+     "img": "HS_GO_LOOKUP.png",
+     "to": "lookup"
+    }
+   ]
+  },
+  {
    "id": "lookup",
+   "case": 4,
    "title": "外滲處置查詢站",
    "sky": "store",
    "type": "end",
@@ -241,7 +715,9 @@
     "A03__DMSOe6b52c.jpg"
    ],
    "again": "BTN_4bceda.jpg",
-   "home": "BTN_aa8382.jpg"
+   "home": "BTN_aa8382.jpg",
+   "toC2": "HS_GO_C2.png",
+   "toC3": "HS_GO_C3.png"
   }
  ],
  "common": {
@@ -249,14 +725,521 @@
   "listen": "LISTENQ.png",
   "start": "W_START.jpg"
  },
+ "paint": {
+  "scale": 1.4142135623730951,
+  "cover": 0.8,
+  "outside": 0.35,
+  "spot": {
+   "w": 4,
+   "h": 3
+  },
+  "small": [
+   "塗太小了",
+   "只塗紅腫的地方不夠：DMSO 要塗到患部的兩倍範圍，油性筆虛線外面也要塗。"
+  ],
+  "big": [
+   "塗太大了",
+   "兩倍範圍就夠了，不需要塗整隻手臂；塗太大只會增加皮膚刺激。"
+  ],
+  "off": [
+   "位置偏了",
+   "以油性筆畫的外滲範圍為中心，往四周擴大到約兩倍，均勻塗滿。"
+  ],
+  "ok": "塗對了：範圍約患部兩倍",
+  "show": "正確範圍：紫色虛線（約患部兩倍）",
+  "keyp": [
+   "範圍：外滲患部的兩倍大（從油性筆範圍往外擴）",
+   "塗完自然風乾，不要覆蓋（不包紗布、不包保鮮膜）",
+   "一天 4 次，連續 7 天；同時冰敷 20 分鐘、一天 4 次、1–2 天",
+   "塗抹時戴手套",
+   "只用於 Anthracycline 類（Doxorubicin、Epirubicin、Idarubicin、Daunorubicin）與 Mitomycin-C、Mitoxantrone"
+  ],
+  "src": "查詢站 Doxorubicin 列（院內〈化療藥品外滲處置建議〉2023.5 版）"
+ },
  "sizes": {
-  "S1_cc3e60.jpg": [
-   2048,
-   1152
+  "HS_PPE_Q.jpg": [
+   1600,
+   900
+  ],
+  "HS_ppe01.jpg": [
+   800,
+   600
+  ],
+  "HS_ppe02.jpg": [
+   800,
+   600
+  ],
+  "HS_ppe03.jpg": [
+   800,
+   600
+  ],
+  "HS_ppe04.jpg": [
+   800,
+   600
+  ],
+  "HS_ppe05.jpg": [
+   800,
+   600
+  ],
+  "HS_ppe06.jpg": [
+   800,
+   600
+  ],
+  "HS_ppe07.jpg": [
+   800,
+   600
+  ],
+  "HS_ppe08.jpg": [
+   800,
+   600
+  ],
+  "HS_CHECK.png": [
+   800,
+   300
+  ],
+  "HS_NEED4.jpg": [
+   1600,
+   900
+  ],
+  "HS_PPE_SHOW.jpg": [
+   1600,
+   900
+  ],
+  "HS_SYR_Q.jpg": [
+   1600,
+   900
+  ],
+  "HS_syr03.jpg": [
+   800,
+   600
+  ],
+  "HS_syr03_NG.jpg": [
+   1600,
+   900
+  ],
+  "HS_syr10.jpg": [
+   800,
+   600
+  ],
+  "HS_SYR_OK.jpg": [
+   1600,
+   900
+  ],
+  "HS_syr50.jpg": [
+   800,
+   600
+  ],
+  "HS_syr50_NG.jpg": [
+   1600,
+   900
+  ],
+  "HS_ASP_Q.jpg": [
+   1600,
+   900
+  ],
+  "HS_ASP_BTN.png": [
+   900,
+   300
+  ],
+  "HS_ASP_GAUGE.png": [
+   360,
+   900
+  ],
+  "HS_ASP_EARLY.jpg": [
+   1600,
+   900
+  ],
+  "HS_ASP_OK.jpg": [
+   1600,
+   900
+  ],
+  "HS_ANTI_GATE.jpg": [
+   1600,
+   900
+  ],
+  "HS_OPEN_CIS.png": [
+   1000,
+   300
+  ],
+  "HS_CHECKED.png": [
+   800,
+   300
+  ],
+  "HS_ANTI_Q.jpg": [
+   1600,
+   900
+  ],
+  "HS_ANTI_A.jpg": [
+   1600,
+   500
+  ],
+  "HS_ANTI_OK.jpg": [
+   1600,
+   900
+  ],
+  "HS_ANTI_B.jpg": [
+   1600,
+   500
+  ],
+  "HS_ANTI_NG.jpg": [
+   1600,
+   900
+  ],
+  "HS_ANTI_C.jpg": [
+   1600,
+   500
+  ],
+  "HS_COMP_GATE.jpg": [
+   1600,
+   900
+  ],
+  "HS_COMP_Q.jpg": [
+   1600,
+   900
+  ],
+  "HS_cp01.jpg": [
+   800,
+   600
+  ],
+  "HS_COMP_OK.jpg": [
+   1600,
+   900
+  ],
+  "HS_cp02.jpg": [
+   800,
+   600
+  ],
+  "HS_COMP_WARN.jpg": [
+   1600,
+   900
+  ],
+  "HS_cp03.jpg": [
+   800,
+   600
+  ],
+  "HS_COMP_NG.jpg": [
+   1600,
+   900
+  ],
+  "HS_Q19_Q.jpg": [
+   1600,
+   900
+  ],
+  "HS_Q19_A.jpg": [
+   1600,
+   500
+  ],
+  "HS_Q19_OK.jpg": [
+   1600,
+   900
+  ],
+  "HS_Q19_B.jpg": [
+   1600,
+   500
+  ],
+  "HS_Q19_NG.jpg": [
+   1600,
+   900
+  ],
+  "HS_Q19_C.jpg": [
+   1600,
+   500
+  ],
+  "HS_SUM1.jpg": [
+   1600,
+   900
+  ],
+  "HS_NEXT_C2.png": [
+   1100,
+   300
+  ],
+  "HS_C2_INTRO.jpg": [
+   1600,
+   900
   ],
   "BTN_ea4482.jpg": [
    1600,
    600
+  ],
+  "HS_C2_GATE.jpg": [
+   1600,
+   900
+  ],
+  "HS_OPEN_DOX.png": [
+   1100,
+   300
+  ],
+  "HS_C2_FOUND.jpg": [
+   1600,
+   900
+  ],
+  "HS_dm1_Q.jpg": [
+   1600,
+   900
+  ],
+  "HS_dm1_A.jpg": [
+   1600,
+   500
+  ],
+  "HS_dm1_NG.jpg": [
+   1600,
+   900
+  ],
+  "HS_dm1_B.jpg": [
+   1600,
+   500
+  ],
+  "HS_dm1_OK.jpg": [
+   1600,
+   900
+  ],
+  "HS_dm1_C.jpg": [
+   1600,
+   500
+  ],
+  "HS_PAINT_Q.jpg": [
+   1600,
+   900
+  ],
+  "HS_PAINT_BTN.png": [
+   900,
+   300
+  ],
+  "HS_PAINT_VRQ.jpg": [
+   1600,
+   900
+  ],
+  "HS_PAINT_A.jpg": [
+   800,
+   600
+  ],
+  "HS_PAINT_SMALL.jpg": [
+   1600,
+   900
+  ],
+  "HS_PAINT_B.jpg": [
+   800,
+   600
+  ],
+  "HS_PAINT_OK.jpg": [
+   1600,
+   900
+  ],
+  "HS_PAINT_C.jpg": [
+   800,
+   600
+  ],
+  "HS_PAINT_BIG.jpg": [
+   1600,
+   900
+  ],
+  "HS_dm2_Q.jpg": [
+   1600,
+   900
+  ],
+  "HS_dm2_A.jpg": [
+   1600,
+   500
+  ],
+  "HS_dm2_OK.jpg": [
+   1600,
+   900
+  ],
+  "HS_dm2_B.jpg": [
+   1600,
+   500
+  ],
+  "HS_dm2_NG.jpg": [
+   1600,
+   900
+  ],
+  "HS_dm2_C.jpg": [
+   1600,
+   500
+  ],
+  "HS_dm3_Q.jpg": [
+   1600,
+   900
+  ],
+  "HS_dm3_A.jpg": [
+   1600,
+   500
+  ],
+  "HS_dm3_NG.jpg": [
+   1600,
+   900
+  ],
+  "HS_dm3_B.jpg": [
+   1600,
+   500
+  ],
+  "HS_dm3_OK.jpg": [
+   1600,
+   900
+  ],
+  "HS_dm3_C.jpg": [
+   1600,
+   500
+  ],
+  "HS_C2_SUM.jpg": [
+   1600,
+   900
+  ],
+  "HS_NEXT_C3.png": [
+   1300,
+   300
+  ],
+  "HS_C3_INTRO.jpg": [
+   1600,
+   900
+  ],
+  "HS_el1_Q.jpg": [
+   1600,
+   900
+  ],
+  "HS_el1_A.jpg": [
+   1600,
+   500
+  ],
+  "HS_el1_A_FB.jpg": [
+   1600,
+   900
+  ],
+  "HS_el1_B.jpg": [
+   1600,
+   500
+  ],
+  "HS_el1_B_FB.jpg": [
+   1600,
+   900
+  ],
+  "HS_el1_C.jpg": [
+   1600,
+   500
+  ],
+  "HS_el1_C_FB.jpg": [
+   1600,
+   900
+  ],
+  "HS_el2_Q.jpg": [
+   1600,
+   900
+  ],
+  "HS_el2_A.jpg": [
+   1600,
+   500
+  ],
+  "HS_el2_A_FB.jpg": [
+   1600,
+   900
+  ],
+  "HS_el2_B.jpg": [
+   1600,
+   500
+  ],
+  "HS_el2_B_FB.jpg": [
+   1600,
+   900
+  ],
+  "HS_el2_C.jpg": [
+   1600,
+   500
+  ],
+  "HS_el2_C_FB.jpg": [
+   1600,
+   900
+  ],
+  "HS_el3_Q.jpg": [
+   1600,
+   900
+  ],
+  "HS_el3_A.jpg": [
+   1600,
+   500
+  ],
+  "HS_el3_A_FB.jpg": [
+   1600,
+   900
+  ],
+  "HS_el3_B.jpg": [
+   1600,
+   500
+  ],
+  "HS_el3_B_FB.jpg": [
+   1600,
+   900
+  ],
+  "HS_el3_C.jpg": [
+   1600,
+   500
+  ],
+  "HS_el3_C_FB.jpg": [
+   1600,
+   900
+  ],
+  "HS_el4_Q.jpg": [
+   1600,
+   900
+  ],
+  "HS_el4_A.jpg": [
+   1600,
+   500
+  ],
+  "HS_el4_A_FB.jpg": [
+   1600,
+   900
+  ],
+  "HS_el4_B.jpg": [
+   1600,
+   500
+  ],
+  "HS_el4_B_FB.jpg": [
+   1600,
+   900
+  ],
+  "HS_el4_C.jpg": [
+   1600,
+   500
+  ],
+  "HS_el4_C_FB.jpg": [
+   1600,
+   900
+  ],
+  "HS_C3_SUM.jpg": [
+   1600,
+   900
+  ],
+  "HS_GO_LOOKUP.png": [
+   1000,
+   300
+  ],
+  "HS_GO_C2.png": [
+   1000,
+   300
+  ],
+  "HS_GO_C3.png": [
+   1100,
+   300
+  ],
+  "D4OKh.jpg": [
+   2048,
+   1152
+  ],
+  "D4XBh.jpg": [
+   2048,
+   1152
+  ],
+  "PPE.jpg": [
+   1800,
+   3200
+  ],
+  "SYR.jpg": [
+   1800,
+   3200
+  ],
+  "S1_cc3e60.jpg": [
+   2048,
+   1152
   ],
   "T2.jpg": [
    2048,
@@ -333,70 +1316,6 @@
   "D1_C1ca066.jpg": [
    2048,
    1152
-  ],
-  "D4Q.jpg": [
-   2048,
-   1152
-  ],
-  "D4A.jpg": [
-   2048,
-   640
-  ],
-  "D4B.jpg": [
-   2048,
-   640
-  ],
-  "D4C.jpg": [
-   2048,
-   640
-  ],
-  "D4OKh.jpg": [
-   2048,
-   1152
-  ],
-  "D4XBh.jpg": [
-   2048,
-   1152
-  ],
-  "D4XCh.jpg": [
-   2048,
-   1152
-  ],
-  "PPE.jpg": [
-   1800,
-   3200
-  ],
-  "D5Q.jpg": [
-   2048,
-   1152
-  ],
-  "D5A.jpg": [
-   2048,
-   640
-  ],
-  "D5B.jpg": [
-   2048,
-   640
-  ],
-  "D5C.jpg": [
-   2048,
-   640
-  ],
-  "D5OKh.jpg": [
-   2048,
-   1152
-  ],
-  "D5XBh.jpg": [
-   2048,
-   1152
-  ],
-  "D5XCh.jpg": [
-   2048,
-   1152
-  ],
-  "SYR.jpg": [
-   1800,
-   3200
   ],
   "D2_e40abe.jpg": [
    2048,

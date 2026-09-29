@@ -27,6 +27,20 @@ html,body{margin:0;height:100%;background:#0f1a2b;font-family:"Microsoft JhengHe
 #panel .bar b{flex:1;font-size:1rem}
 #panel .bar button{border:0;border-radius:10px;padding:8px 14px;font:inherit;font-weight:700;background:#fff;color:var(--navy);cursor:pointer}
 #panel iframe{flex:1;border:0;width:100%}
+/* 2D 塗抹面板（DMSO 範圍） */
+#paint{position:fixed;inset:0;z-index:45;background:#f4f7fb;display:none;flex-direction:column;overflow:auto}
+#paint.on{display:flex}
+#paint .bar{display:flex;align-items:center;gap:8px;padding:8px 12px;padding-top:max(8px,env(safe-area-inset-top));background:#7a3fb5;color:#fff}
+#paint .bar b{flex:1}#paint .in{max-width:900px;width:100%;margin:0 auto;padding:12px 16px 24px;box-sizing:border-box}
+#paint .hint{color:#1c2430;line-height:1.6;margin:0 0 10px}
+#pw{position:relative;width:100%;touch-action:none;border-radius:14px;overflow:hidden;background:#fff}#pw canvas{position:absolute;left:0;top:0;width:100%;height:100%}
+#paint .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+#paint button{border:0;border-radius:12px;padding:12px 16px;font:inherit;font-weight:700;cursor:pointer;background:#e9e3f3;color:#4b2a73}
+#paint button.main{background:#7a3fb5;color:#fff;flex:1}#paint button:disabled{opacity:.45}
+#pm{margin-top:8px;color:#5b6675;display:flex;gap:14px;flex-wrap:wrap}
+#pfb{margin-top:12px;border-radius:12px;padding:12px 14px;line-height:1.6;display:none}
+#pfb.ok{display:block;background:#e7f5ec;border-left:6px solid #1f8a4c}#pfb.warn{display:block;background:#fff8e6;border-left:6px solid #b7791f}
+#pfb b{display:block;font-size:1.05rem;margin-bottom:4px}#pfb ul{margin:6px 0 0 1.2em;padding:0}#pfb small{color:#8a95a5}
 .a-enter-vr{bottom:max(56px,env(safe-area-inset-bottom))!important}
 </style></head>
 <body>
@@ -35,13 +49,20 @@ html,body{margin:0;height:100%;background:#0f1a2b;font-family:"Microsoft JhengHe
 
 <div id="start"><div class="box">
 <h1>③ 外滲當下怎麼做・360 VR</h1>
-<p>王女士左前臂滴注 Cisplatin 時疑似外滲。<br>你要找線索、做決定，每一步都有語音說明。</p>
+<p>王女士左前臂滴注 Cisplatin 時疑似外滲。<br>你要找線索、選物、回抽、做決定，每一步都有語音說明。<br>共三個案例依序做完：案例一 Cisplatin、案例二 DMSO、案例三 抬高 48 小時。</p>
 <p>📱 手機：轉動手機看四周｜💻 電腦：拖曳滑鼠<br>🥽 VR 頭顯：按右下角眼鏡圖示進入</p>
 <button id="goBtn">▶ 開始體驗（開啟聲音）</button>
 <small>不需安裝 App・免登入</small>
 </div></div>
 
 <div id="panel"><div class="bar"><b id="pTitle">2D 內容</b><button id="pClose">✕ 關閉，回到環景</button></div><iframe id="pFrame" title="2D 內容" src="about:blank"></iframe></div>
+
+<div id="paint"><div class="bar"><b>🖌️ 動手塗 DMSO 範圍</b><button id="paintClose" style="background:#fff;color:#7a3fb5">✕ 回到環景</button></div>
+<div class="in"><p class="hint" id="pHint"></p><div id="pw"><canvas id="pbg"></canvas><canvas id="pnt"></canvas></div>
+<div id="pm"></div>
+<div class="row"><button id="pclr">🧽 擦掉重塗</button><button id="pshow">👁 顯示正確範圍</button></div>
+<div class="row"><button class="main" id="pchk" disabled>檢查</button></div>
+<div id="pfb"></div><div class="row" id="pnext" style="display:none"><button class="main" id="pgo">下一步 ▶</button></div></div></div>
 
 <a-scene id="scene" renderer="colorManagement:true;anisotropy:8;antialias:true" vr-mode-ui="enabled:true" device-orientation-permission-ui="enabled:false" loading-screen="dotsColor:#fff;backgroundColor:#0f1a2b" cursor="rayOrigin:mouse;fuse:false" raycaster="objects:.clk">
   <a-assets timeout="20000"></a-assets>
@@ -106,7 +127,7 @@ function popup(f,au,then){
   const cam=$("#cam").object3D; const dir=new THREE.Vector3(); cam.getWorldDirection(dir); dir.negate();
   const pitch=Math.max(-0.6,Math.min(0.6,Math.asin(dir.y))), yaw=Math.atan2(-dir.x,-dir.z);
   const r=3.0, x=-Math.sin(yaw)*Math.cos(pitch)*r, z=-Math.cos(yaw)*Math.cos(pitch)*r, y=1.6+Math.sin(pitch)*r;
-  const e=mk(ov,f,{x,y,z,ry:yaw*180/Math.PI,rx:pitch*180/Math.PI,w:3.0,click:()=>{clear(ov); stopAudio(); stageActive(true); if(then)then();}});
+  const e=mk(ov,f,{x,y,z,ry:yaw*180/Math.PI,rx:pitch*180/Math.PI,w:PORTRAIT()?1.9:3.0,click:()=>{clear(ov); stopAudio(); stageActive(true); if(then)then();}});
   e.setAttribute("animation","property:scale;from:0.85 0.85 1;to:1 1 1;dur:180");
   stageActive(false);
 }
@@ -136,7 +157,16 @@ $("#pClose").onclick=()=>{$("#panel").classList.remove("on"); $("#pFrame").src="
 /* 直式手機版面：全部放正前方一欄，寬度 ≤2.6 公尺（4.2 公尺外約 36°） */
 function layoutPortrait(st,s,nextFn){
   const Z=-4.2;
-  if(s.type==="info"){ mk(st,s.main,{x:0,y:2.2,z:Z,w:2.6}); mk(st,s.next,{x:0,y:1.05,z:Z,w:1.3,click:nextFn}); }
+  if(s.type==="info"){ mk(st,s.main,{x:0,y:2.2,z:Z,w:2.6});
+    if(s.btns) s.btns.forEach((b,k)=>mk(st,b.img,{x:0,y:1.2-k*0.42,z:Z,w:1.45,click:()=>to(b.to)}));
+    else mk(st,s.next,{x:0,y:1.05,z:Z,w:1.3,click:nextFn}); }
+  if(s.type==="mcq") layMcq(st,s,true);
+  if(s.type==="multi") layMulti(st,s,true);
+  if(s.type==="hold") layHold(st,s,true);
+  if(s.type==="gate"){ mk(st,s.main,{x:0,y:2.25,z:Z,w:2.6});
+    mk(st,s.open,{x:0,y:1.1,z:Z,w:1.7,click:()=>open2D(s.url,s.utitle,D.steps.find(x=>x.type==="end"))});
+    mk(st,s.checked,{x:0,y:0.55,z:Z,w:1.2,click:()=>gateDone(s)}); }
+  if(s.type==="paint") layPaint(st,s,true);
   if(s.type==="clues"){ mk(st,s.main,{x:0,y:2.55,z:Z,w:2.6});
     s.hs.forEach((h,k)=>{const r=k<3?0:1, c=k<3?k-1:(k-3)-0.5; mk(st,h.img,{x:c*0.92,y:1.45-r*0.75,z:Z,w:0.86,click:()=>popup(h.ex,h.au)});});
     mk(st,s.next,{x:0,y:0.1,z:Z,w:1.3,click:nextFn}); }
@@ -147,19 +177,24 @@ function layoutPortrait(st,s,nextFn){
   if(s.type==="end"){
     mk(st,s.lookup,{x:0,y:2.3,z:Z,w:2.3,click:()=>open2D("../lookup/","敷療查詢站",s)});
     mk(st,s.handson,{x:0,y:1.55,z:Z,w:2.3,click:()=>open2D("../handson/","2D 動手版",s)});
+    mk(st,s.toC2,{x:-0.66,y:0.3,z:Z,w:1.2,click:()=>to("c2intro")}); mk(st,s.toC3,{x:0.66,y:0.3,z:Z,w:1.25,click:()=>to("c3intro")});
     mk(st,s.again,{x:-0.62,y:0.85,z:Z,w:1.15,click:()=>go(0)});
     mk(st,s.home,{x:0.62,y:0.85,z:Z,w:1.15,click:()=>{location.href="../";}}); }
 }
 function go(i,quiet){
+  HOLD=null; if($("#paint").classList.contains("on")) closePaint();
   cur=(i+D.steps.length)%D.steps.length; const s=D.steps[cur];
   const st=$("#stage"); clear(st); clear($("#overlay")); st.object3D.visible=true;
+  /* 床旁環景的預設視角往下看（對準入針處），卡片整組往下移，才不會擠在畫面上緣 */
+  st.setAttribute("position",`0 ${s.sky==="bed"?(PORTRAIT()?-0.45:-0.9):0} 0`);
   $("#sky").setAttribute("src",`assets/sky/${s.sky}.jpg`); $("#sky").setAttribute("rotation",`0 ${skyYaw(s.sky)} 0`); resetView(VIEW[s.sky].pitch);
-  $("#ttl").textContent=s.title; $("#prog").textContent=`${cur+1}/${D.steps.length}`;
+  const cs=D.steps.filter(x=>(x.case||1)===(s.case||1)); $("#ttl").textContent=s.title;
+  $("#prog").textContent=`${["","案例一","案例二","案例三","查詢站"][s.case||1]} ${cs.indexOf(s)+1}/${cs.length}`;
   const nextFn=()=>go(cur+1);
   if(PORTRAIT()) layoutPortrait(st,s,nextFn); else {
   if(s.type==="info"){
     mk(st,s.main,{x:0,y:1.9,z:-4.2,w:3.4});
-    mk(st,s.next,{x:0,y:0.55,z:-3.6,rx:-20,w:1.4,click:nextFn});
+    if(s.next) mk(st,s.next,{x:0,y:0.55,z:-3.6,rx:-20,w:1.4,click:nextFn});
   }
   if(s.type==="clues"){
     mk(st,s.main,{x:0,y:2.4,z:-4.6,w:2.9});
@@ -174,7 +209,17 @@ function go(i,quiet){
       s.opts.forEach((o,k)=>mk(st,o.img,{...Op,y:1.45+((n-1)/2-k)*0.8,w:2.45,click:()=>answer(s,o.k)})); }
     if(s.poster){const p=arc(-70,3.6); mk(st,s.poster.img,{...p,y:1.6,w:1.3,click:()=>play(s.poster.au)});}
   }
+  if(s.type==="info"&&s.btns){ const n=s.btns.length; s.btns.forEach((b,k)=>{const p=arc((k-(n-1)/2)*24,3.8); mk(st,b.img,{...p,y:0.35,rx:-20,w:1.35,click:()=>to(b.to)});}); }
+  if(s.type==="mcq") layMcq(st,s,false);
+  if(s.type==="multi") layMulti(st,s,false);
+  if(s.type==="hold") layHold(st,s,false);
+  if(s.type==="gate"){ mk(st,s.main,{x:0,y:1.95,z:-4.2,w:3.3});
+    mk(st,s.open,{...arc(-15,3.7),y:0.45,rx:-20,w:1.5,click:()=>open2D(s.url,s.utitle,D.steps.find(x=>x.type==="end"))});
+    mk(st,s.checked,{...arc(15,3.7),y:0.45,rx:-20,w:1.2,click:()=>gateDone(s)}); }
+  if(s.type==="paint") layPaint(st,s,false);
   if(s.type==="end"){
+    mk(st,s.toC2,{...arc(-62,3.6),y:1.45,w:1.4,click:()=>to("c2intro")});
+    mk(st,s.toC3,{...arc(62,3.6),y:1.45,w:1.6,click:()=>to("c3intro")});
     mk(st,s.lookup,{x:-1.15,y:1.95,z:-3.8,w:2.0,click:()=>open2D("../lookup/","敷療查詢站",s)});
     mk(st,s.handson,{x:1.15,y:1.95,z:-3.8,w:2.0,click:()=>open2D("../handson/","2D 動手版",s)});
     mk(st,s.again,{x:-0.8,y:1.05,z:-3.8,w:1.3,click:()=>go(0)});
@@ -184,6 +229,131 @@ function go(i,quiet){
   commonBtns(st,s.nar);
   if(!quiet) play(s.nar); setTimeout(preloadNext,1500);
 }
+/* ---------- 動手版搬來的站型（mcq／multi／hold／gate／paint；內容由 _build_vr_handson.py 從 handson 讀出） ---------- */
+function to(id){ if(id==="next") return go(cur+1); const i=D.steps.findIndex(x=>x.id===id); if(i>=0) go(i); }
+function fb(o){ popup(o.fb,o.au,o.adv?()=>go(cur+1):null); }
+function layMcq(st,s,P){
+  const Z=-4.2, n=s.opts.length;
+  if(P){ mk(st,s.q,{x:0,y:2.45,z:Z,w:2.6});
+    if(s.grid) s.opts.forEach((o,k)=>mk(st,o.img,{x:(k-(n-1)/2)*0.9,y:1.3,z:Z,w:0.84,click:()=>fb(o)}));
+    else s.opts.forEach((o,k)=>mk(st,o.img,{x:0,y:1.45-k*0.86,z:Z,w:2.6,click:()=>fb(o)})); }
+  else if(s.grid){ mk(st,s.q,{x:0,y:2.35,z:-4.4,w:2.9});
+    s.opts.forEach((o,k)=>{const p=arc((k-(n-1)/2)*20,4.2); mk(st,o.img,{...p,y:0.85,w:1.4,click:()=>fb(o)});}); }
+  else { mk(st,s.q,{...arc(-19,4.2),y:1.55,w:2.8}); const Op=arc(19,4.0);
+    s.opts.forEach((o,k)=>mk(st,o.img,{...Op,y:1.45+((n-1)/2-k)*0.8,w:2.45,click:()=>fb(o)})); }
+  if(s.poster&&!P){ mk(st,s.poster.img,{...arc(-70,3.6),y:1.6,w:1.3,click:()=>play(s.poster.au)}); }   // 直式手機空間不夠，海報只在橫式／頭顯顯示
+}
+/* PPE：點選要穿戴的 4 件（VR 取代拖放；不分順序）→ 檢查；錯兩次直接幫你選好正解 */
+function layMulti(st,s,P){
+  const sel=new Set(), frames=[]; let fails=0; const Z=-4.2;
+  const toggle=k=>{ sel.has(k)?sel.delete(k):sel.add(k); frames[k].setAttribute("visible",sel.has(k)); };
+  if(P) mk(st,s.q,{x:0,y:2.55,z:Z,w:2.6}); else mk(st,s.q,{x:0,y:2.6,z:-4.4,w:2.7});
+  s.items.forEach((it,k)=>{ const r=Math.floor(k/4), c=k%4; let pos, w;
+    if(P){ w=0.6; pos={x:(c-1.5)*0.64,y:1.75-r*0.5,z:Z,ry:0}; }
+    else { w=1.0; const a=arc((c-1.5)*15,4.1); pos={...a,y:1.55-r*0.82}; }
+    const f=document.createElement("a-plane"); f.setAttribute("width",w*1.1); f.setAttribute("height",w*0.75*1.12);
+    f.setAttribute("color","#1f8a4c"); f.setAttribute("visible",false); f.setAttribute("material","shader:flat");
+    const a=(pos.ry||0)*Math.PI/180;   // 綠框放在卡片正後方 2 公分
+    f.setAttribute("position",`${pos.x-Math.sin(a)*0.02} ${pos.y} ${pos.z-Math.cos(a)*0.02}`); f.setAttribute("rotation",`0 ${pos.ry||0} 0`);
+    st.appendChild(f); frames[k]=f;
+    mk(st,it.img,{...pos,w,click:()=>toggle(k)}); });
+  const check=()=>{
+    if(sel.size!==4) return popup(s.need4.img,s.need4.au);
+    if([...sel].every(k=>s.items[k].need)) return popup(s.ok.img,s.ok.au,()=>go(cur+1));
+    fails++;
+    if(fails>=2){ sel.clear(); s.items.forEach((it,k)=>{ if(it.need) sel.add(k); frames[k].setAttribute("visible",it.need); });
+      return popup(s.show.img,s.show.au,()=>go(cur+1)); }
+    popup(s.ng.img,s.ng.au);
+  };
+  if(P) mk(st,s.check,{x:0,y:1.0,z:Z,w:1.1,click:check}); else mk(st,s.check,{x:0,y:0.3,z:-3.5,rx:-28,w:1.2,click:check});
+  if(s.poster&&!P){ mk(st,s.poster.img,{...arc(-72,3.6),y:1.6,w:1.3,click:()=>play(s.poster.au)}); }
+}
+/* 回抽：按住按鈕（滑鼠／手指按住、頭顯按住扳機），量筒升到滿＝抽不出；太早放開＝提醒並歸零 */
+let HOLD=null;
+function layHold(st,s,P){
+  const Z=-4.2;
+  if(P) mk(st,s.q,{x:0,y:2.45,z:Z,w:2.6}); else mk(st,s.q,{x:0,y:2.3,z:-4.4,w:2.9});
+  const gx=P?-0.85:-1.05, gy=P?1.05:0.95, gw=0.4, gh=gw*900/360, H0=gh*0.867, base=gy-gh/2+gh*0.0667;
+  const bg=document.createElement("a-plane"); bg.setAttribute("width",gw*0.5); bg.setAttribute("height",H0); bg.setAttribute("color","#ffffff");
+  bg.setAttribute("material","shader:flat"); bg.setAttribute("position",`${gx} ${base+H0/2} ${Z-0.03}`); st.appendChild(bg);
+  const fill=document.createElement("a-plane"); fill.setAttribute("width",gw*0.5); fill.setAttribute("height",0.001); fill.setAttribute("color","#c81e3a");
+  fill.setAttribute("material","shader:flat;opacity:0.85;transparent:true"); fill.setAttribute("position",`${gx} ${base} ${Z-0.02}`); st.appendChild(fill);
+  mk(st,s.gauge,{x:gx,y:gy,z:Z,w:gw});
+  let t0=null, raf=null, done=false;
+  const setP=p=>{ const h=Math.max(0.001,H0*p); fill.setAttribute("height",h); fill.setAttribute("position",`${gx} ${base+h/2} ${Z-0.02}`); };
+  const frame=()=>{ const p=Math.min(1,(performance.now()-t0)/s.ms); setP(p);
+    if(p>=1){ done=true; t0=null; popup(s.done.img,s.done.au,()=>go(cur+1)); return; } raf=requestAnimationFrame(frame); };
+  const start=()=>{ if(done||t0!==null) return; stopAudio(); t0=performance.now(); raf=requestAnimationFrame(frame); };
+  const stop=()=>{ if(done||t0===null) return; cancelAnimationFrame(raf); t0=null; setP(0); popup(s.early.img,s.early.au); };
+  const b=mk(st,s.btn,{x:P?0.45:0.55,y:gy,z:Z,w:P?1.3:1.5,click:()=>{}});
+  b.addEventListener("mousedown",start);
+  HOLD={stop, start};
+}
+["mouseup","touchend","touchcancel"].forEach(ev=>addEventListener(ev,()=>{ if(HOLD) HOLD.stop(); }));
+document.addEventListener("DOMContentLoaded",()=>document.querySelectorAll("[laser-controls]").forEach(c=>c.addEventListener("triggerup",()=>{ if(HOLD) HOLD.stop(); })));
+function gateDone(s){ if(s.after) popup(s.after.img,s.after.au,()=>go(cur+1)); else go(cur+1); }
+/* DMSO 塗抹：一般模式開 2D 面板用手指塗（判定同動手版）；頭顯模式改成三選一圖 */
+function layPaint(st,s,P){
+  if($("#scene").is("vr-mode")){ layMcq(st,{q:s.vrq,opts:s.vropts,grid:true},P); return; }
+  if(P){ mk(st,s.main,{x:0,y:2.2,z:-4.2,w:2.6}); mk(st,s.btn,{x:0,y:1.05,z:-4.2,w:1.4,click:openPaint}); }
+  else { mk(st,s.main,{x:0,y:1.95,z:-4.2,w:3.3}); mk(st,s.btn,{x:0,y:0.45,z:-3.6,rx:-20,w:1.5,click:openPaint}); }
+}
+let PT=null;
+function openPaint(){
+  stopAudio(); const C=D.paint, pw=$("#pw"), bg=$("#pbg"), pc=$("#pnt");
+  $("#pHint").innerHTML=`黑色虛線＝油性筆畫的外滲範圍（${C.spot.w}×${C.spot.h} cm）。用<b>手指或滑鼠</b>在手臂上塗 DMSO，塗到你認為的<b>患部兩倍範圍</b>，再按「檢查」。`;
+  $("#paint").classList.add("on"); $("#pfb").className=""; $("#pfb").innerHTML=""; $("#pnext").style.display="none"; $("#pm").innerHTML="";
+  let W=0,H=0,dpr=1,strokes=[],curS=null,showT=false,locked=false,tries=0;
+  $("#pshow").textContent="👁 顯示正確範圍"; $("#pchk").disabled=true;
+  const geo=()=>({cx:W*0.52,cy:H*0.55,cm:W*0.07});
+  const spot=()=>{const g=geo();return {cx:g.cx,cy:g.cy,a:C.spot.w/2*g.cm,b:C.spot.h/2*g.cm};};
+  const target=()=>{const t=spot();return {cx:t.cx,cy:t.cy,a:t.a*C.scale,b:t.b*C.scale};};
+  const brush=()=>Math.max(8,W*0.02);
+  const font=k=>`700 ${Math.max(13,Math.round(W*k))}px "Microsoft JhengHei","PingFang TC","Noto Sans TC",sans-serif`;
+  function size(){ W=pw.clientWidth; H=Math.round(W*0.62); pw.style.height=H+"px"; dpr=devicePixelRatio||1;
+    [bg,pc].forEach(c=>{c.width=Math.round(W*dpr);c.height=Math.round(H*dpr);c.getContext("2d").setTransform(dpr,0,0,dpr,0,0);}); drawBg(); redraw(); }
+  function drawBg(){ const c=bg.getContext("2d"); c.clearRect(0,0,W,H); c.fillStyle="#f7f9fc"; c.fillRect(0,0,W,H);
+    const gr=c.createLinearGradient(0,H*0.12,0,H*0.96); gr.addColorStop(0,"#e5b392"); gr.addColorStop(.35,"#f4d0b5"); gr.addColorStop(.7,"#f3cdb0"); gr.addColorStop(1,"#dca783");
+    c.fillStyle=gr; c.strokeStyle="#c98f6d"; c.lineWidth=2; c.beginPath(); c.moveTo(0,H*0.13); c.bezierCurveTo(W*0.35,H*0.16,W*0.7,H*0.21,W*0.9,H*0.25);
+    c.lineTo(W,H*0.26); c.lineTo(W,H*0.85); c.lineTo(W*0.9,H*0.85); c.bezierCurveTo(W*0.7,H*0.88,W*0.35,H*0.93,0,H*0.97); c.closePath(); c.fill(); c.stroke();
+    c.fillStyle="#5b6675"; c.font=font(0.032); c.textBaseline="top"; c.textAlign="left"; c.fillText("← 手肘",8,6); c.textAlign="right"; c.fillText("手腕 →",W-8,6);
+    const t=spot(); const rg=c.createRadialGradient(t.cx,t.cy,0,t.cx,t.cy,t.a); rg.addColorStop(0,"rgba(214,72,72,.45)"); rg.addColorStop(1,"rgba(214,72,72,.12)");
+    c.fillStyle=rg; c.beginPath(); c.ellipse(t.cx,t.cy,t.a,t.b,0,0,Math.PI*2); c.fill(); c.setLineDash([7,5]); c.strokeStyle="#1c2430"; c.lineWidth=3; c.stroke(); c.setLineDash([]);
+    c.fillStyle="#1c2430"; c.font=font(0.026); c.textAlign="center"; c.textBaseline="middle"; c.fillText(`外滲 ${C.spot.w}×${C.spot.h} cm`,t.cx,t.cy);
+    if(showT){ const g=target(); c.setLineDash([10,6]); c.strokeStyle="#7a3fb5"; c.lineWidth=4; c.beginPath(); c.ellipse(g.cx,g.cy,g.a,g.b,0,0,Math.PI*2); c.stroke(); c.setLineDash([]);
+      c.fillStyle="#7a3fb5"; c.font=font(0.028); c.textBaseline="bottom"; c.fillText("DMSO 塗抹範圍（約兩倍）",g.cx,g.cy-g.b-4); } c.textAlign="left"; }
+  const dot=(c,x,y)=>{c.beginPath();c.arc(x*W,y*H,brush(),0,Math.PI*2);c.fill();};
+  const seg=(c,a,b)=>{const d=Math.hypot((b[0]-a[0])*W,(b[1]-a[1])*H),n=Math.max(1,Math.ceil(d/(brush()*0.4)));for(let i=1;i<=n;i++)dot(c,a[0]+(b[0]-a[0])*i/n,a[1]+(b[1]-a[1])*i/n);};
+  function redraw(){ const c=pc.getContext("2d"); c.clearRect(0,0,W,H); c.fillStyle="#7a3fb5"; strokes.forEach(sk=>{dot(c,sk[0][0],sk[0][1]);for(let i=1;i<sk.length;i++)seg(c,sk[i-1],sk[i]);}); }
+  const pt=e=>{const r=pc.getBoundingClientRect();return [(e.clientX-r.left)/W,(e.clientY-r.top)/H];};
+  pc.onpointerdown=e=>{ if(locked)return; e.preventDefault(); try{pc.setPointerCapture(e.pointerId);}catch(_){} curS=[pt(e)]; strokes.push(curS); const c=pc.getContext("2d"); c.fillStyle="#7a3fb5"; dot(c,curS[0][0],curS[0][1]); $("#pchk").disabled=false; };
+  pc.onpointermove=e=>{ if(!curS)return; e.preventDefault(); const q=pt(e),c=pc.getContext("2d"); c.fillStyle="#7a3fb5"; seg(c,curS[curS.length-1],q); curS.push(q); };
+  pc.onpointerup=pc.onpointercancel=()=>{curS=null;};
+  const clearP=()=>{strokes=[];redraw();$("#pm").innerHTML="";$("#pchk").disabled=true;$("#pfb").className="";$("#pfb").innerHTML="";};
+  $("#pclr").onclick=()=>{if(!locked)clearP();};
+  $("#pshow").onclick=()=>{showT=!showT;$("#pshow").textContent=showT?"🙈 隱藏正確範圍":"👁 顯示正確範圍";drawBg();};
+  function score(){ const t=target(),img=pc.getContext("2d").getImageData(0,0,pc.width,pc.height).data,step=Math.max(3,W/160); let inT=0,inP=0,outP=0;
+    for(let y=step/2;y<H;y+=step)for(let x=step/2;x<W;x+=step){ const px=Math.min(pc.width-1,Math.round(x*dpr)),py=Math.min(pc.height-1,Math.round(y*dpr));
+      const painted=img[(py*pc.width+px)*4+3]>40, inside=((x-t.cx)/t.a)**2+((y-t.cy)/t.b)**2<=1; if(inside){inT++;if(painted)inP++;}else if(painted)outP++; }
+    return {cover:inP/inT,outside:outP/inT}; }
+  const esc=x=>String(x).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+  const keyp=`<ul>${C.keyp.map(k=>`<li>${esc(k)}</li>`).join("")}</ul><small>${esc(C.src)}</small>`;
+  function pass(title){ locked=true; showT=true; drawBg(); $("#pshow").textContent="🙈 隱藏正確範圍"; $("#pchk").disabled=true;
+    $("#pfb").className="ok"; $("#pfb").innerHTML=`<b>${esc(title)}</b>${keyp}`; $("#pnext").style.display=""; }
+  $("#pchk").onclick=()=>{ const r=score(),cv=Math.round(r.cover*100),ou=Math.round(r.outside*100);
+    $("#pm").innerHTML=`<span>兩倍範圍塗到 ${cv}%</span><span>塗出範圍外 ${ou}%</span>`;
+    if(r.cover>=C.cover&&r.outside<=C.outside) return pass(C.ok);
+    tries++; let m;
+    if(r.cover<C.cover&&r.outside<=C.outside) m=C.small; else if(r.cover>=C.cover) m=C.big; else m=C.off;
+    $("#pfb").className="warn"; $("#pfb").innerHTML=`<b>${esc(m[0])}</b>${esc(m[1])}<br><small>${esc(C.src)}</small>`+
+      `<div class="row"><button id="pretry">🧽 擦掉重塗</button>${tries>=2?'<button id="pskip">看正確範圍並繼續</button>':""}</div>`;
+    $("#pretry").onclick=clearP; const sk=$("#pskip"); if(sk) sk.onclick=()=>pass(C.show); };
+  $("#pgo").onclick=()=>{ closePaint(); go(cur+1); };
+  if(PT) PT.disconnect(); PT=new ResizeObserver(()=>{ if(pw.clientWidth&&pw.clientWidth!==W) size(); }); PT.observe(pw); size();
+}
+function closePaint(){ $("#paint").classList.remove("on"); if(PT){PT.disconnect();PT=null;} }
+$("#paintClose").onclick=closePaint;
+
 function answer(s,k){
   if(k==="A") popup(s.ok.img,s.ok.au,()=>go(cur+1));
   else if(s.bad[k]) popup(s.bad[k].img,s.bad[k].au);
@@ -205,8 +375,8 @@ let lastP=null; addEventListener("resize",()=>{ if(!D)return; const p=PORTRAIT()
 /* 頭顯模式隱藏 2D 提示 */
 document.addEventListener("DOMContentLoaded",()=>{
   const sc=$("#scene");
-  sc.addEventListener("enter-vr",()=>{$("#hud").style.display="none";$("#tip").style.display="none";});
-  sc.addEventListener("exit-vr",()=>{$("#hud").style.display="";$("#tip").style.display="";});
+  sc.addEventListener("enter-vr",()=>{$("#hud").style.display="none";$("#tip").style.display="none"; if(D&&D.steps[cur].type==="paint") go(cur,true);});
+  sc.addEventListener("exit-vr",()=>{$("#hud").style.display="";$("#tip").style.display=""; if(D&&D.steps[cur].type==="paint") go(cur,true);});
 });
 </script>
 </body></html>

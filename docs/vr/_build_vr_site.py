@@ -40,7 +40,7 @@ for k, src in SKYS.items():
 
 # ---------- 圖卡：依主檔名找來源 ----------
 def find(stem):
-    for d in (VR3 / "cards", VR3 / "cards2", LOOKC, HERE / "_extra"):
+    for d in (VR3 / "cards", VR3 / "cards2", LOOKC, HERE / "_extra", HERE / "_extra/hs"):
         for ext in (".png", ".jpg", ".jpeg"):
             p = d / f"{stem}{ext}"
             if p.exists():
@@ -110,34 +110,39 @@ def quiz(code, qcard, opts, ok, bad, nar, okau, badau, opt_prefix=""):
 
 ans = lambda i: Q[i]["answer"]
 assert all(ans(i) == "A" for i in (13, 14, 15, 17)), "正解不是 A，請檢查選項對應"
+# 動手版搬進來的站（PPE 選物、選空針、按住回抽、解毒劑、敷療、九步驟總覽、案例二 DMSO、案例三 抬高；三案例皆必做）
+from _build_vr_handson import build as build_handson
+HS, CASE2, CASE3, PAINT, GOTO = build_handson(card)
+HS["ppe"]["ok"]["img"] = card("D4OKh"); HS["ppe"]["ng"]["img"] = card("D4XBh")   # PPE 答對／答錯沿用 MAKAR 卡與語音（Q14）
+HS["ppe"]["poster"] = {"img": card("PPE"), "au": "VPPE"}
+HS["syr"]["poster"] = {"img": card("SYR"), "au": "VSYR"}
+# 案例一流程＝動手版 FLOW1：d1→ppe→syr→asp→anti→press(d2)→pen(d3)→comp→總覽；VR 原本 D4／D5 選擇題由 ppe／syr＋asp 取代（同 Q14／Q15，保留一份）
 steps = [
-    {"id": "intro", "title": "情境", "sky": "room", "type": "info", "main": card("S1_情境開場"), "nar": "VN01",
+    {"id": "intro", "case": 1, "title": "情境", "sky": "room", "type": "info", "main": card("S1_情境開場"), "nar": "VN01",
      "next": card("BTN_下一步")},
-    {"id": "clues", "title": "找線索", "sky": "room", "type": "clues", "main": card("T2"), "nar": "VN02",
+    {"id": "clues", "case": 1, "title": "找線索", "sky": "room", "type": "clues", "main": card("T2"), "nar": "VN02",
      "hs": [{"img": card(f"H{i}"), "ex": card(f"GH{i}"), "au": f"VE{i}"} for i in range(1, 6)],
      "next": card("NEXT2")},
     dict(quiz("D1", "D1_題目", [(k, f"D1_選項{k}") for k in "ABC"], "D1_正解",
               {"B": "D1_後果B", "C": "D1_後果C"}, "VND1", "VD1OK", {"B": "VD1XB", "C": "VD1XC"}),
-         id="d1", title="決定一：第一個動作", sky="room"),
-    dict(quiz("D4", "D4Q", [(k, f"D4{k}") for k in "ABC"], "D4OKh",
-              {"B": "D4XBh", "C": "D4XCh"}, "VND4", "VD4OK", {"B": "VD4XB", "C": "VD4XC"}),
-         id="d4", title="備物・防護", sky="store", poster={"img": card("PPE"), "au": "VPPE"}),
-    dict(quiz("D5", "D5Q", [(k, f"D5{k}") for k in "ABC"], "D5OKh",
-              {"B": "D5XBh", "C": "D5XCh"}, "VND5", "VD5OK", {"B": "VD5XB", "C": "VD5XC"}),
-         id="d5", title="回抽", sky="bed", poster={"img": card("SYR"), "au": "VSYR"}),
+         id="d1", case=1, title="決定一：第一個動作", sky="room"),
+    dict(HS["ppe"], case=1), dict(HS["syr"], case=1), dict(HS["asp"], case=1),
+    dict(HS["antig"], case=1), dict(HS["anti"], case=1),
     dict(quiz("D2", "D2_題目", [(k, f"D2_選項{k}") for k in "AB"], "D2_正解",
               {"B": "D2_後果B"}, "VND2", "VD2OK", {"B": "VD2XB"}),
-         id="d2", title="決定二：可以壓嗎", sky="bed"),
+         id="d2", case=1, title="決定二：可以壓嗎", sky="bed"),
     dict(quiz("D3", "D3_題目", [(k, f"D3_選項{k}") for k in "ABC"], "D3_正解",
               {"B": "D3_後果B", "C": "D3_後果C"}, "VND3", "VD3OK", {"B": "VD3XB", "C": "VD3XC"}),
-         id="d3", title="決定三：標示範圍", sky="bed", grid=True),
-    {"id": "lookup", "title": "外滲處置查詢站", "sky": "store", "type": "end", "nar": "VN08",
+         id="d3", case=1, title="決定三：標示範圍", sky="bed", grid=True),
+    dict(HS["compg"], case=1), dict(HS["comp"], case=1), dict(HS["q19"], case=1), dict(HS["sum1"], case=1),
+] + CASE2 + CASE3 + [   # 9/29 使用者定：三個案例都必做 → 案例一→二→三 依序，最後才到查詢站
+    {"id": "lookup", "case": 4, "title": "外滲處置查詢站", "sky": "store", "type": "end", "nar": "VN08",
      "lookup": card("W_LOOKUP"), "handson": card("W_HANDSON"), "notice": card("W_NOTICE"),
      "vrcards": [card(s) for s in ("A01_作法_冷敷作法", "A02_作法_熱敷作法", "A03_作法_DMSO作法")],
-     "again": card("BTN_從頭再玩"), "home": card("BTN_回教材首頁")},
+     "again": card("BTN_從頭再玩"), "home": card("BTN_回教材首頁"), "toC2": GOTO["toC2"], "toC3": GOTO["toC3"]},
 ]
 common = {"mute": card("MUTE"), "listen": card("LISTENQ"), "start": card("W_START")}
-json.dump({"steps": steps, "common": common, "sizes": {v["f"]: [v["w"], v["h"]] for v in SIZES.values()}},
+json.dump({"steps": steps, "common": common, "paint": PAINT, "sizes": {v["f"]: [v["w"], v["h"]] for v in SIZES.values()}},
           open(A / "scenes.json", "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 
 # 清掉已不用的舊圖卡

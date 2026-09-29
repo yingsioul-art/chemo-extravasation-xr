@@ -396,13 +396,13 @@ function renderCards(idx){
   const r=el('div','row');
   if(idx>0){ const b=el('button','btn lite','← 上一張'); b.type='button'; b.addEventListener('click',()=>go('#G/'+idx)); r.appendChild(b); }
   if(idx<CARDS.length-1){ const b=el('button','btn','下一張 →'); b.type='button'; b.addEventListener('click',()=>go('#G/'+(idx+2))); r.appendChild(b); }
-  else { const b=el('button','btn','下一步：小測驗（2 題）→'); b.type='button'; b.addEventListener('click',()=>go('#G/quiz')); r.appendChild(b); }
+  else { const b=el('button','btn','下一步：小測驗（4 題）→'); b.type='button'; b.addEventListener('click',()=>go('#G/quiz')); r.appendChild(b); }
   if(r.children.length) app.appendChild(r);
   window.scrollTo(0,0);
 }
 
-/* ── 紀錄與追蹤：看完四張圖卡後的小測驗（2 題，選 Q25 拍照上傳、Q26 通報時限） ── */
-const GQUIZ=[25,26];
+/* ── 紀錄與追蹤：看完四張圖卡後的小測驗（4 題：Q24 記錄在哪、Q25 拍照上傳、Q26 通報時限、Q27 6 週追蹤） ── */
+const GQUIZ=[24,25,26,27];
 function renderGQuiz(n){
   stopAudio(); n=Math.max(0,Math.min(n||0,GQUIZ.length-1));
   const q=byId[GQUIZ[n]]; if(!q){ go('#G'); return; }

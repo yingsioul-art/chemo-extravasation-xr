@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>自學：預防與辨識｜化療藥品外滲</title>
+<title>預防與辨識｜化療藥品外滲</title>
 <meta name="description" content="化療藥品外滲預防與處理 2D 自學站：區塊 A–D 12 題先選再講解（文字＋語音＋圖），區塊 G 紀錄與追蹤 4 張圖卡與自我檢核。">
 <style>
 /* ── 主題色與基礎（沿用首頁 docs/index.html 的色票） ── */
@@ -124,7 +124,7 @@ footer{text-align:center;color:var(--mut);font-size:.78rem;padding:0 16px 28px}
 <header>
   <div class="hrow">
     <button class="hbtn" id="back" type="button">← 回首頁</button>
-    <h1 id="ttl">自學：預防與辨識</h1>
+    <h1 id="ttl">預防與辨識</h1>
     <button class="hbtn" id="auto" type="button" aria-pressed="true">🔊 自動播放 開</button>
   </div>
   <div class="prog" id="prog"><div class="lbl"><span id="plbl"></span><span id="pnum"></span></div><div class="bar"><i id="pbar"></i></div></div>
@@ -259,7 +259,7 @@ function questionCard(q,opts){
 /* ── 首頁 ── */
 function renderHome(){
   markLearn();
-  stopAudio(); setHead('自學：預防與辨識','← 回首頁'); setProg(false);
+  stopAudio(); setHead('預防與辨識','← 回首頁'); setProg(false);
   app.innerHTML='';
   app.appendChild(el('div','hint','先選答案再看講解，答對答錯各有一版講解與語音。區塊 A–D 共 '+learnQ.length+' 題，做完出總複習；區塊 G 是圖卡＋自我檢核，不計分。'));
   const grid=el('div','grid');

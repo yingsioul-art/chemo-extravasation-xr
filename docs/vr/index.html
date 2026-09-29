@@ -61,7 +61,7 @@ const $=s=>document.querySelector(s);
 const PX=1/500;               // 1600px 圖卡 → 3.2 公尺寬
 /* 每個環景的預設視角：u,v＝要對準的點在環景圖上的位置（0–1）；pitch＝進場俯角（度，負＝往下看）
    room/bed：病人左前臂（注射部位）；store：備物架正中。水平方向靠旋轉環景對準（頭顯也有效），俯角靠重設相機。 */
-const VIEW={room:{u:0.557,v:0.68,pitch:-22}, bed:{u:0.566,v:0.657,pitch:-20}, store:{u:0.5,v:0.5,pitch:0}};
+const VIEW={room:{u:0.558,v:0.72,pitch:-22}, bed:{u:0.30,v:0.78,pitch:-26}, store:{u:0.507,v:0.62,pitch:-12}};  // 9/29 生圖版：room＝病人左前臂、bed＝入針處、store＝備物層架
 const skyYaw=k=>-90+(VIEW[k].u-0.5)*360*YAWSIGN;
 const YAWSIGN=1;
 let D, cur=0, audio=new Audio(), started=false;

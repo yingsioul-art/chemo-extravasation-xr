@@ -19,10 +19,11 @@ DOCS = HERE.parent
 MK = pathlib.Path(r"D:\Zettelkasten\20_教學\Makar")
 VR3 = MK / r"10_XR教材_1002成果發表\04_MAKAR建置\MAKAR圖卡_③VR"
 LOOKC = MK / r"10_XR教材_1002成果發表\04_MAKAR建置\MAKAR圖卡_查詢站\cards"
+NEW360 = MK / "10_XR教材_1002成果發表/03_圖片音檔素材/360新版"   # 9/29 ChatGPT 生圖版（prompt 在 03_圖片音檔素材/360環景prompt/）
 SKYS = {
-    "room": MK / r"01_工作坊課程\練習教材\素材\01_場景一.png",
-    "store": MK / r"10_XR教材_1002成果發表\03_圖片音檔素材\360_02_備物空間場景_繁中修正.png",
-    "bed": MK / r"01_工作坊課程\練習教材\素材\03_備物後到病人旁.png",
+    "room": NEW360 / "sky_room.png",
+    "store": NEW360 / "sky_store.png",
+    "bed": NEW360 / "sky_bed.png",
 }
 A = HERE / "assets"
 for d in ("sky", "cards", "audio"):

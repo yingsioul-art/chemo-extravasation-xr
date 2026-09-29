@@ -1,6 +1,6 @@
 <!DOCTYPE html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>發生外滲後的指導</title>
-<meta name="description" content="化療藥品外滲後續處置（表單 17–19）：把提示詞貼給生成式 AI（Copilot、ChatGPT、Gemini 等），AI 扮演外滲病人，你用口語做外滲後的出院指導，AI 依六項檢核表逐項回饋。">
+<meta name="description" content="化療藥品外滲後續處置（表單 17–19）：把提示詞貼給生成式 AI（Copilot、ChatGPT、Gemini 等），AI 扮演外滲病人，你用口語做外滲後的出院指導，AI 依四項檢核表逐項回饋。">
 <style>
 :root{--bg:#f4f7fb;--card:#fff;--ink:#1c2430;--mut:#5b6675;--line:#e3e8ef;--navy:#123a6b;--red:#c81e3a;--cold:#1f6fd0;--warm:#d9541e;--dmso:#7a3fb5;--ok:#2e8b57;--soft:#fff4f6;--gold:#b7791f}
 *{box-sizing:border-box}
@@ -120,7 +120,7 @@ footer{text-align:center;color:var(--mut);font-size:.8rem;padding:16px}
 .uc-row div b{display:block;font-size:1.9rem;margin-bottom:4px}
 .uc-row i{align-self:center;color:var(--mut);font-style:normal}
 .uc-foot{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:8px;font-size:.84rem;color:var(--mut)}
-.howicons{margin:10px 0}
+.howicons{margin:0}
 @media (max-width:480px){.uc-row.howicons{display:grid;grid-template-columns:1fr 1fr;gap:6px}.uc-row.howicons i{display:none}.uc-row div{font-size:.84rem;padding:8px 4px}.uc-row div b{font-size:1.6rem}}
 .stepbar a.lock{opacity:.45;cursor:default}
 .sec.wiz{animation:fadein .25s ease}@keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
@@ -146,7 +146,7 @@ footer{text-align:center;color:var(--mut);font-size:.8rem;padding:16px}
 <div class="uc-row">
 <div><b>🤖</b>AI 扮演<br>外滲的病人</div><i>›</i>
 <div><b>🗣️</b>你做<br>出院指導</div><i>›</i>
-<div><b>✅</b>AI 依 6 重點<br>逐項回饋</div>
+<div><b>✅</b>AI 依 4 重點<br>逐項回饋</div>
 </div>
 <div class="uc-foot"><span>📋 不用寫提示詞，複製貼上即可</span><span>🔒 不輸入真實病人資料</span></div>
 </div>
@@ -169,13 +169,15 @@ footer{text-align:center;color:var(--mut);font-size:.8rem;padding:16px}
 <button class="btn big" id="copyBtn">📋 複製提示詞</button>
 <div class="btnrow"><button class="btn line" id="dlBtn">⬇ 下載 .txt</button><button class="btn ghost" id="toggleBtn">看提示詞全文 ▾</button><span id="copied"></span></div>
 <div class="prewrap" id="prewrap"><pre id="promptBox"></pre><div class="fade"></div></div>
-<details class="guide" open><summary>要貼到哪裡？任何一個生成式 AI 都可以</summary>
+<div class="usecard"><div class="uc-h">🧭 怎麼練（4 步）</div>
 <div class="uc-row howicons">
 <div><b>📋</b>按「複製」</div><i>›</i>
 <div><b>🤖</b>開 AI<br>貼上送出</div><i>›</i>
 <div><b>🗣️</b>把它當病人<br>一句一句講</div><i>›</i>
 <div><b>⌨️</b>打「我說完了」<br>看回饋</div>
 </div>
+</div>
+<details class="guide" open><summary>要貼到哪裡？任何一個生成式 AI 都可以</summary>
 <div class="tools">
 <a href="https://copilot.microsoft.com/" target="_blank" rel="noopener"><b>Microsoft Copilot</b><small>院內帳號可登入</small></a>
 <a href="https://chatgpt.com/" target="_blank" rel="noopener"><b>ChatGPT</b><small>免費版即可</small></a>
@@ -205,7 +207,7 @@ footer{text-align:center;color:var(--mut);font-size:.8rem;padding:16px}
 <dt>😵 AI 開始講課、教你、糾正你，沒有當病人</dt><dd>直接輸入「<b>回到角色</b>」，它就會接著用病人口氣講。還是不行的話，開「新對話」重新貼一次提示詞。</dd>
 <dt>📋 按了複製，貼上沒東西</dt><dd>按「看提示詞全文」，用手指長按文字 → 全選 → 複製；或按「⬇ 下載 .txt」再打開複製。</dd>
 <dt>🔑 AI 網站要我登入</dt><dd>換另一個 AI 試試（ChatGPT、Gemini、Claude 用一般帳號即可），或用院內帳號登入 Copilot。</dd>
-<dt>🤔 不知道要講什麼</dt><dd>往下看「參考資料」的六項衛教重點，照著一項一項講就好，講錯了 AI 會在回饋裡告訴你。</dd>
+<dt>🤔 不知道要講什麼</dt><dd>往下看「參考資料」的四項衛教重點，照著一項一項講就好，講錯了 AI 會在回饋裡告訴你。</dd>
 <dt>🔁 想重來</dt><dd>在 AI 網站開「新對話」，再貼一次提示詞。</dd>
 </dl>
 </details>
@@ -217,7 +219,7 @@ footer{text-align:center;color:var(--mut);font-size:.8rem;padding:16px}
 <!-- STEP 3 -->
 <section class="sec wiz hide" id="s3">
 <div class="step"><span class="n">3</span><h2>練完了？自己勾一次，再對 AI 的回饋</h2></div>
-<p class="sub">六項就是 AI 回饋用的檢核表。先憑印象勾，再看 AI 怎麼說。</p>
+<p class="sub">四項就是 AI 回饋用的檢核表。先憑印象勾，再看 AI 怎麼說。</p>
 <div id="chkList"></div>
 <div class="sumrow" id="chkSum"></div>
 <div class="btnrow"><button class="btn ghost" id="back2">◀ 上一步</button><button class="btn line" id="clearChk">清除勾選</button><button class="btn" id="swapBtn">換另一個案例再練 🔁</button></div>
@@ -252,14 +254,12 @@ footer{text-align:center;color:var(--mut);font-size:.8rem;padding:16px}
 <div class="dock hide" id="dock"><div class="wrap"><div class="lab">目前：<b id="dockLab"></b></div><button class="btn" id="dockCopy">📋 複製提示詞</button></div></div>
 
 <script>
-/* ---------- 六項檢核表（來源：規格檔 7-3；Q21–Q23 展開） ---------- */
+/* ---------- 四項檢核表（來源：規格檔 7-3；Q21–Q23 展開） ---------- */
 const CHECK=[
  {t:"抬高患肢至少 48 小時",d:"高於心臟；睡覺用枕頭墊高也算。不是「不痛就放下」。"},
  {t:"每天自己看九項＋發燒",d:"皮膚顏色、溫度、完整性（有沒有破皮）、腫脹、水泡、分泌物、疼痛、灼熱或麻木、手能不能正常活動；加上有沒有發燒。"},
  {t:"惡化就回診或聯絡",d:"範圍變大、變黑變硬、起水泡、破皮、越來越痛、發燒 → 回診或打電話回病房，不要等下次回診。"},
- {t:"敷療五要素＋不可壓迫",d:"冷還是熱、幾度、每次幾分鐘、一天幾次、敷幾天；並說「不可以壓、不可以揉」。"},
- {t:"不需要塗 DMSO",d:"兩個案例都是刺激性藥品，只要冷／熱敷，不用 DMSO。沒提也算有講到；叫病人塗 DMSO 算講錯。"},
- {t:"6 週追蹤與電訪",d:"回家第一週病房護理師會打電話；第二週起腫瘤品管護理師每週一次；追到外滲後 6 週。電話裡覺得變差要說。"}
+ {t:"敷療五要素＋不可壓迫",d:"冷還是熱、幾度、每次幾分鐘、一天幾次、敷幾天；並說「不可以壓、不可以揉」。"}
 ];
 
 /* ---------- 兩案例 ---------- */
@@ -331,17 +331,15 @@ ${R.who}
 - 對照用：冷敷＝0℃ 每次 20 分鐘、一天 4 次、1–2 天；熱敷＝44–50℃ 每次 20–30 分鐘、一天 4 次、1–2 天；DMSO＝99% 外用、患部兩倍範圍、風乾不覆蓋、一天 4 次 × 7 天，僅 Anthracycline 類（Doxorubicin、Epirubicin、Idarubicin、Daunorubicin）與 Mitomycin-C、Mitoxantrone 適用。
 
 ■ 結束時的回饋（只有在上面兩種結束情況才出現；這時才跳出角色，用護理教師的口氣，繁體中文）
-先寫一行「── 練習結束，以下是回饋 ──」，然後依六項檢核表逐項給結果，每項一行，格式：「編號｜項目｜✅有講到／⬜沒講到／❌講錯｜一句話說明（我實際講了什麼、對或錯在哪）」。
+先寫一行「── 練習結束，以下是回饋 ──」，然後依四項檢核表逐項給結果，每項一行，格式：「編號｜項目｜✅有講到／⬜沒講到／❌講錯｜一句話說明（我實際講了什麼、對或錯在哪）」。
 
-檢核表六項：
+檢核表四項：
 1. 抬高患肢至少 48 小時（高於心臟；睡覺用枕頭墊高也算）。
 2. 每天自己觀察九項＋發燒：皮膚顏色、溫度、完整性（有沒有破皮）、腫脹、水泡、分泌物、疼痛、灼熱或麻木、手的活動；加上有沒有發燒。至少講到其中 5 項且提到「每天看」才算有講到。
 3. 惡化就回診或聯絡：講到「哪些情況」（範圍變大、變黑變硬、起水泡、破皮、更痛、發燒）以及「要做什麼」（回診或打電話回病房），兩者都有才算有講到。
 4. 敷療五要素＋不可壓迫：冷或熱、幾度、每次幾分鐘、一天幾次、敷幾天，並說不可以壓、不可以揉。五要素缺 1–2 項＝沒講到（在說明寫出缺哪些）；冷熱、溫度、時間任一與敷療說明不符＝講錯。
-5. DMSO：${C.dmsoRule}
-6. 6 週追蹤與電訪：回家第一週由病房護理師電訪，第二週起腫瘤品管護理師每週一次，追蹤到外滲後 6 週；電話中若覺得變差要說。三個時間點至少講到兩個才算有講到。
 
-六項之後，加一行「💡 最重要的一句建議：」，只給一句、針對我最該先改的地方（例如講了敷法卻沒講幾天、用了病人聽不懂的詞、沒確認病人聽懂）。最後一行寫「可以再用另一個案例練一次。」
+四項之後，加一行「💡 最重要的一句建議：」，只給一句、針對我最該先改的地方（例如講了敷法卻沒講幾天、用了病人聽不懂的詞、沒確認病人聽懂）。最後一行寫「可以再用另一個案例練一次。」
 
 再提醒一次：在我輸入「我說完了」或「結束」之前，你只是${R.say}，不是老師。
 現在開始：不要寫任何說明或開場白，直接用${R.say}的口氣說一句話，例如「護理師，${r==="f"?"我先生":"我"}${C.day}就要回家了，這隻手要怎麼顧啊？」，然後等我回答。`;
@@ -354,7 +352,7 @@ function renderCase(){
  const C=CASES[curCase],R=ROLES[curRole];
  $("#caseBox").innerHTML=`<div>${C.tag}<b>${C.name}</b>・${R.short}</div>
  <div style="margin-top:4px">張示範，58 歲，${C.when}${C.site}外滲。${C.done} ${C.home}</div>
- <div class="note" style="margin-top:4px">本案敷法：${C.comp}<br>DMSO：${C.dmso}</div>`;
+ <div class="note" style="margin-top:4px">本案敷法：${C.comp}</div>`;
  $("#promptBox").textContent=buildPrompt(curCase,curRole);
  $("#hint1").innerHTML=`✅ <div><b>已選好：${C.short}・${R.short}。</b>下一步：把提示詞複製、貼給你慣用的 AI。</div>`;
  $("#dockLab").textContent=`${C.short}・${R.short}`;
@@ -398,9 +396,10 @@ $("#back2").onclick=()=>show(2);
 
 /* 自評（勾選只存本機瀏覽器，失敗也不影響使用） */
 const xrMark=k=>{try{const p=JSON.parse(localStorage.getItem('xrprog')||'{}');if(!p[k]){p[k]=Date.now();localStorage.setItem('xrprog',JSON.stringify(p));}}catch(e){}};
-const KEY="coach_chk_v1";
+const KEY="coach_chk_v2";
 let saved={};try{saved=JSON.parse(localStorage.getItem(KEY)||"{}")||{};}catch(e){saved={};}
-if(Object.keys(saved).length>=6)xrMark("coach");   // 之前已勾完六項者，開頁即補記完成
+const allDone=()=>CHECK.every((c,i)=>saved["c"+i]);
+if(allDone())xrMark("coach");   // 之前已勾完全部項目者，開頁即補記完成
 function renderChk(){
  $("#chkList").innerHTML=CHECK.map((c,i)=>`<div class="chkcard"><div class="no">${i+1}</div><div><div class="t">${c.t}</div><div class="d">${c.d}</div>
  <div class="segc">
@@ -413,7 +412,7 @@ function sumChk(){
  const v=Object.values(saved);const y=v.filter(x=>x==="y").length,n=v.filter(x=>x==="n").length,x=v.filter(x=>x==="x").length;
  $("#chkSum").innerHTML=v.length?`<span class="chip y">有講到 ${y}</span><span class="chip">沒講到 ${n}</span><span class="chip x">講錯 ${x}</span><span class="note">／共 6 項${v.length<6?`，還有 ${6-v.length} 項沒勾`:""}</span>`:`<span class="note">還沒勾選。練完後每項選一個。</span>`;
 }
-$("#chkList").addEventListener("change",e=>{if(e.target.name){saved[e.target.name]=e.target.value;try{localStorage.setItem(KEY,JSON.stringify(saved));}catch(err){}sumChk();if(Object.keys(saved).length>=6)xrMark("coach");}});
+$("#chkList").addEventListener("change",e=>{if(e.target.name){saved[e.target.name]=e.target.value;try{localStorage.setItem(KEY,JSON.stringify(saved));}catch(err){}sumChk();if(allDone())xrMark("coach");}});
 $("#clearChk").onclick=()=>{saved={};try{localStorage.removeItem(KEY);}catch(e){}renderChk();};
 
 /* 知識底稿 Q21–Q23：讀題庫檔（單一來源），不手抄 */

@@ -46,7 +46,7 @@ const mark = k => { try { P[k] = P[k] || Date.now(); localStorage.setItem("xrpro
 const TESTS_ON = false;   // 前測／後測開關：false＝先隱藏讓使用者自由體驗
 const STATIONS = [
   ["learn", "預防與辨識", "作答完 12 題"],
-  ["handson", "外滲當下怎麼做", "走完 2D 案例一，或開啟 360° 網頁 VR"],
+  ["handson", "外滲當下怎麼做", "2D 動手版三個案例都走完"],
   ["lookup", "查詢", "做完「小測驗」分頁 4 題"],
   ["coach", "發生外滲後的指導", "完成自評四項"],
   ["record", "紀錄與追蹤", "看完 4 張圖卡並完成小測驗 4 題"],
@@ -77,8 +77,6 @@ function render() {
   const firstTodo = st.find(([k]) => !P[k]);
   document.getElementById("steps").innerHTML = st.map(([k, n]) => `<span class="${P[k] ? "done" : (firstTodo && firstTodo[0] === k ? "now" : "")}">${P[k] ? "✓ " : ""}${n}</span>`).join("");
 }
-document.getElementById("vr-link").addEventListener("click", () => { mark("handson"); setTimeout(render, 50); });
-document.getElementById("webvr-link").addEventListener("click", () => { mark("handson"); });
 window.addEventListener("pageshow", () => { try { Object.assign(P, JSON.parse(localStorage.getItem("xrprog") || "{}")); } catch (e) {} render(); });
 render();
 </script>

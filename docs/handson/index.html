@@ -214,7 +214,7 @@ const PAINT_PASS_COVER = 0.80;       // 兩倍範圍區至少塗到 80%
 const PAINT_MAX_OUTSIDE = 0.35;      // 塗到兩倍區外的面積 ≤ 兩倍區面積的 35%
 const PAINT_SPOT = {w:4, h:3};       // 油性筆畫的外滲範圍（cm，示範值）
 
-/* ---------- 案例三：抬高患肢 48 小時（情境練習，選做） ----------
+/* ---------- 案例三：抬高患肢 48 小時（情境練習，必做） ----------
    依據：技術評核表單第 17 項「若為周邊靜脈外滲者，抬高患肢至少 48 小時，以減少腫脹」。
    只用有依據的原則：高於心臟、枕頭墊高、至少 48 小時、不可壓迫／按摩；干擾選項都寫明錯在哪一條原則。 */
 const EL_SRC = '技術評核表單第 17 項：若為周邊靜脈外滲者，抬高患肢至少 48 小時，以減少腫脹';
@@ -320,10 +320,13 @@ function home(){
   for (const k in result) delete result[k];
   $('#app').innerHTML = `
   <div class="card"><h2>怎麼玩</h2><p class="lead">跟著情境一步一步做決定：拔不拔針、穿什麼、抽多少、用哪支筆。<b>做錯會看到後果</b>，再回頭重做。</p>
-  <div><span class="chip">決策 ×3</span><span class="chip">選物拖放 ×1</span><span class="chip">選物 ×2</span><span class="chip">回抽動作 ×1</span><span class="chip">查詢後決策 ×2</span><span class="chip">DMSO 動手塗 ×1</span><span class="chip">抬高情境 ×4（選做）</span></div></div>
+  <div><span class="chip">決策 ×3</span><span class="chip">選物拖放 ×1</span><span class="chip">選物 ×2</span><span class="chip">回抽動作 ×1</span><span class="chip">查詢後決策 ×2</span><span class="chip">DMSO 動手塗 ×1</span><span class="chip">抬高情境 ×4</span></div></div>
   <button class="case" id="c1"><h2>案例一｜Cisplatin 外滲（完整九步驟）</h2><p>張示範，左前臂周邊留置針，手臂腫、喊痛。從第一個動作到冷敷，9 個步驟。</p></button>
   <button class="case c2" id="c2"><h2>案例二｜Doxorubicin 外滲（DMSO 簡版）</h2><p>查詢站查到 DMSO 之後：塗多大範圍（動手塗一次）、風乾還是覆蓋、幾天。</p></button>
-  <button class="case c3" id="c3"><h2>案例三｜抬高患肢 48 小時（情境練習・選做）</h2><p>睡覺、吃飯、下床、隔天家屬問──每個情境怎麼做到「高於心臟、至少 48 小時」。4 題。</p></button>`;
+  <button class="case c3" id="c3"><h2>案例三｜抬高患肢 48 小時（情境練習）</h2><p>睡覺、吃飯、下床、隔天家屬問──每個情境怎麼做到「高於心臟、至少 48 小時」。4 題。</p></button>`;
+  { const d = casesDone(); ['c1','c2','c3'].forEach((id,i) => { if (d[i+1]) { const h = $('#'+id+' h2'); h.textContent = '✓ ' + h.textContent; } });
+    const left = [1,2,3].filter(n => !d[n]);
+    $('#app').insertAdjacentHTML('afterbegin', `<div class="card" style="padding:10px 14px"><b>三個案例都要完成</b>${left.length ? '：還差案例' + left.join('、') : '：✓ 全部完成！'}</div>`); }
   $('#c1').onclick = () => { flow = FLOW1; go(0); };
   $('#c2').onclick = () => { flow = FLOW2; go(0); };
   $('#c3').onclick = () => { flow = FLOW3; go(0); };
@@ -601,8 +604,11 @@ RENDER.comp = () => {
 
 /* 案例一總覽 */
 const xrMark=k=>{try{const p=JSON.parse(localStorage.getItem('xrprog')||'{}');if(!p[k]){p[k]=Date.now();localStorage.setItem('xrprog',JSON.stringify(p));}}catch(e){}};
+/* 三個案例都要做完才算完成本站（9/29 使用者定：沒有選做） */
+function caseDone(n){ try{ const d=JSON.parse(localStorage.getItem('handson_cases')||'{}'); d[n]=d[n]||Date.now(); localStorage.setItem('handson_cases',JSON.stringify(d)); if(d[1]&&d[2]&&d[3]) xrMark('handson'); }catch(e){} }
+function casesDone(){ try{ return JSON.parse(localStorage.getItem('handson_cases')||'{}'); }catch(e){ return {}; } }
 RENDER.sum1 = () => {
-  xrMark('handson');   // 首頁進度：案例一走完
+  caseDone(1);   // 首頁進度：三個案例都走完才記完成
   const seen = [].concat(...Object.values(result).map(r=>r.seen));
   const rows = STEPS9.map((s,i) => {
     const r = result[s.key]; let st = '—';
@@ -780,6 +786,7 @@ function elStep(i){
 }
 RENDER.el1 = elStep(0); RENDER.el2 = elStep(1); RENDER.el3 = elStep(2); RENDER.el4 = elStep(3);
 RENDER.sum3 = () => {
+  caseDone(3);
   const n = EL.filter(d => result[d.key] && result[d.key].first).length;
   $('#app').innerHTML = `<div class="card"><span class="badge ok">完成案例三</span><h2>抬高 48 小時：第一次就對 ${n}／${EL.length}</h2>
     <div class="exp info show"><div class="t">一句話帶走</div><div>不論躺、坐、下床回來，手都要<b>高於心臟</b>（枕頭墊高），<b>至少 48 小時</b>；外滲部位<b>不壓、不揉</b>。</div><div class="src">${esc(EL_SRC)}</div></div>
@@ -836,6 +843,7 @@ function wantResume(){
   return false;
 }
 RENDER.sum2 = () => {
+  caseDone(2);
   const n = DM.filter(d => result[d.key] && result[d.key].first).length;
   $('#app').innerHTML = `<div class="card"><span class="badge ok">完成案例二</span><h2>DMSO 三題：第一次就對 ${n}／3</h2>
     <div class="exp info show"><div class="t">記住這一行</div><div>${esc(LOOKUP_DOXO)}</div><div class="src">查詢站 Doxorubicin 列（院內 2023.5 版）</div></div>

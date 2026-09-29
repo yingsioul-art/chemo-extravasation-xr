@@ -127,7 +127,10 @@ const QS=new URLSearchParams(location.search);
 const fromH=QS.get("from")==="handson"||/\/handson\//.test(document.referrer);
 function backH(){if(fromH&&history.length>1&&/\/handson\//.test(document.referrer)){history.back();}else{location.href="../handson/?resume=1"+(QS.get("ret")?"#"+QS.get("ret"):"");}}
 $("#backH").onclick=backH;
-if(fromH){document.body.classList.add("fromh");const d=document.createElement("div");d.className="dockback";d.innerHTML='<button type="button">← 返回外滲當下怎麼做（接續剛才的進度）</button>';d.querySelector("button").onclick=backH;document.body.appendChild(d);}
+/* 被嵌在 VR 頁面板（iframe）裡時不顯示返回鈕，避免在面板內跳頁 */
+let inFrame=false;try{inFrame=window.self!==window.top}catch(e){inFrame=true}
+if(inFrame)$("#backH").hidden=true;
+if(fromH&&!inFrame){document.body.classList.add("fromh");const d=document.createElement("div");d.className="dockback";d.innerHTML='<button type="button">← 返回外滲當下怎麼做（接續剛才的進度）</button>';d.querySelector("button").onclick=backH;document.body.appendChild(d);}
 /* 深連結：?tab=q&kw=Vincristine */
 (function(){const t=QS.get("tab"),kw=QS.get("kw");if(kw){$("#kw").value=kw;openTab("q");}else if(t&&["q","p","s","z"].includes(t))openTab(t);})();
 // 一覽表

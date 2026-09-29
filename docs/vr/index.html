@@ -1,0 +1,212 @@
+<!DOCTYPE html><html lang="zh-Hant"><head><meta charset="utf-8"><link rel="icon" href="data:,">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>外滲當下怎麼做 360 VR</title>
+<meta name="description" content="化療藥品外滲③立即處理：網頁版 360 VR 情境（不需安裝 App），手機轉動、電腦拖曳、VR 頭顯皆可；可在環景中開啟 2D 查詢站與動手版。">
+<script src="https://cdn.jsdelivr.net/npm/aframe@1.5.0/dist/aframe-v1.5.0.min.js"></script>
+<style>
+:root{--navy:#123a6b;--red:#c81e3a;--ink:#1c2430}
+html,body{margin:0;height:100%;background:#0f1a2b;font-family:"Microsoft JhengHei","PingFang TC","Noto Sans TC",system-ui,sans-serif}
+/* 上方狀態列（2D 模式） */
+#hud{position:fixed;left:0;right:0;top:0;z-index:10;display:flex;gap:8px;align-items:center;padding:10px 12px;padding-top:max(10px,env(safe-area-inset-top));background:linear-gradient(rgba(10,20,40,.78),rgba(10,20,40,0));color:#fff;pointer-events:none}
+#hud a,#hud button{pointer-events:auto}
+#hud a{color:#fff;text-decoration:none;font-size:.85rem;opacity:.85;white-space:nowrap}
+#hud .t{flex:1;min-width:0;font-weight:700;font-size:1rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#hud .n{font-size:.8rem;opacity:.8;white-space:nowrap}
+.hb{border:0;border-radius:999px;padding:8px 12px;font:inherit;font-size:.85rem;font-weight:700;cursor:pointer;color:#fff;background:rgba(255,255,255,.18);white-space:nowrap}
+#tip{position:fixed;left:50%;bottom:max(16px,env(safe-area-inset-bottom));transform:translateX(-50%);z-index:10;background:rgba(10,20,40,.72);color:#fff;border-radius:999px;padding:8px 16px;font-size:.85rem;pointer-events:none;white-space:nowrap}
+/* 開始畫面 */
+#start{position:fixed;inset:0;z-index:30;background:rgba(12,26,48,.92);color:#fff;display:flex;align-items:center;justify-content:center;padding:16px}
+#start .box{max-width:520px;text-align:center}
+#start h1{font-size:1.5rem;margin:0 0 10px}#start p{line-height:1.7;margin:6px 0;color:#dfe7f3}
+#start button{margin-top:16px;border:0;border-radius:14px;padding:14px 28px;font:inherit;font-size:1.15rem;font-weight:700;background:var(--red);color:#fff;cursor:pointer}
+#start small{display:block;margin-top:12px;color:#9fb0c8}
+/* 2D 嵌入面板 */
+#panel{position:fixed;inset:0;z-index:40;background:#fff;display:none;flex-direction:column}
+#panel.on{display:flex}
+#panel .bar{display:flex;align-items:center;gap:8px;padding:8px 12px;padding-top:max(8px,env(safe-area-inset-top));background:var(--navy);color:#fff}
+#panel .bar b{flex:1;font-size:1rem}
+#panel .bar button{border:0;border-radius:10px;padding:8px 14px;font:inherit;font-weight:700;background:#fff;color:var(--navy);cursor:pointer}
+#panel iframe{flex:1;border:0;width:100%}
+.a-enter-vr{bottom:max(56px,env(safe-area-inset-bottom))!important}
+</style></head>
+<body>
+<div id="hud"><a href="../">← 首頁</a><span class="t" id="ttl">外滲當下怎麼做</span><span class="n" id="prog"></span><button class="hb" id="muteBtn">🔇 停止語音</button></div>
+<div id="tip">拖曳／轉動手機看四周・點卡片作答</div>
+
+<div id="start"><div class="box">
+<h1>③ 外滲當下怎麼做・360 VR</h1>
+<p>王女士左前臂滴注 Cisplatin 時疑似外滲。<br>你要找線索、做決定，每一步都有語音說明。</p>
+<p>📱 手機：轉動手機看四周｜💻 電腦：拖曳滑鼠<br>🥽 VR 頭顯：按右下角眼鏡圖示進入</p>
+<button id="goBtn">▶ 開始體驗（開啟聲音）</button>
+<small>不需安裝 App・免登入</small>
+</div></div>
+
+<div id="panel"><div class="bar"><b id="pTitle">2D 內容</b><button id="pClose">✕ 關閉，回到環景</button></div><iframe id="pFrame" title="2D 內容" src="about:blank"></iframe></div>
+
+<a-scene id="scene" renderer="colorManagement:true;anisotropy:8;antialias:true" vr-mode-ui="enabled:true" device-orientation-permission-ui="enabled:false" loading-screen="dotsColor:#fff;backgroundColor:#0f1a2b" cursor="rayOrigin:mouse;fuse:false" raycaster="objects:.clk">
+  <a-assets timeout="20000"></a-assets>
+  <a-sky id="sky" radius="60" color="#ffffff"></a-sky>
+  <a-entity id="rig">
+    <a-camera id="cam" position="0 1.6 0" look-controls="magicWindowTrackingEnabled:true;touchEnabled:true;reverseMouseDrag:false" wasd-controls="enabled:false"></a-camera>
+    <a-entity laser-controls="hand:right" raycaster="objects:.clk;far:30"></a-entity>
+    <a-entity laser-controls="hand:left" raycaster="objects:.clk;far:30"></a-entity>
+  </a-entity>
+  <a-entity id="stage"></a-entity>
+  <a-entity id="overlay"></a-entity>
+</a-scene>
+
+<script>
+/* 網頁版 ③VR：場景資料來自 assets/scenes.json（由 _build_vr_site.py 產生），圖卡與語音同 MAKAR 版 */
+const $=s=>document.querySelector(s);
+const PX=1/500;               // 1600px 圖卡 → 3.2 公尺寬
+/* 每個環景的預設視角：u,v＝要對準的點在環景圖上的位置（0–1）；pitch＝進場俯角（度，負＝往下看）
+   room/bed：病人左前臂（注射部位）；store：備物架正中。水平方向靠旋轉環景對準（頭顯也有效），俯角靠重設相機。 */
+const VIEW={room:{u:0.557,v:0.68,pitch:-22}, bed:{u:0.566,v:0.657,pitch:-20}, store:{u:0.5,v:0.5,pitch:0}};
+const skyYaw=k=>-90+(VIEW[k].u-0.5)*360*YAWSIGN;
+const YAWSIGN=1;
+let D, cur=0, audio=new Audio(), started=false;
+
+/* ---------- 語音 ---------- */
+function play(key){ if(!started||!key)return; audio.pause(); audio=new Audio(`assets/audio/${key}.mp3`); audio.play().catch(()=>{}); }
+function stopAudio(){ audio.pause(); audio.currentTime=0; }
+$("#muteBtn").onclick=stopAudio;
+
+/* ---------- 建立圖卡 ---------- */
+function mk(parent,f,{x=0,y=1.6,z=-4,ry=0,rx=0,w,click,cls=true}={}){
+  const [pw,ph]=D.sizes[f]; const W=w||3.2, H=W*ph/pw;
+  const e=document.createElement("a-image");
+  e.setAttribute("src",`assets/cards/${f}`);
+  e.setAttribute("width",W); e.setAttribute("height",H);
+  e.setAttribute("position",`${x} ${y} ${z}`); e.setAttribute("rotation",`${rx} ${ry} 0`);
+  e.setAttribute("material","shader:flat;transparent:true;alphaTest:0.01");
+  if(click){ if(cls){e.classList.add("clk");e.dataset.clk=1;} e.addEventListener("click",ev=>{ev.stopPropagation();click(e);});
+    e.addEventListener("mouseenter",()=>e.object3D.scale.set(1.04,1.04,1)); e.addEventListener("mouseleave",()=>e.object3D.scale.set(1,1,1)); }
+  parent.appendChild(e); return e;
+}
+/* 放在以使用者為圓心的弧線上：角度 deg（0＝正前方，正值＝右邊）、距離 r */
+function arc(deg,r=4.2){ const a=deg*Math.PI/180; return {x:Math.sin(a)*r, z:-Math.cos(a)*r, ry:-deg}; }
+/* 預抓下一站的圖（進瀏覽器快取），切換場景時不會空白太久；一次只抓一站，避免同時開太多連線 */
+const PRE=[];
+function stepImgs(s){ const L=[`assets/sky/${s.sky}.jpg`]; JSON.stringify(s).replace(/"([^"]+\.(?:jpg|png))"/g,(m,f)=>{if(D.sizes[f])L.push(`assets/cards/${f}`);}); return L; }
+function preloadNext(){ const n=D.steps[(cur+1)%D.steps.length]; stepImgs(n).forEach(u=>{const im=new Image(); im.src=u; PRE.push(im);}); }
+/* 場景切換時把相機轉回正前方＋預設俯角 */
+const PORTRAIT=()=>innerWidth/innerHeight<0.8;   // 手機直拿：水平視角只有約 40°，改單欄版面
+function resetView(pitchDeg){ if(PORTRAIT())pitchDeg=pitchDeg*0.5; const lc=$("#cam").components["look-controls"]; if(!lc)return;
+  lc.pitchObject.rotation.x=pitchDeg*Math.PI/180; lc.yawObject.rotation.y=0; }
+function clear(el){ while(el.firstChild) el.removeChild(el.firstChild); refreshRay(); }
+function refreshRay(){ setTimeout(()=>document.querySelectorAll("[raycaster]").forEach(r=>r.components.raycaster&&r.components.raycaster.refreshObjects()),0); }
+/* 講解卡蓋上時，底下的卡片暫時不能點（不然手把射線會穿過去點到） */
+function stageActive(on){ const st=$("#stage"); st.object3D.visible=on;
+  st.querySelectorAll("[data-clk]").forEach(e=>e.classList.toggle("clk",on)); refreshRay(); }
+
+/* 蓋在最前面的講解卡：點一下關閉（或執行 then） */
+function popup(f,au,then){
+  const ov=$("#overlay"); clear(ov); play(au);
+  // 跟著使用者目前的視線（含低頭角度）放在正前方 3 公尺，並面向使用者
+  const cam=$("#cam").object3D; const dir=new THREE.Vector3(); cam.getWorldDirection(dir); dir.negate();
+  const pitch=Math.max(-0.6,Math.min(0.6,Math.asin(dir.y))), yaw=Math.atan2(-dir.x,-dir.z);
+  const r=3.0, x=-Math.sin(yaw)*Math.cos(pitch)*r, z=-Math.cos(yaw)*Math.cos(pitch)*r, y=1.6+Math.sin(pitch)*r;
+  const e=mk(ov,f,{x,y,z,ry:yaw*180/Math.PI,rx:pitch*180/Math.PI,w:3.0,click:()=>{clear(ov); stopAudio(); stageActive(true); if(then)then();}});
+  e.setAttribute("animation","property:scale;from:0.85 0.85 1;to:1 1 1;dur:180");
+  stageActive(false);
+}
+
+/* 共用：停止語音／聽題目（VR 頭顯內沒有 HUD，所以場景裡也放一份） */
+function commonBtns(st,nar){
+  if(PORTRAIT()){ mk(st,D.common.listen,{x:-0.66,y:-0.55,z:-3.6,rx:-30,w:1.2,click:()=>play(nar)});
+    mk(st,D.common.mute,{x:0.66,y:-0.55,z:-3.6,rx:-30,w:1.2,click:stopAudio}); return; }
+  const L=arc(-48,3.4); mk(st,D.common.listen,{...L,y:0.45,rx:-30,w:1.1,click:()=>play(nar)});
+  const M=arc(48,3.4);  mk(st,D.common.mute,{...M,y:0.45,rx:-30,w:1.1,click:stopAudio});
+}
+
+/* ---------- 2D 嵌入 ---------- */
+function open2D(url,title,step){
+  if($("#scene").is("vr-mode")){        // 頭顯內 iframe 無法渲染 → 改用說明卡＋作法卡
+    const ov=$("#overlay"); clear(ov); stageActive(false);
+    const close=()=>{clear(ov);stageActive(true);};
+    mk(ov,step.notice,{x:0,y:2.35,z:-3.4,w:2.4,click:close});
+    step.vrcards.forEach((f,i)=>{const p=arc((i-1)*34,3.6); mk(ov,f,{...p,y:1.05,w:1.7,click:close});});
+    return;
+  }
+  stopAudio(); $("#pTitle").textContent=title; $("#pFrame").src=url; $("#panel").classList.add("on");
+}
+$("#pClose").onclick=()=>{$("#panel").classList.remove("on"); $("#pFrame").src="about:blank";};
+
+/* ---------- 場景 ---------- */
+/* 直式手機版面：全部放正前方一欄，寬度 ≤2.6 公尺（4.2 公尺外約 36°） */
+function layoutPortrait(st,s,nextFn){
+  const Z=-4.2;
+  if(s.type==="info"){ mk(st,s.main,{x:0,y:2.2,z:Z,w:2.6}); mk(st,s.next,{x:0,y:1.05,z:Z,w:1.3,click:nextFn}); }
+  if(s.type==="clues"){ mk(st,s.main,{x:0,y:2.55,z:Z,w:2.6});
+    s.hs.forEach((h,k)=>{const r=k<3?0:1, c=k<3?k-1:(k-3)-0.5; mk(st,h.img,{x:c*0.92,y:1.45-r*0.75,z:Z,w:0.86,click:()=>popup(h.ex,h.au)});});
+    mk(st,s.next,{x:0,y:0.1,z:Z,w:1.3,click:nextFn}); }
+  if(s.type==="quiz"){ mk(st,s.q,{x:0,y:2.45,z:Z,w:2.6});
+    if(s.grid) s.opts.forEach((o,k)=>mk(st,o.img,{x:(k-1)*0.9,y:1.3,z:Z,w:0.84,click:()=>answer(s,o.k)}));
+    else s.opts.forEach((o,k)=>mk(st,o.img,{x:0,y:1.45-k*0.86,z:Z,w:2.6,click:()=>answer(s,o.k)}));
+    if(s.poster){const p=arc(-60,3.6); mk(st,s.poster.img,{...p,y:1.6,w:1.3,click:()=>play(s.poster.au)});} }
+  if(s.type==="end"){
+    mk(st,s.lookup,{x:0,y:2.3,z:Z,w:2.3,click:()=>open2D("../lookup/","敷療查詢站",s)});
+    mk(st,s.handson,{x:0,y:1.55,z:Z,w:2.3,click:()=>open2D("../handson/","2D 動手版",s)});
+    mk(st,s.again,{x:-0.62,y:0.85,z:Z,w:1.15,click:()=>go(0)});
+    mk(st,s.home,{x:0.62,y:0.85,z:Z,w:1.15,click:()=>{location.href="../";}}); }
+}
+function go(i,quiet){
+  cur=(i+D.steps.length)%D.steps.length; const s=D.steps[cur];
+  const st=$("#stage"); clear(st); clear($("#overlay")); st.object3D.visible=true;
+  $("#sky").setAttribute("src",`assets/sky/${s.sky}.jpg`); $("#sky").setAttribute("rotation",`0 ${skyYaw(s.sky)} 0`); resetView(VIEW[s.sky].pitch);
+  $("#ttl").textContent=s.title; $("#prog").textContent=`${cur+1}/${D.steps.length}`;
+  const nextFn=()=>go(cur+1);
+  if(PORTRAIT()) layoutPortrait(st,s,nextFn); else {
+  if(s.type==="info"){
+    mk(st,s.main,{x:0,y:1.9,z:-4.2,w:3.4});
+    mk(st,s.next,{x:0,y:0.55,z:-3.6,rx:-20,w:1.4,click:nextFn});
+  }
+  if(s.type==="clues"){
+    mk(st,s.main,{x:0,y:2.4,z:-4.6,w:2.9});
+    s.hs.forEach((h,k)=>{const p=arc((k-2)*19,4.4); mk(st,h.img,{...p,y:1.15,w:1.4,click:()=>popup(h.ex,h.au)});});
+    mk(st,s.next,{x:0,y:0.3,z:-3.4,rx:-30,w:1.3,click:nextFn});
+  }
+  if(s.type==="quiz"){
+    if(s.grid){ mk(st,s.q,{x:0,y:2.35,z:-4.4,w:2.9});
+      s.opts.forEach((o,k)=>{const p=arc((k-1)*20,4.2); mk(st,o.img,{...p,y:0.85,w:1.4,click:()=>answer(s,o.k)});}); }
+    else { const Qp=arc(-19,4.2); mk(st,s.q,{...Qp,y:1.55,w:2.8});
+      const Op=arc(19,4.0); const n=s.opts.length;
+      s.opts.forEach((o,k)=>mk(st,o.img,{...Op,y:1.45+((n-1)/2-k)*0.8,w:2.45,click:()=>answer(s,o.k)})); }
+    if(s.poster){const p=arc(-70,3.6); mk(st,s.poster.img,{...p,y:1.6,w:1.3,click:()=>play(s.poster.au)});}
+  }
+  if(s.type==="end"){
+    mk(st,s.lookup,{x:-1.15,y:1.95,z:-3.8,w:2.0,click:()=>open2D("../lookup/","敷療查詢站",s)});
+    mk(st,s.handson,{x:1.15,y:1.95,z:-3.8,w:2.0,click:()=>open2D("../handson/","2D 動手版",s)});
+    mk(st,s.again,{x:-0.8,y:1.05,z:-3.8,w:1.3,click:()=>go(0)});
+    mk(st,s.home,{x:0.8,y:1.05,z:-3.8,w:1.3,click:()=>{location.href="../";}});
+  }
+  }
+  commonBtns(st,s.nar);
+  if(!quiet) play(s.nar); setTimeout(preloadNext,1500);
+}
+function answer(s,k){
+  if(k==="A") popup(s.ok.img,s.ok.au,()=>go(cur+1));
+  else if(s.bad[k]) popup(s.bad[k].img,s.bad[k].au);
+}
+
+/* ---------- 啟動 ---------- */
+fetch("assets/scenes.json").then(r=>r.json()).then(d=>{
+  D=d; const sc=$("#scene");
+  const boot=()=>go(0);
+  if(sc.hasLoaded) boot(); else sc.addEventListener("loaded",boot);
+});
+$("#goBtn").onclick=()=>{
+  started=true; $("#start").remove(); play(D&&D.steps[cur].nar);
+  /* iOS 需在使用者點擊當下要求「動作與方向」權限，才能轉手機看四周；拒絕也能用手指拖曳 */
+  try{ if(window.DeviceOrientationEvent&&typeof DeviceOrientationEvent.requestPermission==="function") DeviceOrientationEvent.requestPermission().catch(()=>{}); }catch(e){}
+};
+/* 手機轉橫／直時重排版面（不重播語音） */
+let lastP=null; addEventListener("resize",()=>{ if(!D)return; const p=PORTRAIT(); if(p!==lastP){lastP=p; go(cur,true);} });
+/* 頭顯模式隱藏 2D 提示 */
+document.addEventListener("DOMContentLoaded",()=>{
+  const sc=$("#scene");
+  sc.addEventListener("enter-vr",()=>{$("#hud").style.display="none";$("#tip").style.display="none";});
+  sc.addEventListener("exit-vr",()=>{$("#hud").style.display="";$("#tip").style.display="";});
+});
+</script>
+</body></html>

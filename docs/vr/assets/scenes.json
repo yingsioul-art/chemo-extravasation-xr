@@ -1,0 +1,494 @@
+{
+ "steps": [
+  {
+   "id": "intro",
+   "title": "情境",
+   "sky": "room",
+   "type": "info",
+   "main": "S1_cc3e60.jpg",
+   "nar": "VN01",
+   "next": "BTN_ea4482.jpg"
+  },
+  {
+   "id": "clues",
+   "title": "找線索",
+   "sky": "room",
+   "type": "clues",
+   "main": "T2.jpg",
+   "nar": "VN02",
+   "hs": [
+    {
+     "img": "H1.jpg",
+     "ex": "GH1.jpg",
+     "au": "VE1"
+    },
+    {
+     "img": "H2.jpg",
+     "ex": "GH2.jpg",
+     "au": "VE2"
+    },
+    {
+     "img": "H3.jpg",
+     "ex": "GH3.jpg",
+     "au": "VE3"
+    },
+    {
+     "img": "H4.jpg",
+     "ex": "GH4.jpg",
+     "au": "VE4"
+    },
+    {
+     "img": "H5.jpg",
+     "ex": "GH5.jpg",
+     "au": "VE5"
+    }
+   ],
+   "next": "NEXT2.jpg"
+  },
+  {
+   "type": "quiz",
+   "q": "D1_c1ff25.jpg",
+   "nar": "VND1",
+   "opts": [
+    {
+     "k": "A",
+     "img": "D1_Afc03e7.jpg"
+    },
+    {
+     "k": "B",
+     "img": "D1_B878e2d.jpg"
+    },
+    {
+     "k": "C",
+     "img": "D1_Cae1931.jpg"
+    }
+   ],
+   "ok": {
+    "img": "D1_3ee489.jpg",
+    "au": "VD1OK"
+   },
+   "bad": {
+    "B": {
+     "img": "D1_B0de913.jpg",
+     "au": "VD1XB"
+    },
+    "C": {
+     "img": "D1_C1ca066.jpg",
+     "au": "VD1XC"
+    }
+   },
+   "id": "d1",
+   "title": "決定一：第一個動作",
+   "sky": "room"
+  },
+  {
+   "type": "quiz",
+   "q": "D4Q.jpg",
+   "nar": "VND4",
+   "opts": [
+    {
+     "k": "A",
+     "img": "D4A.jpg"
+    },
+    {
+     "k": "B",
+     "img": "D4B.jpg"
+    },
+    {
+     "k": "C",
+     "img": "D4C.jpg"
+    }
+   ],
+   "ok": {
+    "img": "D4OKh.jpg",
+    "au": "VD4OK"
+   },
+   "bad": {
+    "B": {
+     "img": "D4XBh.jpg",
+     "au": "VD4XB"
+    },
+    "C": {
+     "img": "D4XCh.jpg",
+     "au": "VD4XC"
+    }
+   },
+   "id": "d4",
+   "title": "備物・防護",
+   "sky": "store",
+   "poster": {
+    "img": "PPE.jpg",
+    "au": "VPPE"
+   }
+  },
+  {
+   "type": "quiz",
+   "q": "D5Q.jpg",
+   "nar": "VND5",
+   "opts": [
+    {
+     "k": "A",
+     "img": "D5A.jpg"
+    },
+    {
+     "k": "B",
+     "img": "D5B.jpg"
+    },
+    {
+     "k": "C",
+     "img": "D5C.jpg"
+    }
+   ],
+   "ok": {
+    "img": "D5OKh.jpg",
+    "au": "VD5OK"
+   },
+   "bad": {
+    "B": {
+     "img": "D5XBh.jpg",
+     "au": "VD5XB"
+    },
+    "C": {
+     "img": "D5XCh.jpg",
+     "au": "VD5XC"
+    }
+   },
+   "id": "d5",
+   "title": "回抽",
+   "sky": "bed",
+   "poster": {
+    "img": "SYR.jpg",
+    "au": "VSYR"
+   }
+  },
+  {
+   "type": "quiz",
+   "q": "D2_e40abe.jpg",
+   "nar": "VND2",
+   "opts": [
+    {
+     "k": "A",
+     "img": "D2_Adbe57a.jpg"
+    },
+    {
+     "k": "B",
+     "img": "D2_B551c9b.jpg"
+    }
+   ],
+   "ok": {
+    "img": "D2_ee928b.jpg",
+    "au": "VD2OK"
+   },
+   "bad": {
+    "B": {
+     "img": "D2_Be29522.jpg",
+     "au": "VD2XB"
+    }
+   },
+   "id": "d2",
+   "title": "決定二：可以壓嗎",
+   "sky": "bed"
+  },
+  {
+   "type": "quiz",
+   "q": "D3_5ec09a.jpg",
+   "nar": "VND3",
+   "opts": [
+    {
+     "k": "A",
+     "img": "D3_Ad29ca8.jpg"
+    },
+    {
+     "k": "B",
+     "img": "D3_B59d8ba.jpg"
+    },
+    {
+     "k": "C",
+     "img": "D3_Cbaad67.jpg"
+    }
+   ],
+   "ok": {
+    "img": "D3_080dd0.jpg",
+    "au": "VD3OK"
+   },
+   "bad": {
+    "B": {
+     "img": "D3_Bc0338e.jpg",
+     "au": "VD3XB"
+    },
+    "C": {
+     "img": "D3_Cb073a2.jpg",
+     "au": "VD3XC"
+    }
+   },
+   "id": "d3",
+   "title": "決定三：標示範圍",
+   "sky": "bed",
+   "grid": true
+  },
+  {
+   "id": "lookup",
+   "title": "外滲處置查詢站",
+   "sky": "store",
+   "type": "end",
+   "nar": "VN08",
+   "lookup": "W_LOOKUP.png",
+   "handson": "W_HANDSON.png",
+   "notice": "W_NOTICE.jpg",
+   "vrcards": [
+    "A01__fd3b2b.jpg",
+    "A02__4fb848.jpg",
+    "A03__DMSOe6b52c.jpg"
+   ],
+   "again": "BTN_4bceda.jpg",
+   "home": "BTN_aa8382.jpg"
+  }
+ ],
+ "common": {
+  "mute": "MUTE.jpg",
+  "listen": "LISTENQ.png",
+  "start": "W_START.jpg"
+ },
+ "sizes": {
+  "S1_cc3e60.jpg": [
+   2048,
+   1152
+  ],
+  "BTN_ea4482.jpg": [
+   1600,
+   600
+  ],
+  "T2.jpg": [
+   2048,
+   1152
+  ],
+  "H1.jpg": [
+   1600,
+   1200
+  ],
+  "GH1.jpg": [
+   2048,
+   1152
+  ],
+  "H2.jpg": [
+   1600,
+   1200
+  ],
+  "GH2.jpg": [
+   2048,
+   1152
+  ],
+  "H3.jpg": [
+   1600,
+   1200
+  ],
+  "GH3.jpg": [
+   2048,
+   1152
+  ],
+  "H4.jpg": [
+   1600,
+   1200
+  ],
+  "GH4.jpg": [
+   2048,
+   1152
+  ],
+  "H5.jpg": [
+   1600,
+   1200
+  ],
+  "GH5.jpg": [
+   2048,
+   1152
+  ],
+  "NEXT2.jpg": [
+   1600,
+   600
+  ],
+  "D1_c1ff25.jpg": [
+   2048,
+   1152
+  ],
+  "D1_Afc03e7.jpg": [
+   2048,
+   640
+  ],
+  "D1_B878e2d.jpg": [
+   2048,
+   640
+  ],
+  "D1_Cae1931.jpg": [
+   2048,
+   640
+  ],
+  "D1_3ee489.jpg": [
+   2048,
+   1152
+  ],
+  "D1_B0de913.jpg": [
+   2048,
+   1152
+  ],
+  "D1_C1ca066.jpg": [
+   2048,
+   1152
+  ],
+  "D4Q.jpg": [
+   2048,
+   1152
+  ],
+  "D4A.jpg": [
+   2048,
+   640
+  ],
+  "D4B.jpg": [
+   2048,
+   640
+  ],
+  "D4C.jpg": [
+   2048,
+   640
+  ],
+  "D4OKh.jpg": [
+   2048,
+   1152
+  ],
+  "D4XBh.jpg": [
+   2048,
+   1152
+  ],
+  "D4XCh.jpg": [
+   2048,
+   1152
+  ],
+  "PPE.jpg": [
+   1800,
+   3200
+  ],
+  "D5Q.jpg": [
+   2048,
+   1152
+  ],
+  "D5A.jpg": [
+   2048,
+   640
+  ],
+  "D5B.jpg": [
+   2048,
+   640
+  ],
+  "D5C.jpg": [
+   2048,
+   640
+  ],
+  "D5OKh.jpg": [
+   2048,
+   1152
+  ],
+  "D5XBh.jpg": [
+   2048,
+   1152
+  ],
+  "D5XCh.jpg": [
+   2048,
+   1152
+  ],
+  "SYR.jpg": [
+   1800,
+   3200
+  ],
+  "D2_e40abe.jpg": [
+   2048,
+   1152
+  ],
+  "D2_Adbe57a.jpg": [
+   2048,
+   640
+  ],
+  "D2_B551c9b.jpg": [
+   2048,
+   640
+  ],
+  "D2_ee928b.jpg": [
+   2048,
+   1152
+  ],
+  "D2_Be29522.jpg": [
+   2048,
+   1152
+  ],
+  "D3_5ec09a.jpg": [
+   2048,
+   1152
+  ],
+  "D3_Ad29ca8.jpg": [
+   1600,
+   1200
+  ],
+  "D3_B59d8ba.jpg": [
+   1600,
+   1200
+  ],
+  "D3_Cbaad67.jpg": [
+   1600,
+   1200
+  ],
+  "D3_080dd0.jpg": [
+   2048,
+   1152
+  ],
+  "D3_Bc0338e.jpg": [
+   2048,
+   1152
+  ],
+  "D3_Cb073a2.jpg": [
+   2048,
+   1152
+  ],
+  "W_LOOKUP.png": [
+   1280,
+   384
+  ],
+  "W_HANDSON.png": [
+   1280,
+   384
+  ],
+  "W_NOTICE.jpg": [
+   2048,
+   1152
+  ],
+  "A01__fd3b2b.jpg": [
+   1600,
+   627
+  ],
+  "A02__4fb848.jpg": [
+   1600,
+   627
+  ],
+  "A03__DMSOe6b52c.jpg": [
+   1600,
+   628
+  ],
+  "BTN_4bceda.jpg": [
+   1600,
+   600
+  ],
+  "BTN_aa8382.jpg": [
+   1600,
+   600
+  ],
+  "MUTE.jpg": [
+   1600,
+   600
+  ],
+  "LISTENQ.png": [
+   1800,
+   440
+  ],
+  "W_START.jpg": [
+   2048,
+   1152
+  ]
+ }
+}

@@ -115,6 +115,16 @@ main{max-width:640px;margin:0 auto;padding:16px 16px 40px}
 .case h2{margin:0 0 4px;font-size:1.1rem}.case p{margin:0;color:var(--mut);font-size:.9rem}
 .chip{display:inline-block;padding:2px 8px;border-radius:6px;font-size:.78rem;background:#eef2f7;color:var(--mut);margin:2px 4px 0 0}
 .err{background:#fdf1f3;border:1px solid #f3c2cb;border-radius:12px;padding:14px;color:#8e1530}
+.paintwrap{position:relative;width:100%;margin:10px 0;border-radius:12px;overflow:hidden;background:#fff;border:1px solid var(--line);touch-action:none;user-select:none;-webkit-user-select:none}
+.paintwrap canvas{position:absolute;left:0;top:0;width:100%;height:100%;display:block}
+.paintwrap #pnt{opacity:.5;cursor:crosshair;touch-action:none}
+.pmeter{display:flex;gap:8px;flex-wrap:wrap;font-size:.9rem;margin:6px 0}
+.pmeter span{background:#f3edf9;color:var(--dmso);border-radius:8px;padding:3px 10px;font-weight:700}
+.btn.dm{background:var(--dmso)}
+.keyp{margin:8px 0 0 0;padding-left:20px;font-size:.95rem}.keyp li{margin:3px 0}
+.case.resume{border-left-color:var(--navy)}
+.case.c3{border-left-color:var(--ok)}
+.scn{font-size:2.6rem;line-height:1;margin:4px 0 6px}
 footer{text-align:center;color:var(--mut);font-size:.78rem;padding:20px 16px}
 @media (min-width:520px){.dcard{font-size:.85rem}.steps{grid-template-columns:1fr 1fr}}
 </style>
@@ -196,9 +206,45 @@ const DM = [
   {key:'dm3', stem:'DMSO 要用幾天？', opts:['1–2 天','一天 4 次，連續 7 天','塗到消腫為止'], ans:1}
 ];
 
+/* ---------- DMSO 塗抹互動（案例二） ----------
+   🔴 待使用者拍板：院內原文只寫「塗抹範圍為患部兩倍」，未說明是「面積兩倍」或「長寬各兩倍」。
+   目前畫面採「面積約兩倍＝長寬各 ×√2（約 1.4 倍）」；若拍板改「長寬各兩倍」，把 DMSO_SCALE 改成 2 即可。 */
+const DMSO_SCALE = Math.SQRT2;       // 塗抹範圍相對於油性筆外滲範圍的長寬倍率
+const PAINT_PASS_COVER = 0.80;       // 兩倍範圍區至少塗到 80%
+const PAINT_MAX_OUTSIDE = 0.35;      // 塗到兩倍區外的面積 ≤ 兩倍區面積的 35%
+const PAINT_SPOT = {w:4, h:3};       // 油性筆畫的外滲範圍（cm，示範值）
+
+/* ---------- 案例三：抬高患肢 48 小時（情境練習，選做） ----------
+   依據：技術評核表單第 17 項「若為周邊靜脈外滲者，抬高患肢至少 48 小時，以減少腫脹」。
+   只用有依據的原則：高於心臟、枕頭墊高、至少 48 小時、不可壓迫／按摩；干擾選項都寫明錯在哪一條原則。 */
+const EL_SRC = '技術評核表單第 17 項：若為周邊靜脈外滲者，抬高患肢至少 48 小時，以減少腫脹';
+const EL = [
+  {key:'el1', ic:'🛏️', when:'晚上要睡覺了', stem:'張示範左前臂外滲，晚上躺下要睡覺。左手怎麼放？',
+   opts:[
+    {t:'用枕頭把左前臂墊高，讓手高過心臟', ok:true, why:'抬高的重點是「高於心臟」，躺著時用枕頭墊高最容易做到，減少腫脹。'},
+    {t:'手平放在身體旁邊的床上就好', ok:false, why:'平放時手跟心臟差不多高，沒有「高於心臟」，不算抬高。'},
+    {t:'把手塞在枕頭底下，頭壓著比較不會亂動', ok:false, why:'頭壓在上面等於壓迫外滲部位；外滲部位不可壓迫。'}]},
+  {key:'el2', ic:'🍱', when:'坐在床邊吃飯、看電視', stem:'張示範坐起來吃飯、看電視。左手怎麼放？',
+   opts:[
+    {t:'手放在大腿上休息', ok:false, why:'坐著時大腿比心臟低，手放大腿上是往下放，不是抬高。'},
+    {t:'在床上桌或扶手放枕頭，把左前臂墊高過心臟', ok:true, why:'坐著也要維持「高於心臟」，用枕頭墊在桌上或扶手上最穩。'},
+    {t:'手不腫了就不用特別放高', ok:false, why:'抬高要「至少 48 小時」，不是看腫不腫決定。'}]},
+  {key:'el3', ic:'🚶', when:'要下床走到廁所', stem:'張示範要下床去廁所，家屬拿出三角巾說「吊起來就等於抬高了吧？」你怎麼說？',
+   opts:[
+    {t:'對，三角巾吊著就算抬高', ok:false, why:'三角巾吊在胸前時，手大約在心臟高度或更低，沒有「高於心臟」，不算抬高。'},
+    {t:'走路時讓手自然下垂、甩一甩比較通', ok:false, why:'手下垂是低於心臟，方向剛好相反；甩動也會碰撞外滲部位。'},
+    {t:'三角巾不算抬高；回到床上或坐下後，馬上再用枕頭把手墊高過心臟', ok:true, why:'原則只有一個：「高於心臟」。離開床的時間回來就要馬上墊回去，48 小時內都要做到。'}]},
+  {key:'el4', ic:'⏰', when:'外滲後第 30 小時', stem:'外滲後第 30 小時，腫比較消了。家屬問：「還要抬嗎？可以幫她揉一揉讓它散掉嗎？」',
+   opts:[
+    {t:'還要抬，至少滿 48 小時；而且不要揉、不要壓', ok:true, why:'抬高至少 48 小時；外滲部位不可壓迫、不可按摩，揉會把藥推散、範圍變大。'},
+    {t:'消腫了就可以放下，揉一揉幫助吸收', ok:false, why:'兩個都錯：時間未滿 48 小時；外滲部位不可按摩。'},
+    {t:'不用抬了，改成熱敷加按摩', ok:false, why:'未滿 48 小時不能停止抬高；按摩在外滲部位是禁止的；敷法要依藥品查查詢站，不是自己改。'}]}
+];
+
 /* ---------- 流程定義 ---------- */
 const FLOW1 = ['scene1','d1','ppe','syr','asp','anti','press','pen','comp','sum1'];
-const FLOW2 = ['scene2','look2','dm1','dm2','dm3','sum2'];
+const FLOW2 = ['scene2','look2','dm1','paint','dm2','dm3','sum2'];
+const FLOW3 = ['scene3','el1','el2','el3','el4','sum3'];
 let flow = null, pos = 0;
 const result = {};   // key → {tries, first:true/false, seen:[後果卡]}
 function rec(key){ return result[key] || (result[key] = {tries:0, first:null, seen:[]}); }
@@ -262,10 +308,11 @@ function go(i){
   pos = i; const key = flow[pos];
   const total = flow.length - 1; // 最後一頁是總覽
   $('#pbar').style.width = Math.round(Math.min(pos,total)/total*100)+'%';
-  $('#ptitle').textContent = flow===FLOW1 ? '案例一 Cisplatin' : '案例二 Doxorubicin';
+  $('#ptitle').textContent = flow===FLOW1 ? '案例一 Cisplatin' : flow===FLOW2 ? '案例二 Doxorubicin' : '案例三 抬高 48 小時';
   $('#pstep').textContent = key.startsWith('sum') ? '完成' : `步驟 ${pos+1} / ${total}`;
   window.scrollTo({top:0});
   RENDER[key]();
+  saveState();
 }
 function home(){
   flow = null; pos = 0;
@@ -273,11 +320,18 @@ function home(){
   for (const k in result) delete result[k];
   $('#app').innerHTML = `
   <div class="card"><h2>怎麼玩</h2><p class="lead">跟著情境一步一步做決定：拔不拔針、穿什麼、抽多少、用哪支筆。<b>做錯會看到後果</b>，再回頭重做。</p>
-  <div><span class="chip">決策 ×3</span><span class="chip">選物拖放 ×1</span><span class="chip">選物 ×2</span><span class="chip">回抽動作 ×1</span><span class="chip">查詢後決策 ×2</span></div></div>
+  <div><span class="chip">決策 ×3</span><span class="chip">選物拖放 ×1</span><span class="chip">選物 ×2</span><span class="chip">回抽動作 ×1</span><span class="chip">查詢後決策 ×2</span><span class="chip">DMSO 動手塗 ×1</span><span class="chip">抬高情境 ×4（選做）</span></div></div>
   <button class="case" id="c1"><h2>案例一｜Cisplatin 外滲（完整九步驟）</h2><p>張示範，左前臂周邊留置針，手臂腫、喊痛。從第一個動作到冷敷，9 個步驟。</p></button>
-  <button class="case c2" id="c2"><h2>案例二｜Doxorubicin 外滲（DMSO 簡版）</h2><p>查詢站查到 DMSO 之後：塗多大範圍、風乾還是覆蓋、幾天。3 題。</p></button>`;
+  <button class="case c2" id="c2"><h2>案例二｜Doxorubicin 外滲（DMSO 簡版）</h2><p>查詢站查到 DMSO 之後：塗多大範圍（動手塗一次）、風乾還是覆蓋、幾天。</p></button>
+  <button class="case c3" id="c3"><h2>案例三｜抬高患肢 48 小時（情境練習・選做）</h2><p>睡覺、吃飯、下床、隔天家屬問──每個情境怎麼做到「高於心臟、至少 48 小時」。4 題。</p></button>`;
   $('#c1').onclick = () => { flow = FLOW1; go(0); };
   $('#c2').onclick = () => { flow = FLOW2; go(0); };
+  $('#c3').onclick = () => { flow = FLOW3; go(0); };
+  const st = loadState();
+  if (st && !FLOWS[st.flow][st.pos].startsWith('sum')) {
+    $('#app').insertAdjacentHTML('afterbegin', `<button class="case resume" id="cres"><h2>▶ 繼續上次進度</h2><p>${{'1':'案例一 Cisplatin','2':'案例二 Doxorubicin','3':'案例三 抬高 48 小時'}[st.flow]}・步驟 ${st.pos+1}</p></button>`);
+    $('#cres').onclick = () => restore(st);
+  }
 }
 
 /* ================= 各步驟畫面 ================= */
@@ -467,11 +521,11 @@ RENDER.anti = () => {
   $('#app').innerHTML = `<div class="card"><span class="badge acc">判斷</span><span class="badge">表單 ${q.form_item}</span>
     <div class="stem">${esc(q.stem)}</div>
     <div class="exp info show"><div class="t">先查：本案 Cisplatin 稀釋滴注，有沒有適用的解毒劑？</div><div>開查詢站，輸入 <b>Cisplatin</b>，看「處置」欄。查完回到這一頁作答。</div>
-      <div class="btnrow"><a class="btn navy" href="../lookup/" target="_blank" rel="noopener" id="lk">🔍 開查詢站查 Cisplatin</a></div></div>
+      <div class="btnrow"><a class="btn navy" href="../lookup/?from=handson" id="lk">🔍 開查詢站查 Cisplatin</a></div></div>
     <div id="qa" style="display:none">${optList(q)}<div id="fb"></div></div>
     <div id="pre" class="btnrow"><button class="btn sec wide" id="checked">我查過了，開始作答</button></div></div>`;
   const reveal = () => { $('#qa').style.display = ''; $('#pre').style.display = 'none'; };
-  $('#checked').onclick = reveal; $('#lk').addEventListener('click', () => setTimeout(reveal, 300));
+  $('#checked').onclick = reveal; bindLookup(reveal);
   bindOpts(q, (ok) => {
     if (ok) { mark('anti', true);
       $('#fb').innerHTML = expBox('ok', '答對了', q.explain_ok, srcQ(q)) + expBox('info', '本案結論', '本院目前無適用解毒劑，本案 Cisplatin 稀釋滴注 → 回抽完成後拔針。', '本院規則（分工檔）') + nextBtn('拔針 →'); bindNext(); }
@@ -518,12 +572,12 @@ RENDER.comp = () => {
   $('#app').innerHTML = `<div class="card"><span class="badge acc">查詢後決策</span><span class="badge">表單 ${q.form_item}</span>
     <div class="stem">本案 Cisplatin 外滲，敷什麼？</div>
     <div class="exp info show"><div class="t">不憑印象，先查</div><div>開查詢站，輸入 <b>Cisplatin</b>，看它是冷敷、熱敷還是 DMSO。查完回到這一頁選。</div>
-      <div class="btnrow"><a class="btn navy" href="../lookup/" target="_blank" rel="noopener" id="lk">🔍 開查詢站查 Cisplatin</a></div></div>
+      <div class="btnrow"><a class="btn navy" href="../lookup/?from=handson" id="lk">🔍 開查詢站查 Cisplatin</a></div></div>
     <div id="qa" style="display:none"><div class="pick">${COMP.map(c=>`<button data-id="${c.id}">${ph(c.id, c.name, '', 'small nocap')}<b>${esc(c.name)}</b>${c.sub?`<span class="hint">${esc(c.sub)}</span>`:''}</button>`).join('')}</div><div id="fb"></div>
       <div id="q19" style="display:none"><h3>原則題</h3><div class="stem">${esc(q.stem)}</div>${optList(q)}<div id="fb2"></div></div></div>
     <div id="pre" class="btnrow"><button class="btn sec wide" id="checked">我查過了，開始選</button></div></div>`;
   const reveal = () => { $('#qa').style.display = ''; $('#pre').style.display = 'none'; };
-  $('#checked').onclick = reveal; $('#lk').addEventListener('click', () => setTimeout(reveal, 300));
+  $('#checked').onclick = reveal; bindLookup(reveal);
   const caseNote = '查詢站：Cisplatin 冷敷或熱敷無定論（院內建議兩者皆可）；本院本案定冷敷。';
   document.querySelectorAll('.pick button').forEach(b => b.onclick = () => {
     const c = COMP.find(x=>x.id===b.dataset.id);
@@ -576,12 +630,12 @@ RENDER.look2 = () => {
   $('#app').innerHTML = `<div class="card"><span class="badge acc">查詢</span><span class="badge">表單 16</span>
     <div class="stem">Doxorubicin 外滲，查詢站說要怎麼敷？</div>
     <div class="exp info show"><div class="t">開查詢站，輸入 <b>Doxorubicin</b>（或 Adriamycin、小紅莓）</div><div>看「處置」欄與最下方「DMSO」原理段，記住：塗多大範圍、風乾還是覆蓋、幾天。</div>
-      <div class="btnrow"><a class="btn navy" href="../lookup/" target="_blank" rel="noopener" id="lk">🔍 開查詢站查 Doxorubicin</a></div></div>
+      <div class="btnrow"><a class="btn navy" href="../lookup/?from=handson" id="lk">🔍 開查詢站查 Doxorubicin</a></div></div>
     <div id="qa" style="display:none">${expBox('info', '查到了：DMSO＋冷敷', LOOKUP_DOXO, '查詢站 Doxorubicin 列（院內 2023.5 版）')}
       ${expBox('ok', '為什麼是 DMSO', q20.explain_ok, srcQ(q20))}${nextBtn('開始三題 →')}</div>
     <div id="pre" class="btnrow"><button class="btn sec wide" id="checked">我查過了</button></div></div>`;
   const reveal = () => { $('#qa').style.display = ''; $('#pre').style.display = 'none'; bindNext(); };
-  $('#checked').onclick = reveal; $('#lk').addEventListener('click', () => setTimeout(reveal, 300));
+  $('#checked').onclick = reveal; bindLookup(reveal);
 };
 function dmStep(i){
   return () => {
@@ -598,6 +652,189 @@ function dmStep(i){
   };
 }
 RENDER.dm1 = dmStep(0); RENDER.dm2 = dmStep(1); RENDER.dm3 = dmStep(2);
+
+/* DMSO 塗抹範圍：在前臂上用手指／滑鼠塗，檢查是否塗到約兩倍範圍 */
+RENDER.paint = () => {
+  $('#app').innerHTML = `<div class="card"><span class="badge acc">動手塗</span><span class="badge">DMSO 範圍</span>
+    <div class="stem">動手塗一次：DMSO 要塗到多大？</div>
+    <p class="hint">黑色虛線＝油性筆畫的外滲範圍（${PAINT_SPOT.w}×${PAINT_SPOT.h} cm）。用<b>手指或滑鼠</b>在手臂上塗 DMSO，塗到你認為的<b>患部兩倍範圍</b>，再按「檢查」。</p>
+    <div class="paintwrap" id="pw"><canvas id="pbg"></canvas><canvas id="pnt"></canvas></div>
+    <div class="pmeter" id="pm"></div>
+    <div class="btnrow"><button class="btn sec" id="pclr">🧽 擦掉重塗</button><button class="btn sec" id="pshow">👁 顯示正確範圍</button></div>
+    <div class="btnrow"><button class="btn dm wide" id="pchk" disabled>檢查</button></div>
+    <div id="fb"></div></div>`;
+  const pw = $('#pw'), bg = $('#pbg'), pc = $('#pnt');
+  let W = 0, H = 0, dpr = 1, strokes = [], cur = null, showT = false, locked = false;
+  const geo = () => ({cx:W*0.52, cy:H*0.55, cm:W*0.07});   // 1 cm＝畫布寬 7%
+  function spot(){ const g = geo(); return {cx:g.cx, cy:g.cy, a:PAINT_SPOT.w/2*g.cm, b:PAINT_SPOT.h/2*g.cm}; }
+  function target(){ const s = spot(); return {cx:s.cx, cy:s.cy, a:s.a*DMSO_SCALE, b:s.b*DMSO_SCALE}; }
+  const brush = () => Math.max(8, W*0.02);
+  const font = (k, wt) => `${wt||700} ${Math.max(13, Math.round(W*k))}px "Microsoft JhengHei","PingFang TC","Noto Sans TC",sans-serif`;
+  function size(){
+    W = pw.clientWidth; H = Math.round(W*0.62); pw.style.height = H+'px'; dpr = window.devicePixelRatio || 1;
+    [bg, pc].forEach(c => { c.width = Math.round(W*dpr); c.height = Math.round(H*dpr); c.getContext('2d').setTransform(dpr,0,0,dpr,0,0); });
+    drawBg(); redrawPaint();
+  }
+  function drawBg(){
+    const c = bg.getContext('2d'); c.clearRect(0,0,W,H);
+    c.fillStyle = '#f7f9fc'; c.fillRect(0,0,W,H);
+    // 前臂（左＝手肘、右＝手腕；掌面朝上）
+    const gr = c.createLinearGradient(0,H*0.12,0,H*0.96); gr.addColorStop(0,'#e5b392'); gr.addColorStop(.35,'#f4d0b5'); gr.addColorStop(.7,'#f3cdb0'); gr.addColorStop(1,'#dca783');
+    c.fillStyle = gr; c.strokeStyle = '#c98f6d'; c.lineWidth = 2;
+    c.beginPath(); c.moveTo(0,H*0.13); c.bezierCurveTo(W*0.35,H*0.16,W*0.7,H*0.21,W*0.9,H*0.25);
+    c.lineTo(W,H*0.26); c.lineTo(W,H*0.85); c.lineTo(W*0.9,H*0.85);
+    c.bezierCurveTo(W*0.7,H*0.88,W*0.35,H*0.93,0,H*0.97); c.closePath(); c.fill(); c.stroke();
+    c.strokeStyle = 'rgba(201,143,109,.6)'; c.lineWidth = 2;   // 手腕摺痕
+    c.beginPath(); c.moveTo(W*0.9,H*0.28); c.quadraticCurveTo(W*0.915,H*0.55,W*0.9,H*0.82); c.stroke();
+    c.fillStyle = '#5b6675'; c.font = font(0.032); c.textBaseline = 'top';
+    c.textAlign = 'left'; c.fillText('◀ 手肘', 8, 6); c.textAlign = 'right'; c.fillText('手腕 ▶', W-8, 6);
+    // 紅腫的外滲患部＋油性筆虛線
+    const s = spot();
+    const rg = c.createRadialGradient(s.cx,s.cy,0,s.cx,s.cy,s.a); rg.addColorStop(0,'rgba(214,72,72,.45)'); rg.addColorStop(1,'rgba(214,72,72,.12)');
+    c.fillStyle = rg; c.beginPath(); c.ellipse(s.cx,s.cy,s.a,s.b,0,0,Math.PI*2); c.fill();
+    c.setLineDash([7,5]); c.strokeStyle = '#1c2430'; c.lineWidth = 3; c.stroke(); c.setLineDash([]);
+    c.fillStyle = '#1c2430'; c.font = font(0.026); c.textAlign = 'center'; c.textBaseline = 'middle';
+    c.fillText(`外滲 ${PAINT_SPOT.w}×${PAINT_SPOT.h} cm`, s.cx, s.cy);
+    if (showT) {
+      const t = target();
+      c.setLineDash([10,6]); c.strokeStyle = '#7a3fb5'; c.lineWidth = 4;
+      c.beginPath(); c.ellipse(t.cx,t.cy,t.a,t.b,0,0,Math.PI*2); c.stroke(); c.setLineDash([]);
+      c.fillStyle = '#7a3fb5'; c.font = font(0.028, 800); c.textAlign = 'center'; c.textBaseline = 'bottom';
+      c.fillText('DMSO 塗抹範圍（約兩倍）', t.cx, t.cy - t.b - 4);
+    }
+    c.textAlign = 'left';
+  }
+  function dot(c, x, y){ c.beginPath(); c.arc(x*W, y*H, brush(), 0, Math.PI*2); c.fill(); }
+  function seg(c, p, q){ const d = Math.hypot((q[0]-p[0])*W, (q[1]-p[1])*H), n = Math.max(1, Math.ceil(d/(brush()*0.4)));
+    for (let i=1;i<=n;i++) dot(c, p[0]+(q[0]-p[0])*i/n, p[1]+(q[1]-p[1])*i/n); }
+  function redrawPaint(){ const c = pc.getContext('2d'); c.clearRect(0,0,W,H); c.fillStyle = '#7a3fb5';
+    strokes.forEach(st => { dot(c, st[0][0], st[0][1]); for (let i=1;i<st.length;i++) seg(c, st[i-1], st[i]); }); }
+  const pt = e => { const r = pc.getBoundingClientRect(); return [(e.clientX-r.left)/W, (e.clientY-r.top)/H]; };
+  pc.addEventListener('pointerdown', e => { if (locked) return; e.preventDefault(); try{ pc.setPointerCapture(e.pointerId); }catch(_){}
+    cur = [pt(e)]; strokes.push(cur); const c = pc.getContext('2d'); c.fillStyle = '#7a3fb5'; dot(c, cur[0][0], cur[0][1]); $('#pchk').disabled = false; });
+  pc.addEventListener('pointermove', e => { if (!cur) return; e.preventDefault(); const p = pt(e), c = pc.getContext('2d'); c.fillStyle = '#7a3fb5'; seg(c, cur[cur.length-1], p); cur.push(p); });
+  ['pointerup','pointercancel'].forEach(t => pc.addEventListener(t, () => { cur = null; }));
+  const clearPaint = () => { strokes = []; redrawPaint(); $('#pm').innerHTML = ''; $('#pchk').disabled = true; };
+  $('#pclr').onclick = () => { if (!locked) clearPaint(); };
+  $('#pshow').onclick = () => { showT = !showT; $('#pshow').textContent = showT ? '🙈 隱藏正確範圍' : '👁 顯示正確範圍'; drawBg(); };
+  function score(){
+    // 格點取樣：兩倍區內被塗到的比例、兩倍區外被塗到的面積（相對兩倍區面積）
+    const t = target(), img = pc.getContext('2d').getImageData(0,0,pc.width,pc.height).data, step = Math.max(3, W/160);
+    let inT = 0, inP = 0, outP = 0;
+    for (let y=step/2; y<H; y+=step) for (let x=step/2; x<W; x+=step) {
+      const px = Math.min(pc.width-1, Math.round(x*dpr)), py = Math.min(pc.height-1, Math.round(y*dpr));
+      const painted = img[(py*pc.width+px)*4+3] > 40;
+      const inside = ((x-t.cx)/t.a)**2 + ((y-t.cy)/t.b)**2 <= 1;
+      if (inside) { inT++; if (painted) inP++; } else if (painted) outP++;
+    }
+    return {cover: inP/inT, outside: outP/inT};
+  }
+  const KEYP = `<ul class="keyp"><li>範圍：外滲患部的<b>兩倍</b>大（從油性筆範圍往外擴）</li><li>塗完<b>自然風乾，不要覆蓋</b>（不包紗布、不包保鮮膜）</li><li><b>一天 4 次，連續 7 天</b>；同時冰敷 20 分鐘、一天 4 次、1–2 天</li><li>塗抹時<b>戴手套</b></li><li>只用於 Anthracycline 類（Doxorubicin、Epirubicin、Idarubicin、Daunorubicin）與 Mitomycin-C、Mitoxantrone</li></ul>`;
+  const SRC = '查詢站 Doxorubicin 列（院內〈化療藥品外滲處置建議〉2023.5 版）';
+  function pass(title, cls){
+    locked = true; showT = true; drawBg(); $('#pshow').textContent = '🙈 隱藏正確範圍'; $('#pchk').disabled = true;
+    $('#fb').innerHTML = `<div class="exp ${cls} show"><div class="t">${esc(title)}</div>${KEYP}<div class="src">${esc(SRC)}</div></div>` + nextBtn(); bindNext();
+  }
+  $('#pchk').onclick = () => {
+    const r = score(), cv = Math.round(r.cover*100), ou = Math.round(r.outside*100);
+    $('#pm').innerHTML = `<span>兩倍範圍塗到 ${cv}%</span><span>塗出範圍外 ${ou}%</span>`;
+    if (r.cover >= PAINT_PASS_COVER && r.outside <= PAINT_MAX_OUTSIDE) { mark('paint', true); pass('塗對了：範圍約患部兩倍', 'ok'); return; }
+    mark('paint', false);
+    let title, text;
+    if (r.cover < PAINT_PASS_COVER && r.outside <= PAINT_MAX_OUTSIDE) { title = '塗太小了'; text = '只塗紅腫的地方不夠：DMSO 要塗到患部的兩倍範圍，油性筆虛線外面也要塗。'; }
+    else if (r.cover >= PAINT_PASS_COVER) { title = '塗太大了'; text = '兩倍範圍就夠了，不需要塗整隻手臂；塗太大只會增加皮膚刺激。'; }
+    else { title = '位置偏了'; text = '以油性筆畫的外滲範圍為中心，往四周擴大到約兩倍，均勻塗滿。'; }
+    showCQ({title, text, src:SRC, warn:true, retryLabel:'擦掉重塗', allowSkip: rec('paint').tries >= 2, skipLabel:'看正確範圍並繼續',
+      onRetry: clearPaint, onSkip: () => pass('正確範圍：紫色虛線（約患部兩倍）', 'ng')});
+  };
+  new ResizeObserver(() => { if (pw.clientWidth && pw.clientWidth !== W) size(); }).observe(pw);
+  size();
+};
+
+/* ===== 案例三：抬高患肢 48 小時 ===== */
+RENDER.scene3 = () => {
+  $('#app').innerHTML = `<div class="card"><span class="badge acc">情境</span><h2>案例三：外滲後的 48 小時</h2>
+    <div class="scn">🛏️ 🍱 🚶 ⏰</div>
+    <p><b>張示範</b>左前臂周邊靜脈外滲，處理完了。接下來 48 小時，她要睡覺、吃飯、下床、家屬也會來問。</p>
+    <div class="exp info show"><div class="t">記住兩件事</div><div>① 手要<b>高於心臟</b>，② 至少 <b>48 小時</b>。外滲部位<b>不可壓迫、不可按摩</b>。</div><div class="src">${esc(EL_SRC)}</div></div>
+    ${nextBtn('開始 4 個情境 →')}</div>`;
+  bindNext();
+};
+function elStep(i){
+  return () => {
+    const d = EL[i], order = shuffle(d.opts.map((o,j)=>j));
+    $('#app').innerHTML = `<div class="card"><span class="badge acc">情境 ${i+1}／${EL.length}</span><span class="badge">表單 17</span>
+      <div class="scn">${d.ic}</div><h3 style="margin-top:0">${esc(d.when)}</h3><div class="stem">${esc(d.stem)}</div>
+      <div class="opts">${order.map((j,n)=>`<button class="opt" data-j="${j}"><span class="k">${'ABC'[n]}</span><span>${esc(d.opts[j].t)}</span></button>`).join('')}</div><div id="fb"></div></div>`;
+    document.querySelectorAll('.opt').forEach(b => b.onclick = () => {
+      const o = d.opts[+b.dataset.j], right = d.opts.find(x=>x.ok);
+      document.querySelectorAll('.opt').forEach(x => { x.disabled = true; if (d.opts[+x.dataset.j].ok) x.classList.add('ok'); });
+      if (!o.ok) b.classList.add('ng');
+      mark(d.key, o.ok);
+      $('#fb').innerHTML = (o.ok ? expBox('ok', '答對了', o.why, EL_SRC)
+                                 : expBox('ng', '這樣不對', o.why, '') + expBox('ok', '正解：' + right.t, right.why, EL_SRC))
+                         + nextBtn(i < EL.length-1 ? '下一個情境 →' : '完成 →');
+      bindNext();
+    });
+  };
+}
+RENDER.el1 = elStep(0); RENDER.el2 = elStep(1); RENDER.el3 = elStep(2); RENDER.el4 = elStep(3);
+RENDER.sum3 = () => {
+  const n = EL.filter(d => result[d.key] && result[d.key].first).length;
+  $('#app').innerHTML = `<div class="card"><span class="badge ok">完成案例三</span><h2>抬高 48 小時：第一次就對 ${n}／${EL.length}</h2>
+    <div class="exp info show"><div class="t">一句話帶走</div><div>不論躺、坐、下床回來，手都要<b>高於心臟</b>（枕頭墊高），<b>至少 48 小時</b>；外滲部位<b>不壓、不揉</b>。</div><div class="src">${esc(EL_SRC)}</div></div>
+    <div class="btnrow"><button class="btn" id="again">案例三再玩一次</button><button class="btn sec" id="menu">回案例選單</button><a class="btn sec" href="../">回首頁</a></div></div>`;
+  $('#again').onclick = () => { EL.forEach(d => delete result[d.key]); flow = FLOW3; go(0); };
+  $('#menu').onclick = home;
+};
+
+/* ---------- 進度保存／還原（去查詢站再回來不用重做） ----------
+   存：案例（flow）、步驟（pos）、每步作答紀錄（result）、該步是否已點過查詢站／「我查過了」（revealed）。
+   位置：sessionStorage（同分頁返回）＋ localStorage 備援（新分頁或 App 內嵌開啟時；6 小時內有效）。
+   還原時機：網址帶 ?resume=1、瀏覽器「上一頁」返回（重新載入時）；bfcache 返回則頁面原樣保留。
+   一般從首頁進入不自動還原，而是在案例選單上方出現「繼續上次進度」。 */
+const SKEY = 'handson_state_v1', STTL = 6*3600*1000;
+const FLOWS = {'1': FLOW1, '2': FLOW2, '3': FLOW3};
+let revealedKey = null;
+function saveState(){
+  if (!flow) return;
+  const st = {flow: flow===FLOW1 ? '1' : flow===FLOW2 ? '2' : '3', pos, result, revealed: revealedKey === flow[pos] ? revealedKey : null, ts: Date.now()};
+  const j = JSON.stringify(st);
+  try{ sessionStorage.setItem(SKEY, j); }catch(e){}
+  try{ localStorage.setItem(SKEY, j); }catch(e){}
+}
+function loadState(){
+  let j = null;
+  try{ j = sessionStorage.getItem(SKEY); }catch(e){}
+  if (!j) { try{ j = localStorage.getItem(SKEY); }catch(e){} }
+  if (!j) return null;
+  try{
+    const st = JSON.parse(j);
+    if (!st || !FLOWS[st.flow] || !(Date.now()-st.ts < STTL)) return null;
+    if (!(st.pos >= 0 && st.pos < FLOWS[st.flow].length)) return null;
+    return st;
+  }catch(e){ return null; }
+}
+function restore(st){
+  for (const k in result) delete result[k];
+  Object.assign(result, st.result || {});
+  flow = FLOWS[st.flow];
+  revealedKey = st.revealed || null;
+  go(st.pos);
+  if (revealedKey && revealedKey === flow[pos]) { const b = $('#checked'); if (b) b.click(); }
+}
+function bindLookup(reveal){
+  // 連到查詢站：同分頁開、網址帶 ret＝目前步驟；點之前先存進度（含「已查詢」）
+  const a = $('#lk'); if (!a) return;
+  a.href = `../lookup/?from=handson&ret=${encodeURIComponent(flow[pos])}`;
+  a.addEventListener('click', () => { revealedKey = flow[pos]; saveState(); setTimeout(reveal, 300); });
+  const c = $('#checked'); if (c) c.addEventListener('click', () => { revealedKey = flow[pos]; saveState(); });
+}
+function wantResume(){
+  if (new URLSearchParams(location.search).get('resume') === '1') return true;
+  try{ const nav = performance.getEntriesByType('navigation')[0]; if (nav && nav.type === 'back_forward') return true; }catch(e){}
+  return false;
+}
 RENDER.sum2 = () => {
   const n = DM.filter(d => result[d.key] && result[d.key].first).length;
   $('#app').innerHTML = `<div class="card"><span class="badge ok">完成案例二</span><h2>DMSO 三題：第一次就對 ${n}／3</h2>
@@ -617,7 +854,9 @@ fetch(DATA_URL, {cache:'no-cache'}).then(r => { if (!r.ok) throw new Error(r.sta
   d.questions.forEach(q => { Q[q.id] = q; });
   const missing = [13,14,15,16,17,18,19,20].filter(id => !Q[id]);
   if (missing.length) throw new Error('題庫缺 Q' + missing.join('、Q'));
-  home();
+  const st = wantResume() ? loadState() : null;
+  if (st) { restore(st); try{ history.replaceState(null, '', location.pathname); }catch(e){} }
+  else home();
 }).catch(err => {
   $('#app').innerHTML = `<div class="err"><b>題庫載入失敗</b>（${esc(err.message)}）。<br>本頁的題目文字來自 <code>assets/data/questions.json</code>，直接雙擊 HTML 用 <code>file://</code> 開會被瀏覽器擋住。<br><b>本機預覽</b>：雙擊同資料夾的 <code>_preview.bat</code>（會啟動本機伺服器並自動開頁），或等 S0 推上 GitHub Pages 後用網址開。</div>`;
 });

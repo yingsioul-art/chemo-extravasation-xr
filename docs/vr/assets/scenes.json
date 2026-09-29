@@ -1,5 +1,5 @@
 {
- "ver": 1790688467,
+ "ver": 1790690265,
  "steps": [
   {
    "id": "intro",
@@ -390,6 +390,7 @@
    "sky": "store",
    "type": "info",
    "main": "HS_SUM1.jpg",
+   "main2": "HS_SUM1B.jpg",
    "nar": "HS_SUM1",
    "btns": [
     {
@@ -1010,7 +1011,11 @@
   ],
   "HS_SUM1.jpg": [
    2560,
-   2240
+   1920
+  ],
+  "HS_SUM1B.jpg": [
+   2560,
+   1920
   ],
   "HS_NEXT_C2.png": [
    1760,

@@ -79,6 +79,7 @@ ul{margin:14px 0 0 1.1em;padding:0}
 .io img{height:360px;max-width:740px;object-fit:contain;border-radius:18px;background:#fff}
 .io b{font-size:96px;line-height:1.15}.io span{font-size:62px;line-height:1.2;color:#5b6675}
 .btn{display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;text-align:center;padding:0 30px;white-space:nowrap}
+.g9big div{font-size:60px!important}.g9big img{width:300px!important;height:210px!important}
 .big .kick{font-size:56px}.big h1{font-size:100px}.big p{font-size:76px!important;line-height:1.45}
 .grid9{display:grid;grid-template-columns:repeat(3,1fr);gap:12px 16px;margin-top:6px}
 .grid9 div{display:flex;flex-direction:column;gap:8px;align-items:center;text-align:center;font-size:48px;line-height:1.3;background:#fff;border-radius:16px;padding:8px}
@@ -211,10 +212,16 @@ def build(card):
     C("HS_Q19_NG", fbcard("ng", "正解說明", q19["explain_ng"], f"文字來源：規格檔 Q19（表單 {q19['form_item']}）", hint="點這張卡片 ▶ 看九步驟總覽"), q19["explain_ng"])
     # ---- 九步驟總覽 ----
     g9 = "".join(f'<div><img src="{img64("h_" + s["id"] + ".png", 240)}"><span><i>{i + 1}</i> {e(s["t"])}</span></div>' for i, s in enumerate(H["STEPS9"]))
-    C("HS_SUM1", (f'<div class="c ok" data-root style="justify-content:flex-start;padding-top:40px;height:1400px"><div class="bar"></div><div class="kick">完成案例一</div>'
-                  f'<h1 style="font-size:76px">初步處理九步驟總覽</h1><div class="grid9">{g9}</div>'
-                  f'<p style="font-size:44px;color:#5b6675;margin-top:14px">第 9 步 DMSO 在案例二。</p></div>', (1600, 1400)),
+    # 9/29：九步驟總覽拆兩張（1–5、6–9）並排，字才夠大；語音掛在第一張
+    def g9card(lo, hi, title, foot=""):
+        cells = "".join(f'<div><img src="{img64("h_" + s["id"] + ".png", 300)}"><span><i>{i + 1}</i> {e(s["t"])}</span></div>'
+                        for i, s in enumerate(H["STEPS9"]) if lo <= i + 1 <= hi)
+        return (f'<div class="c ok" data-root style="justify-content:flex-start;padding-top:40px;height:1200px"><div class="bar"></div><div class="kick">完成案例一・九步驟總覽</div>'
+                f'<h1 style="font-size:84px">{e(title)}</h1><div class="grid9 g9big">{cells}</div>'
+                + (f'<p style="font-size:50px;color:#5b6675;margin-top:14px">{e(foot)}</p>' if foot else "") + '</div>', (1600, 1200))
+    C("HS_SUM1", g9card(1, 5, "第 1–5 步"),
       "完成案例一。初步處理九個步驟：" + "；".join(f"第{i + 1}，{s['t']}" for i, s in enumerate(H["STEPS9"])) + "。第九步 DMSO 在案例二。")
+    C("HS_SUM1B", g9card(6, 9, "第 6–9 步", "第 9 步 DMSO 在案例二。"))
     C("HS_GO_LOOKUP", btncard("下一站：查詢站 ▶", "#123a6b", 1000, 300, 72))
     C("HS_GO_C2", btncard("🟣 案例二 DMSO", "#7a3fb5", 1000, 300, 72))
     C("HS_GO_C3", btncard("⏰ 案例三 抬高 48 小時", "#b7791f", 1100, 300, 68))
@@ -344,7 +351,7 @@ def build(card):
     S["q19"] = {"id": "q19", "title": "敷療：原則題", "sky": "bed", "type": "mcq", "q": A("HS_Q19_Q"), "nar": "HS_Q19_Q",
                 "opts": [{"img": A(f"HS_Q19_{o['key']}"), "fb": A("HS_Q19_OK" if o["key"] == q19["answer"] else "HS_Q19_NG"),
                           "au": "HS_Q19_OK" if o["key"] == q19["answer"] else "HS_Q19_NG", "adv": True} for o in q19["options"]]}
-    S["sum1"] = {"id": "sum1", "title": "案例一完成：九步驟總覽", "sky": "store", "type": "info", "main": A("HS_SUM1"), "nar": "HS_SUM1",
+    S["sum1"] = {"id": "sum1", "title": "案例一完成：九步驟總覽", "sky": "store", "type": "info", "main": A("HS_SUM1"), "main2": A("HS_SUM1B"), "nar": "HS_SUM1",
                  "btns": [{"img": A("HS_NEXT_C2"), "to": "c2intro"}]}
     # 案例二
     C2 = [{"id": "c2intro", "case": 2, "title": "案例二：情境", "sky": "bed", "type": "info", "main": A("HS_C2_INTRO"), "nar": "HS_C2_INTRO", "next": card("BTN_下一步")},

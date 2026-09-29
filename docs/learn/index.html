@@ -118,6 +118,7 @@ main{max-width:760px;margin:0 auto;padding:16px 16px 48px}
 .err{background:var(--ngbg);border:1px solid #f3c3cc;border-radius:12px;padding:14px;color:var(--ng)}
 footer{text-align:center;color:var(--mut);font-size:.78rem;padding:0 16px 28px}
 .sr{position:absolute;left:-9999px}
+.subs{margin-top:10px;min-height:3.2em;padding:10px 14px;border-radius:12px;background:#1c2430;color:#fff;font-size:1.05rem;line-height:1.5;font-weight:700;text-align:center}
 </style>
 </head>
 <body>
@@ -211,6 +212,20 @@ function audioEl(cands,autoplay,label){
   a.src=cands[0].src; wrap.appendChild(a); wrap.appendChild(note);
   if(autoplay&&st.auto){ a.play().catch(()=>{ note.textContent='▶ 點播放鍵聽講解'; }); }
   return wrap;
+}
+
+/* ── 旁白字幕：讀 VTT，隨播放時間顯示目前句子 ── */
+function attachSubs(a,url,host){
+  if(!a) return;
+  const box=el('div','subs',''); box.setAttribute('aria-live','polite'); host.appendChild(box);
+  const toS=t=>{const m=t.trim().split(':');return (+m[0])*3600+(+m[1])*60+parseFloat(m[2]);};
+  let cues=[];
+  fetch(url,{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
+    cues=t.split(/\r?\n\r?\n+/).map(b=>b.split(/\r?\n/)).filter(l=>l[0]&&l[0].includes('-->')).map(l=>{const [x,y]=l[0].split('-->');return {b:toS(x),e:toS(y),t:l.slice(1).join(' ')};});
+    box.textContent=cues.length?'▶ 播放後這裡會顯示字幕':'';
+  }).catch(()=>{});
+  a.addEventListener('timeupdate',()=>{const now=a.currentTime;const c=cues.find(c=>now>=c.b&&now<c.e);if(c)box.textContent=c.t;});
+  a.addEventListener('ended',()=>{box.textContent='（旁白結束）';});
 }
 
 /* ── 進度條 ── */
@@ -374,15 +389,31 @@ function renderCards(idx){
   card.appendChild(imgEl(c.id,c.title));
   // 卡片旁白 g0N.mp3；尚未供應時暫播同主題自我檢核題的講解-對音檔
   const cands=[{src:AUD+c.id+'.mp3'}];
-  card.appendChild(audioEl(cands,false,'圖卡 '+(idx+1)+' 旁白'));
+  const aw=audioEl(cands,false,'圖卡 '+(idx+1)+' 旁白'); card.appendChild(aw);
+  attachSubs(aw.querySelector('audio'),AUD+c.id+'.vtt',card);
   app.appendChild(card);
   // 9/29：G 只做教學，不放互動考題；看到最後一張即記完成
-  if(idx===CARDS.length-1) xrMark('record');
   const r=el('div','row');
   if(idx>0){ const b=el('button','btn lite','← 上一張'); b.type='button'; b.addEventListener('click',()=>go('#G/'+idx)); r.appendChild(b); }
   if(idx<CARDS.length-1){ const b=el('button','btn','下一張 →'); b.type='button'; b.addEventListener('click',()=>go('#G/'+(idx+2))); r.appendChild(b); }
-  else { const b=el('button','btn','完成，回首頁 →'); b.type='button'; b.addEventListener('click',()=>{location.href='../';}); r.appendChild(b); }
+  else { const b=el('button','btn','下一步：小測驗（2 題）→'); b.type='button'; b.addEventListener('click',()=>go('#G/quiz')); r.appendChild(b); }
   if(r.children.length) app.appendChild(r);
+  window.scrollTo(0,0);
+}
+
+/* ── 紀錄與追蹤：看完四張圖卡後的小測驗（2 題，選 Q25 拍照上傳、Q26 通報時限） ── */
+const GQUIZ=[25,26];
+function renderGQuiz(n){
+  stopAudio(); n=Math.max(0,Math.min(n||0,GQUIZ.length-1));
+  const q=byId[GQUIZ[n]]; if(!q){ go('#G'); return; }
+  setHead('紀錄與追蹤・小測驗','← 回首頁');
+  const lbl='小測驗 第 '+(n+1)+'／'+GQUIZ.length+' 題'; setProg(true,lbl,n,GQUIZ.length);
+  app.innerHTML='';
+  delete st.gans[q.id];
+  const last=n===GQUIZ.length-1;
+  const actions=last?[{label:'完成，回首頁 →',go:()=>{xrMark('record');location.href='../';}}]:[{label:'下一題 →',go:()=>go('#G/quiz/'+(n+2))}];
+  app.appendChild(questionCard(q,{counted:false,showPrev:false,actions,onAnswer:()=>{setProg(true,lbl,n+1,GQUIZ.length); if(last) xrMark('record');}}));
+  const r=el('div','row'); const b=el('button','btn lite','← 回去看圖卡'); b.type='button'; b.addEventListener('click',()=>go('#G/4')); r.appendChild(b); app.appendChild(r);
   window.scrollTo(0,0);
 }
 
@@ -391,6 +422,7 @@ function route(){
   const h=(location.hash||'#home').slice(1); const [a,b]=h.split('/');
   if(a==='review') return renderReview();
   if(a==='redo'&&b) return renderRedo(+b);
+  if(a==='G'&&b==='quiz'){ const c=h.split('/')[2]; return renderGQuiz(c?+c-1:0); }
   if(a==='G') return renderCards(b?+b-1:0);
   if(blocks[a]) return renderQuiz(a,b?+b-1:null);
   renderHome();

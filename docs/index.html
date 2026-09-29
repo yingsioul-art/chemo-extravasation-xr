@@ -25,9 +25,13 @@ a.tile:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.1)}
 .hide{display:none!important}
 .more{margin-top:8px;font-size:.82rem;color:var(--mut)}.more summary{cursor:pointer}.more a{display:inline-block;margin-top:4px;color:#123a6b}
 .t7{--c:#0f766e}
-</style></head><body>
+.idbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:#fff;border-radius:14px;padding:8px 14px;margin-bottom:10px;box-shadow:0 2px 10px rgba(0,0,0,.05);font-size:.88rem;color:var(--mut)}
+.idbar b{color:var(--ink)}.idbar input{font:inherit;padding:6px 10px;border:1px solid #d5dbe4;border-radius:8px;width:9.5em}.idbar button{font:inherit;border:0;border-radius:8px;padding:6px 12px;background:#123a6b;color:#fff;cursor:pointer}
+.idbar .lk{background:none;color:#123a6b;text-decoration:underline;padding:0}.idbar .msg{flex-basis:100%;font-size:.8rem}
+</style><script src="assets/js/track.js" data-page="home"></script></head><body>
 <header><h1>化療藥品外滲預防與處理</h1><p>臺大醫院護理部 AI 與 XR 數位教材工作坊｜依院內技術評核表單（15700-4-041228）製作｜教學示範資料，無病人資料</p></header>
 <main>
+<div class="idbar" id="idbar"></div>
 <div class="guide" id="guide"><div id="guide-txt"></div><div class="steps" id="steps"></div></div>
 <div class="grid">
 <a class="tile t4" id="t-pre" href="test/?phase=pre"><div class="ic">📝</div><h2>前測</h2><p>知識題 27 題＋自我效能 10 題。<b>先完成前測</b>，才會開啟下面的學習內容。</p><span class="tag"></span></a>
@@ -79,5 +83,16 @@ function render() {
 }
 window.addEventListener("pageshow", () => { try { Object.assign(P, JSON.parse(localStorage.getItem("xrprog") || "{}")); } catch (e) {} render(); });
 render();
+/* 學員代號（與前後測同一組：手機末 4 碼＿生日月日）；用於後台紀錄，不收姓名 */
+function idbar(edit){
+  const b=document.getElementById("idbar"); const c=window.XRT?XRT.getCode():"";
+  if(c&&!edit){ b.innerHTML=`🪪 學員代號：<b>${c}</b> <button class="lk" id="idchg" type="button">更改</button>`; document.getElementById("idchg").onclick=()=>idbar(true); return; }
+  b.innerHTML=`🪪 學員代號 <input id="idin" inputmode="numeric" placeholder="例：1234_0915" value="${c}" aria-label="學員代號"> <button id="idok" type="button">儲存</button>`+
+    `<span class="msg">手機末 4 碼＋底線＋生日月日（4 碼），與前後測同一組；用來記錄學習歷程，不需填姓名。沒填也可以使用。</span>`;
+  const save=()=>{ const v=document.getElementById("idin").value.trim().replace(/[－—–\-\s]/g,"_");
+    if(window.XRT&&XRT.setCode(v)){ XRT.track("set_code",{value:v?1:0}); idbar(false); } else b.querySelector(".msg").innerHTML='<b style="color:#c81e3a">格式不對</b>：請輸入像 <b>1234_0915</b> 這樣（手機末 4 碼＋底線＋生日月日）。'; };
+  document.getElementById("idok").onclick=save; document.getElementById("idin").onkeydown=e=>{ if(e.key==="Enter") save(); };
+}
+idbar(false);
 </script>
 </body></html>

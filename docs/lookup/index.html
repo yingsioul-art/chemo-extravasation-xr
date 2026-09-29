@@ -39,7 +39,8 @@ main{max-width:980px;margin:0 auto;padding:14px 16px 60px}
 .dockback button{border:0;background:#e8792b;color:#fff;border-radius:12px;padding:12px 18px;font:inherit;font-weight:700;font-size:1rem;cursor:pointer;width:100%;max-width:520px}
 body.fromh main{padding-bottom:90px}
 
-</style></head><body>
+</style><script src="../assets/js/track.js" data-page="lookup"></script>
+</head><body>
 <header><a class="home" href="https://yingsioul-art.github.io/chemo-extravasation-xr/">← 回教材首頁</a><button class="back2" id="backH" type="button">← 返回外滲當下怎麼做</button><h1>化療藥品外滲處置查詢</h1><p>資料來源：本院〈化療藥品外滲處置建議〉2023.5 版｜57 個藥品｜輸入學名或商品名，或用分類篩選</p></header>
 <main>
 <div class="menu" id="menu">
@@ -107,7 +108,7 @@ function render(){
   $("#count").textContent=`符合 ${rows.length} 個藥品`;
   $("#grid").innerHTML=rows.map((d,i)=>`<div class="card" data-i="${DATA.indexOf(d)}"><h3>${d.g}</h3><div class="b">${d.b}</div><span class="tag ${tagCls(d.cc)}">${d.cls}</span><span class="tag t${d.tc}">${d.tx}</span>${d.txd?`<div class="how">${d.txd}</div>`:""}</div>`).join("");
 }
-function show(i){const d=DATA[i];$("#detail").innerHTML=`<div class="detail"><button class="close" onclick="document.getElementById('detail').innerHTML=''">✕ 關閉</button><h2>${d.g}</h2><div class="b">商品名：${d.b}</div>
+function show(i){const d=DATA[i];try{XRT.track('view_drug',{item:d.g})}catch(e){}$("#detail").innerHTML=`<div class="detail"><button class="close" onclick="document.getElementById('detail').innerHTML=''">✕ 關閉</button><h2>${d.g}</h2><div class="b">商品名：${d.b}</div>
 <div class="row"><span class="k">外滲特性</span>：<span class="tag ${tagCls(d.cc)}">${d.cls}</span><span style="color:#5b6675;font-size:.85rem">（原文：${d.prop}）</span></div>
 <div class="row"><span class="k">局部處置</span>：<span class="tag t${d.tc}">${d.tx}</span><div>${d.txd||"—"}</div></div>
 ${d.note?`<div class="row"><span class="k">備註</span>：${d.note}</div>`:""}
@@ -115,9 +116,10 @@ ${d.note?`<div class="row"><span class="k">備註</span>：${d.note}</div>`:""}
 <div class="row" style="font-size:.9rem;color:#5b6675">提醒：任何藥品外滲的共同步驟＝立即停藥、勿拔針、回抽、不壓迫、油性筆標示範圍、依表單紀錄與通報；上面只是「敷療」這一步的差別。</div></div>`;window.scrollTo({top:0,behavior:"smooth"});}
 $("#grid").addEventListener("click",e=>{const c=e.target.closest(".card");if(c)show(+c.dataset.i)});
 $("#kw").addEventListener("input",render);
+let kwT=null;$("#kw").addEventListener("input",()=>{clearTimeout(kwT);kwT=setTimeout(()=>{const v=$("#kw").value.trim();if(v)try{XRT.track("search",{choice:v.slice(0,40)})}catch(e){}},1200);});
 $("#chips").addEventListener("click",e=>{const c=e.target.closest(".chip");if(!c)return;const [k,v]=c.dataset.f.split(":");
   if(filters[k]===v){delete filters[k];c.classList.remove("on")}else{filters[k]=v;[...$("#chips").children].forEach(x=>{if(x.dataset.f.startsWith(k+":"))x.classList.remove("on")});c.classList.add("on")}render();});
-function openTab(t){$("#menu").hidden=true;$("#tabs").hidden=false;document.querySelectorAll(".tabs button[data-t]").forEach(x=>x.classList.toggle("on",x.dataset.t===t));["q","p","s","z"].forEach(k=>$("#tab-"+k).hidden=(k!==t));try{sessionStorage.setItem("lookup_tab",t)}catch(e){}}
+function openTab(t){try{XRT.track("open_tab",{item:t})}catch(e){}$("#menu").hidden=true;$("#tabs").hidden=false;document.querySelectorAll(".tabs button[data-t]").forEach(x=>x.classList.toggle("on",x.dataset.t===t));["q","p","s","z"].forEach(k=>$("#tab-"+k).hidden=(k!==t));try{sessionStorage.setItem("lookup_tab",t)}catch(e){}}
 function openMenu(){$("#menu").hidden=false;$("#tabs").hidden=true;["q","p","s","z"].forEach(k=>$("#tab-"+k).hidden=true);try{sessionStorage.removeItem("lookup_tab")}catch(e){}}
 document.querySelectorAll(".tabs button[data-t]").forEach(b=>b.onclick=()=>openTab(b.dataset.t));
 document.querySelectorAll("#menu [data-go]").forEach(b=>b.onclick=()=>openTab(b.dataset.go));
@@ -136,13 +138,13 @@ if(fromH&&!inFrame){document.body.classList.add("fromh");const d=document.create
 // 一覽表
 $("#table").innerHTML=`<table style="width:100%;border-collapse:collapse;font-size:.9rem"><thead><tr style="background:#eef2f7"><th style="text-align:left;padding:6px">學名</th><th style="text-align:left;padding:6px">商品名</th><th style="text-align:left;padding:6px">特性</th><th style="text-align:left;padding:6px">處置</th><th style="text-align:left;padding:6px">作法</th></tr></thead><tbody>${DATA.map(d=>`<tr style="border-bottom:1px solid #e3e8ef"><td style="padding:6px">${d.g}</td><td style="padding:6px">${d.b}</td><td style="padding:6px"><span class="tag ${tagCls(d.cc)}">${d.cls}</span></td><td style="padding:6px"><span class="tag t${d.tc}">${d.tx}</span></td><td style="padding:6px;font-size:.82rem;color:#5b6675">${d.txd||"—"}</td></tr>`).join("")}</tbody></table>`;
 // 原理頁小測驗
-const xrMark=k=>{try{const p=JSON.parse(localStorage.getItem('xrprog')||'{}');if(!p[k]){p[k]=Date.now();localStorage.setItem('xrprog',JSON.stringify(p));}}catch(e){}};
+const xrMark=k=>{try{const p=JSON.parse(localStorage.getItem('xrprog')||'{}');if(!p[k]){p[k]=Date.now();localStorage.setItem('xrprog',JSON.stringify(p));try{XRT.track('complete',{page:k==='pre'||k==='post'?'test':k,item:k})}catch(e){}}}catch(e){}};
 const Q=[{q:"Vincristine 外滲，局部要怎麼敷？",o:["冷敷","熱敷"],a:1,why:"長春花鹼類要熱敷：血管擴張讓藥品被帶走稀釋；冷敷會讓藥留在原處、加重潰瘍。"},
 {q:"Doxorubicin 外滲，除了冰敷還可依醫囑加什麼？",o:["熱敷","99% DMSO 外用","按摩患部"],a:1,why:"Anthracycline 類可用 DMSO（自由基清除劑），塗患部兩倍範圍、風乾、一天 4 次 × 7 天；任何藥品都不可按摩或壓迫。"},
 {q:"Oxaliplatin 外滲為什麼不冷敷？",o:["冷會讓藥品結晶","冷會誘發或加重神經毒性，且應讓藥品散開","沒有原因，習慣而已"],a:1,why:"Oxaliplatin 有冷誘發神經病變的特性，院內建議熱敷 44–50℃。"},
 {q:"冰敷一次要敷多久、持續幾天？",o:["5 分鐘、當天即可","20 分鐘、一天 3–4 次、持續 24–48 小時","整天不間斷"],a:1,why:"0℃ 冰敷袋每次 20 分鐘，一天 3–4 次，持續 24–48 小時。"}];
 let qi=0;function quiz(){const q=Q[qi];$("#quiz").innerHTML=`<b>動手試試（${qi+1}/${Q.length}）</b><div>${q.q}</div>${q.o.map((o,i)=>`<button data-i="${i}">${o}</button>`).join("")}<div class="why"></div>`;
-  $("#quiz").querySelectorAll("button").forEach(b=>b.onclick=()=>{const ok=+b.dataset.i===q.a;$("#quiz").querySelectorAll("button").forEach(x=>{x.disabled=true;if(+x.dataset.i===q.a)x.classList.add("ok")});if(!ok)b.classList.add("ng");
+  $("#quiz").querySelectorAll("button").forEach(b=>b.onclick=()=>{const ok=+b.dataset.i===q.a;try{XRT.track("answer",{item:"lookup_q"+(qi+1),choice:b.textContent,correct:ok,attempt:1})}catch(e){}$("#quiz").querySelectorAll("button").forEach(x=>{x.disabled=true;if(+x.dataset.i===q.a)x.classList.add("ok")});if(!ok)b.classList.add("ng");
     $("#quiz .why").innerHTML=(ok?"✅ 答對了。":"❌ 不對。")+q.why+(qi<Q.length-1?` <button id="nx">下一題</button>`:" 🎉 完成。");if(qi===Q.length-1)xrMark("lookup");const n=$("#nx");if(n)n.onclick=()=>{qi++;quiz()};});}
 quiz();render();
 </script></body></html>

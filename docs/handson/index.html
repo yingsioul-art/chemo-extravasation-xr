@@ -128,6 +128,7 @@ main{max-width:640px;margin:0 auto;padding:16px 16px 40px}
 footer{text-align:center;color:var(--mut);font-size:.78rem;padding:20px 16px}
 @media (min-width:520px){.dcard{font-size:.85rem}.steps{grid-template-columns:1fr 1fr}}
 </style>
+<script src="../assets/js/track.js" data-page="handson"></script>
 </head>
 <body>
 <header>
@@ -252,7 +253,9 @@ function mark(key, ok, cq){
   const r = rec(key); r.tries++;
   if (r.first === null) r.first = ok;
   if (cq && !r.seen.includes(cq)) r.seen.push(cq);
+  try { XRT.track('answer', { item: key, correct: !!ok, attempt: r.tries, extra: { case: caseNo(), cq: cq || undefined } }); } catch (e) {}
 }
+function caseNo(){ return flow===FLOW1?1:flow===FLOW2?2:flow===FLOW3?3:0; }
 
 /* ---------- 小工具 ---------- */
 const $ = s => document.querySelector(s);
@@ -306,6 +309,7 @@ function showCQ(opt){
 /* ---------- 導覽 ---------- */
 function go(i){
   pos = i; const key = flow[pos];
+  try { XRT.track('step', { item: key, value: pos + 1, extra: { case: caseNo() } }); } catch (e) {}
   const total = flow.length - 1; // 最後一頁是總覽
   $('#pbar').style.width = Math.round(Math.min(pos,total)/total*100)+'%';
   $('#ptitle').textContent = flow===FLOW1 ? '案例一 Cisplatin' : flow===FLOW2 ? '案例二 Doxorubicin' : '案例三 抬高 48 小時';
@@ -603,9 +607,9 @@ RENDER.comp = () => {
 };
 
 /* 案例一總覽 */
-const xrMark=k=>{try{const p=JSON.parse(localStorage.getItem('xrprog')||'{}');if(!p[k]){p[k]=Date.now();localStorage.setItem('xrprog',JSON.stringify(p));}}catch(e){}};
+const xrMark=k=>{try{const p=JSON.parse(localStorage.getItem('xrprog')||'{}');if(!p[k]){p[k]=Date.now();localStorage.setItem('xrprog',JSON.stringify(p));try{XRT.track('complete',{page:k==='pre'||k==='post'?'test':k,item:k})}catch(e){}}}catch(e){}};
 /* 三個案例都要做完才算完成本站（9/29 使用者定：沒有選做） */
-function caseDone(n){ try{ const d=JSON.parse(localStorage.getItem('handson_cases')||'{}'); d[n]=d[n]||Date.now(); localStorage.setItem('handson_cases',JSON.stringify(d)); if(d[1]&&d[2]&&d[3]) xrMark('handson'); }catch(e){} }
+function caseDone(n){ try{ XRT.track('complete_case',{item:'case'+n}); }catch(e){} try{ const d=JSON.parse(localStorage.getItem('handson_cases')||'{}'); d[n]=d[n]||Date.now(); localStorage.setItem('handson_cases',JSON.stringify(d)); if(d[1]&&d[2]&&d[3]) xrMark('handson'); }catch(e){} }
 function casesDone(){ try{ return JSON.parse(localStorage.getItem('handson_cases')||'{}'); }catch(e){ return {}; } }
 RENDER.sum1 = () => {
   caseDone(1);   // 首頁進度：三個案例都走完才記完成
@@ -743,6 +747,7 @@ RENDER.paint = () => {
   }
   $('#pchk').onclick = () => {
     const r = score(), cv = Math.round(r.cover*100), ou = Math.round(r.outside*100);
+    try { XRT.track('paint_check', { item: 'paint', value: cv, correct: r.cover >= PAINT_PASS_COVER && r.outside <= PAINT_MAX_OUTSIDE, extra: { cover: cv, outside: ou } }); } catch (e) {}
     $('#pm').innerHTML = `<span>兩倍範圍塗到 ${cv}%</span><span>塗出範圍外 ${ou}%</span>`;
     if (r.cover >= PAINT_PASS_COVER && r.outside <= PAINT_MAX_OUTSIDE) { mark('paint', true); pass('塗對了：範圍約患部兩倍', 'ok'); return; }
     mark('paint', false);

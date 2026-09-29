@@ -128,7 +128,8 @@ footer{text-align:center;color:var(--mut);font-size:.8rem;padding:16px}
 .stepbar a.lock{opacity:.45;cursor:default}
 .sec.wiz{animation:fadein .25s ease}@keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 @media (max-width:480px){.sec{padding:14px}.stepbar a{font-size:.8rem}.stepbar a .txt{display:none}.stepbar a.on .txt{display:inline}}
-</style></head>
+</style><script src="../assets/js/track.js" data-page="coach"></script>
+</head>
 <body>
 <header><div class="wrap"><a href="../">← 回首頁</a><h1>🗣️ 發生外滲後的指導</h1></div></header>
 
@@ -367,8 +368,8 @@ function renderCase(){
  $("#dockLab").textContent=`${C.short}・${R.short}`;
  $("#copied").textContent="";
 }
-document.querySelectorAll("#caseSeg button").forEach(b=>b.onclick=()=>{curCase=+b.dataset.case;document.querySelectorAll("#caseSeg button").forEach(x=>x.classList.toggle("on",x===b));renderCase();});
-document.querySelectorAll("#roleSeg button").forEach(b=>b.onclick=()=>{curRole=b.dataset.role;document.querySelectorAll("#roleSeg button").forEach(x=>x.classList.toggle("on",x===b));renderCase();});
+document.querySelectorAll("#caseSeg button").forEach(b=>b.onclick=()=>{curCase=+b.dataset.case;try{XRT.track("choose_case",{item:"case"+curCase})}catch(e){}document.querySelectorAll("#caseSeg button").forEach(x=>x.classList.toggle("on",x===b));renderCase();});
+document.querySelectorAll("#roleSeg button").forEach(b=>b.onclick=()=>{curRole=b.dataset.role;try{XRT.track("choose_role",{item:curRole})}catch(e){}document.querySelectorAll("#roleSeg button").forEach(x=>x.classList.toggle("on",x===b));renderCase();});
 $("#swapBtn").onclick=()=>{const b=document.querySelector(`#caseSeg button[data-case="${curCase===1?2:1}"]`);b.click();show(1);};
 
 async function copyText(t){
@@ -376,6 +377,7 @@ async function copyText(t){
  try{const ta=document.createElement("textarea");ta.value=t;ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.focus();ta.select();const ok=document.execCommand("copy");document.body.removeChild(ta);return ok;}catch(e){return false;}
 }
 async function doCopy(){
+ try{XRT.track("copy_prompt",{item:"case"+curCase,choice:curRole})}catch(e){}
  const ok=await copyText($("#promptBox").textContent);
  if(ok)openHow(2);
  $("#copied").textContent=ok?"✅ 已複製，打開 AI 貼上":"⚠️ 無法自動複製，請展開全文長按複製";
@@ -416,7 +418,7 @@ $("#back1").onclick=()=>show(1);
 $("#back2").onclick=()=>show(2);
 
 /* 自評（勾選只存本機瀏覽器，失敗也不影響使用） */
-const xrMark=k=>{try{const p=JSON.parse(localStorage.getItem('xrprog')||'{}');if(!p[k]){p[k]=Date.now();localStorage.setItem('xrprog',JSON.stringify(p));}}catch(e){}};
+const xrMark=k=>{try{const p=JSON.parse(localStorage.getItem('xrprog')||'{}');if(!p[k]){p[k]=Date.now();localStorage.setItem('xrprog',JSON.stringify(p));try{XRT.track('complete',{page:k==='pre'||k==='post'?'test':k,item:k})}catch(e){}}}catch(e){}};
 const KEY="coach_chk_v2";
 let saved={};try{saved=JSON.parse(localStorage.getItem(KEY)||"{}")||{};}catch(e){saved={};}
 const allDone=()=>CHECK.every((c,i)=>saved["c"+i]);
@@ -433,7 +435,7 @@ function sumChk(){
  const v=Object.values(saved);const y=v.filter(x=>x==="y").length,n=v.filter(x=>x==="n").length,x=v.filter(x=>x==="x").length;
  $("#chkSum").innerHTML=v.length?`<span class="chip y">有講到 ${y}</span><span class="chip">沒講到 ${n}</span><span class="chip x">講錯 ${x}</span><span class="note">／共 6 項${v.length<6?`，還有 ${6-v.length} 項沒勾`:""}</span>`:`<span class="note">還沒勾選。練完後每項選一個。</span>`;
 }
-$("#chkList").addEventListener("change",e=>{if(e.target.name){saved[e.target.name]=e.target.value;try{localStorage.setItem(KEY,JSON.stringify(saved));}catch(err){}sumChk();if(allDone())xrMark("coach");}});
+$("#chkList").addEventListener("change",e=>{if(e.target.name){try{XRT.track("self_check",{item:e.target.name,choice:e.target.value,extra:{case:curCase}})}catch(x){}saved[e.target.name]=e.target.value;try{localStorage.setItem(KEY,JSON.stringify(saved));}catch(err){}sumChk();if(allDone())xrMark("coach");}});
 $("#clearChk").onclick=()=>{saved={};try{localStorage.removeItem(KEY);}catch(e){}renderChk();};
 
 /* 知識底稿 Q21–Q23：讀題庫檔（單一來源），不手抄 */

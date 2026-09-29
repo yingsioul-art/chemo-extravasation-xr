@@ -120,6 +120,7 @@ footer{text-align:center;color:var(--mut);font-size:.78rem;padding:0 16px 28px}
 .sr{position:absolute;left:-9999px}
 .subs{margin-top:10px;min-height:3.2em;padding:10px 14px;border-radius:12px;background:#1c2430;color:#fff;font-size:1.05rem;line-height:1.5;font-weight:700;text-align:center}
 </style>
+<script src="../assets/js/track.js" data-page="learn"></script>
 </head>
 <body>
 <header>
@@ -164,8 +165,9 @@ const $=id=>document.getElementById(id);
 const app=$('app');
 
 function load(){ try{ const s=JSON.parse(localStorage.getItem(KEY)||'null'); if(s&&s.ans) return Object.assign({auto:true,gans:{}},s);}catch(e){} return {ans:{},gans:{},auto:true}; }
-const xrMark=k=>{try{const p=JSON.parse(localStorage.getItem('xrprog')||'{}');if(!p[k]){p[k]=Date.now();localStorage.setItem('xrprog',JSON.stringify(p));}}catch(e){}};
+const xrMark=k=>{try{const p=JSON.parse(localStorage.getItem('xrprog')||'{}');if(!p[k]){p[k]=Date.now();localStorage.setItem('xrprog',JSON.stringify(p));try{XRT.track('complete',{page:k==='pre'||k==='post'?'test':k,item:k})}catch(e){}}}catch(e){}};
 /* 首頁進度：區塊 A–D 題目全部作答過＝完成 */
+const ATT={};   // 後台紀錄：每題本頁作答次數
 function markRecord(){ if(gQ.length&&gQ.every(q=>st.gans[q.id])) xrMark('record'); }
 function markLearn(){ if(learnQ.length&&learnQ.every(q=>st.ans[q.id])) xrMark('learn'); }
 function save(){ try{ localStorage.setItem(KEY,JSON.stringify(st)); }catch(e){} markLearn(); markRecord(); }
@@ -256,6 +258,7 @@ function questionCard(q,opts){
     if(expBox) return;
     store[q.id]=key; save();
     const right=key===q.answer;
+    if(fresh!==false){ try{ ATT[q.id]=(ATT[q.id]||0)+1; XRT.track('answer',{page:counted?'learn':'record',item:'Q'+q.id,choice:key,correct:right,attempt:ATT[q.id]}); }catch(e){} }
     btns.forEach(b=>{ b.disabled=true; if(b.dataset.key===q.answer) b.classList.add('ok'); else if(b.dataset.key===key) b.classList.add('ng'); });
     expBox=el('div','exp '+(right?'ok':'ng'));
     expBox.appendChild(el('div','ttl',right?'✅ 答對了':'❌ 答錯了，正解是 '+esc(q.answer)));
@@ -379,6 +382,7 @@ function renderCards(idx){
   idx=Math.max(0,Math.min(idx||0,CARDS.length-1));
   const c=CARDS[idx]; const q=gQ[idx];
   setHead('紀錄與追蹤','← 回首頁');
+  try{ XRT.track('view_card',{page:'record',item:c.id,value:idx+1}); }catch(e){}
   const lbl='圖卡 第 '+(idx+1)+'／'+CARDS.length+' 張';
   setProg(true,lbl,idx+1,CARDS.length);
   app.innerHTML='';

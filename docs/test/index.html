@@ -84,6 +84,7 @@ textarea{width:100%;min-height:90px;font-size:1rem;padding:10px;border:2px solid
 .sech{margin:18px 0 4px;font-size:1rem;color:var(--navy)}
 @media (min-width:600px){header h1{font-size:1.4rem}.stem{font-size:1.15rem}}
 </style>
+<script src="../assets/js/track.js" data-page="test"></script>
 </head>
 <body>
 <header><h1>前後測</h1><p>化療藥品外滲預防與處理｜知識題 27 題＋自我效能 10 題（後測另加課程滿意度）</p></header>
@@ -278,7 +279,7 @@ async function loadQuestions() {
 }
 
 /* ===== 開始頁 ===== */
-const xrMark=k=>{try{const p=JSON.parse(localStorage.getItem('xrprog')||'{}');if(!p[k]){p[k]=Date.now();localStorage.setItem('xrprog',JSON.stringify(p));}}catch(e){}};
+const xrMark=k=>{try{const p=JSON.parse(localStorage.getItem('xrprog')||'{}');if(!p[k]){p[k]=Date.now();localStorage.setItem('xrprog',JSON.stringify(p));try{XRT.track('complete',{page:k==='pre'||k==='post'?'test':k,item:k})}catch(e){}}}catch(e){}};
 let phase = null;
 function setPhase(p) { phase = p; $("ph-pre").setAttribute("aria-pressed", p === "pre"); $("ph-post").setAttribute("aria-pressed", p === "post"); $("start-err").textContent = ""; }
 $("ph-pre").onclick = () => setPhase("pre");

@@ -88,7 +88,15 @@ const YAWSIGN=1;
 let D, cur=0, audio=new Audio(), started=false;
 
 /* ---------- 語音 ---------- */
-function play(key){ if(!started||!key)return; audio.pause(); audio=new Audio(`assets/audio/${key}.mp3`); audio.play().catch(()=>{}); }
+function play(key){ if(!started||!key)return; audio.pause(); audio=new Audio(`assets/audio/${key}.mp3`); audio.dataset.key=key; audio.play().catch(()=>{}); }
+function toggle(key){ if(audio.dataset&&audio.dataset.key===key&&!audio.paused){ stopAudio(); return; } play(key); }   // 再點一次停止
+/* 查詢站環繞卡片：上排 作法＋原理 9 張、下排 藥品 5 張，排在使用者四周（正前方留給按鈕）；QR 在右前方 */
+function layRing(st,s){
+  if(!s.ring) return; const top=s.ring.slice(0,9), bot=s.ring.slice(9,14), qr=s.ring[14];
+  top.forEach((c,k)=>{ const a=60+k*30; mk(st,c.img,{...arc(a,4.2),y:2.55,w:1.95,click:()=>toggle(c.au)}); });
+  bot.forEach((c,k)=>{ const a=90+k*45; mk(st,c.img,{...arc(a,4.2),y:1.05,w:2.3,click:()=>toggle(c.au)}); });
+  if(qr) mk(st,qr.img,{...arc(38,4.0),y:1.4,w:1.6,click:()=>open2D("../lookup/","敷療查詢站",s)});
+}
 function stopAudio(){ audio.pause(); audio.currentTime=0; }
 $("#muteBtn").onclick=stopAudio;
 
@@ -179,11 +187,12 @@ function layoutPortrait(st,s,nextFn){
     mk(st,s.handson,{x:0,y:1.55,z:Z,w:2.3,click:()=>open2D("../handson/","2D 動手版",s)});
     mk(st,s.toC2,{x:-0.66,y:0.3,z:Z,w:1.2,click:()=>to("c2intro")}); mk(st,s.toC3,{x:0.66,y:0.3,z:Z,w:1.25,click:()=>to("c3intro")});
     mk(st,s.again,{x:-0.62,y:0.85,z:Z,w:1.15,click:()=>go(0)});
-    mk(st,s.home,{x:0.62,y:0.85,z:Z,w:1.15,click:()=>{location.href="../";}}); }
+    mk(st,s.home,{x:0.62,y:0.85,z:Z,w:1.15,click:()=>{location.href="../";}}); layRing(st,s); }
 }
 function go(i,quiet){
-  HOLD=null; if($("#paint").classList.contains("on")) closePaint();
-  cur=(i+D.steps.length)%D.steps.length; const s=D.steps[cur];
+  HOLD=null; if($("#paint").classList.contains("on")){ $("#paint").classList.remove("on"); if(PT){PT.disconnect();PT=null;} }
+  const prevCur=cur; cur=(i+D.steps.length)%D.steps.length; const s=D.steps[cur];
+  if(s.type==="paint"&&prevCur!==cur) PAINT_OK=false;   // 新進入塗抹站才重設過關狀態
   const st=$("#stage"); clear(st); clear($("#overlay")); st.object3D.visible=true;
   /* 床旁環景的預設視角往下看（對準入針處），卡片整組往下移，才不會擠在畫面上緣 */
   st.setAttribute("position",`0 ${s.sky==="bed"?(PORTRAIT()?-0.45:-0.9):0} 0`);
@@ -224,6 +233,7 @@ function go(i,quiet){
     mk(st,s.handson,{x:1.15,y:1.95,z:-3.8,w:2.0,click:()=>open2D("../handson/","2D 動手版",s)});
     mk(st,s.again,{x:-0.8,y:1.05,z:-3.8,w:1.3,click:()=>go(0)});
     mk(st,s.home,{x:0.8,y:1.05,z:-3.8,w:1.3,click:()=>{location.href="../";}});
+    layRing(st,s);
   }
   }
   commonBtns(st,s.nar);
@@ -293,8 +303,14 @@ function layHold(st,s,P){
 document.addEventListener("DOMContentLoaded",()=>document.querySelectorAll("[laser-controls]").forEach(c=>c.addEventListener("triggerup",()=>{ if(HOLD) HOLD.stop(); })));
 function gateDone(s){ if(s.after) popup(s.after.img,s.after.au,()=>go(cur+1)); else go(cur+1); }
 /* DMSO 塗抹：一般模式開 2D 面板用手指塗（判定同動手版）；頭顯模式改成三選一圖 */
+let PAINT_OK=false;   // 本輪塗抹是否已過關（過關後關掉面板，環景裡要有出口）
 function layPaint(st,s,P){
   if($("#scene").is("vr-mode")){ layMcq(st,{q:s.vrq,opts:s.vropts,grid:true},P); return; }
+  const okCard=s.vropts&&s.vropts.find(o=>o.adv);   // 過關講解卡（卡上寫「點這張卡片 ▶ 下一步」）
+  if(PAINT_OK&&okCard){
+    if(P){ mk(st,okCard.fb,{x:0,y:2.0,z:-4.2,w:2.8,click:()=>go(cur+1)}); mk(st,s.btn,{x:0,y:0.75,z:-4.2,w:1.2,click:openPaint}); }
+    else { mk(st,okCard.fb,{x:0,y:1.75,z:-4.2,w:3.3,click:()=>go(cur+1)}); mk(st,s.btn,{x:0,y:0.35,z:-3.6,rx:-20,w:1.2,click:openPaint}); }
+    return; }
   if(P){ mk(st,s.main,{x:0,y:2.2,z:-4.2,w:2.6}); mk(st,s.btn,{x:0,y:1.05,z:-4.2,w:1.4,click:openPaint}); }
   else { mk(st,s.main,{x:0,y:1.95,z:-4.2,w:3.3}); mk(st,s.btn,{x:0,y:0.45,z:-3.6,rx:-20,w:1.5,click:openPaint}); }
 }
@@ -305,6 +321,7 @@ function openPaint(){
   $("#paint").classList.add("on"); $("#pfb").className=""; $("#pfb").innerHTML=""; $("#pnext").style.display="none"; $("#pm").innerHTML="";
   let W=0,H=0,dpr=1,strokes=[],curS=null,showT=false,locked=false,tries=0;
   $("#pshow").textContent="👁 顯示正確範圍"; $("#pchk").disabled=true;
+  $("#paintClose").textContent=PAINT_OK?"下一步 ▶":"✕ 回到環景"; $("#paintClose").onclick=PAINT_OK?()=>{ closePaint(); go(cur+1); }:closePaint;
   const geo=()=>({cx:W*0.52,cy:H*0.55,cm:W*0.07});
   const spot=()=>{const g=geo();return {cx:g.cx,cy:g.cy,a:C.spot.w/2*g.cm,b:C.spot.h/2*g.cm};};
   const target=()=>{const t=spot();return {cx:t.cx,cy:t.cy,a:t.a*C.scale,b:t.b*C.scale};};
@@ -339,19 +356,22 @@ function openPaint(){
   const esc=x=>String(x).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
   const keyp=`<ul>${C.keyp.map(k=>`<li>${esc(k)}</li>`).join("")}</ul><small>${esc(C.src)}</small>`;
   function pass(title){ locked=true; showT=true; drawBg(); $("#pshow").textContent="🙈 隱藏正確範圍"; $("#pchk").disabled=true;
-    $("#pfb").className="ok"; $("#pfb").innerHTML=`<b>${esc(title)}</b>${keyp}`; $("#pnext").style.display=""; }
+    $("#pfb").className="ok"; $("#pfb").innerHTML=`<b>${esc(title)}</b>${keyp}`; $("#pnext").style.display="";
+    PAINT_OK=true; $("#paintClose").textContent="下一步 ▶"; $("#paintClose").onclick=()=>{ closePaint(); go(cur+1); };
+    setTimeout(()=>$("#pnext").scrollIntoView({behavior:"smooth",block:"end"}),60); }
   $("#pchk").onclick=()=>{ const r=score(),cv=Math.round(r.cover*100),ou=Math.round(r.outside*100);
     $("#pm").innerHTML=`<span>兩倍範圍塗到 ${cv}%</span><span>塗出範圍外 ${ou}%</span>`;
     if(r.cover>=C.cover&&r.outside<=C.outside) return pass(C.ok);
     tries++; let m;
     if(r.cover<C.cover&&r.outside<=C.outside) m=C.small; else if(r.cover>=C.cover) m=C.big; else m=C.off;
     $("#pfb").className="warn"; $("#pfb").innerHTML=`<b>${esc(m[0])}</b>${esc(m[1])}<br><small>${esc(C.src)}</small>`+
-      `<div class="row"><button id="pretry">🧽 擦掉重塗</button>${tries>=2?'<button id="pskip">看正確範圍並繼續</button>':""}</div>`;
+      `<div class="row"><button id="pretry">🧽 擦掉重塗</button><button id="pskip" class="main">看正確範圍並繼續 ▶</button></div>`;
     $("#pretry").onclick=clearP; const sk=$("#pskip"); if(sk) sk.onclick=()=>pass(C.show); };
   $("#pgo").onclick=()=>{ closePaint(); go(cur+1); };
   if(PT) PT.disconnect(); PT=new ResizeObserver(()=>{ if(pw.clientWidth&&pw.clientWidth!==W) size(); }); PT.observe(pw); size();
 }
-function closePaint(){ $("#paint").classList.remove("on"); if(PT){PT.disconnect();PT=null;} }
+function closePaint(){ const was=$("#paint").classList.contains("on"); $("#paint").classList.remove("on"); if(PT){PT.disconnect();PT=null;}
+  if(was&&PAINT_OK&&D&&D.steps[cur]&&D.steps[cur].type==="paint") go(cur,true); }
 $("#paintClose").onclick=closePaint;
 
 function answer(s,k){

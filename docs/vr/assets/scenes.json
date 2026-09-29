@@ -717,7 +717,69 @@
    "again": "BTN_4bceda.jpg",
    "home": "BTN_aa8382.jpg",
    "toC2": "HS_GO_C2.png",
-   "toC3": "HS_GO_C3.png"
+   "toC3": "HS_GO_C3.png",
+   "ring": [
+    {
+     "img": "LA01.jpg",
+     "au": "VA01"
+    },
+    {
+     "img": "LA02.jpg",
+     "au": "VA02"
+    },
+    {
+     "img": "LA03.jpg",
+     "au": "VA03"
+    },
+    {
+     "img": "LB00.jpg",
+     "au": "VB00"
+    },
+    {
+     "img": "LB01.jpg",
+     "au": "VB01"
+    },
+    {
+     "img": "LB02.jpg",
+     "au": "VB02"
+    },
+    {
+     "img": "LB03.jpg",
+     "au": "VB03"
+    },
+    {
+     "img": "LB04.jpg",
+     "au": "VB04"
+    },
+    {
+     "img": "LB05.jpg",
+     "au": "VB05"
+    },
+    {
+     "img": "LP1.jpg",
+     "au": "VP1"
+    },
+    {
+     "img": "LP2.jpg",
+     "au": "VP2"
+    },
+    {
+     "img": "LP3.jpg",
+     "au": "VP3"
+    },
+    {
+     "img": "LP4.jpg",
+     "au": "VP4"
+    },
+    {
+     "img": "LP5.jpg",
+     "au": "VP5"
+    },
+    {
+     "img": "LQR.jpg",
+     "au": null
+    }
+   ]
   }
  ],
  "common": {
@@ -1396,6 +1458,66 @@
   "BTN_aa8382.jpg": [
    1600,
    600
+  ],
+  "LA01.jpg": [
+   1600,
+   627
+  ],
+  "LA02.jpg": [
+   1600,
+   627
+  ],
+  "LA03.jpg": [
+   1600,
+   628
+  ],
+  "LB00.jpg": [
+   1600,
+   604
+  ],
+  "LB01.jpg": [
+   1600,
+   855
+  ],
+  "LB02.jpg": [
+   1600,
+   947
+  ],
+  "LB03.jpg": [
+   1600,
+   847
+  ],
+  "LB04.jpg": [
+   1600,
+   755
+  ],
+  "LB05.jpg": [
+   1600,
+   769
+  ],
+  "LP1.jpg": [
+   1600,
+   900
+  ],
+  "LP2.jpg": [
+   1600,
+   900
+  ],
+  "LP3.jpg": [
+   1600,
+   900
+  ],
+  "LP4.jpg": [
+   1600,
+   900
+  ],
+  "LP5.jpg": [
+   1600,
+   900
+  ],
+  "LQR.jpg": [
+   1600,
+   900
   ],
   "MUTE.jpg": [
    1600,

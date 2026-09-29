@@ -65,23 +65,23 @@ def read_handson():
 CSS = """*{box-sizing:border-box;margin:0}body{margin:0;font-family:"Microsoft JhengHei","Noto Sans TC",sans-serif;color:#1c2430}
 .c{width:1600px;height:900px;background:#f4f7fb;padding:56px 80px 56px 90px;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:center}
 .c .bar{position:absolute;left:0;top:0;bottom:0;width:30px;background:var(--a,#123a6b)}
-.kick{font-size:42px;color:#5b6675;margin-bottom:16px;font-weight:700}
-h1{font-size:80px;line-height:1.28;color:var(--h,#123a6b)}
-p,li{font-size:52px;line-height:1.5}p+p{margin-top:18px}
+.kick{font-size:50px;color:#5b6675;margin-bottom:16px;font-weight:700}
+h1{font-size:88px;line-height:1.28;color:var(--h,#123a6b)}
+p,li{font-size:62px;line-height:1.5}p+p{margin-top:18px}
 ul{margin:14px 0 0 1.1em;padding:0}
-.src{font-size:30px;color:#8a95a5;margin-top:18px}
+.src{font-size:36px;color:#8a95a5;margin-top:18px}
 .ok{--a:#1f8a4c;--h:#1f8a4c}.ng{--a:#c81e3a;--h:#c81e3a}.warn{--a:#b7791f;--h:#9a6200}.info{--a:#123a6b}.dm{--a:#7a3fb5;--h:#7a3fb5}
-.hint{position:absolute;left:90px;bottom:40px;padding:12px 32px;border-radius:40px;color:#fff;font-size:40px;font-weight:800;background:var(--a,#123a6b)}
+.hint{position:absolute;left:90px;bottom:40px;padding:12px 32px;border-radius:40px;color:#fff;font-size:46px;font-weight:800;background:var(--a,#123a6b)}
 .split{display:flex;gap:40px;align-items:center}.split img{width:560px;border-radius:24px;flex:none;background:#fff}
 .opt{display:flex;gap:34px;align-items:center}.key{flex:none;width:140px;height:140px;border-radius:34px;background:#123a6b;color:#fff;font-size:96px;font-weight:800;display:flex;align-items:center;justify-content:center}
-.opt p{font-size:66px;line-height:1.3}
+.opt p{font-size:72px;line-height:1.3}
 .io{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center}
 .io img{height:380px;max-width:720px;object-fit:contain;border-radius:18px;background:#fff}
-.io b{font-size:66px}.io span{font-size:40px;color:#5b6675}
+.io b{font-size:74px}.io span{font-size:50px;color:#5b6675}
 .btn{display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;text-align:center;padding:0 30px;white-space:nowrap}
 .grid9{display:grid;grid-template-columns:repeat(3,1fr);gap:14px 22px;margin-top:10px}
-.grid9 div{display:flex;gap:14px;align-items:center;font-size:32px;line-height:1.3;background:#fff;border-radius:16px;padding:8px}
-.grid9 img{width:120px;height:90px;object-fit:contain;flex:none}.grid9 i{font-style:normal;font-weight:800;color:#123a6b;font-size:36px}
+.grid9 div{display:flex;gap:14px;align-items:center;font-size:40px;line-height:1.3;background:#fff;border-radius:16px;padding:8px}
+.grid9 img{width:120px;height:90px;object-fit:contain;flex:none}.grid9 i{font-style:normal;font-weight:800;color:#123a6b;font-size:44px}
 """
 FIT_JS = """()=>{const r=document.querySelector('[data-root]');if(!r)return 1;
   const over=()=>{if(r.scrollHeight>r.clientHeight+1||r.scrollWidth>r.clientWidth+1)return true;
@@ -111,7 +111,7 @@ def fbcard(cls, title, text, src=None, img=None, hint="next", extra=""):
 
 
 def qcard(kick, stem, hint="點選你的答案", cls="info", extra=""):
-    return f'<div class="c {cls}" data-root><div class="bar"></div><div class="kick">{e(kick)}</div><h1>{e(stem)}</h1>{extra}<p style="margin-top:26px;color:#5b6675;font-size:44px">{e(hint)}</p></div>', (1600, 900)
+    return f'<div class="c {cls}" data-root><div class="bar"></div><div class="kick">{e(kick)}</div><h1>{e(stem)}</h1>{extra}<p style="margin-top:26px;color:#5b6675;font-size:52px">{e(hint)}</p></div>', (1600, 900)
 
 
 def optcard(k, text):
@@ -212,7 +212,7 @@ def build(card):
     g9 = "".join(f'<div><img src="{img64("h_" + s["id"] + ".png", 240)}"><span><i>{i + 1}</i> {e(s["t"])}</span></div>' for i, s in enumerate(H["STEPS9"]))
     C("HS_SUM1", (f'<div class="c ok" data-root style="justify-content:flex-start;padding-top:40px"><div class="bar"></div><div class="kick">完成案例一</div>'
                   f'<h1 style="font-size:64px">初步處理九步驟總覽</h1><div class="grid9">{g9}</div>'
-                  f'<p style="font-size:34px;color:#5b6675;margin-top:14px">第 9 步 DMSO 在案例二。</p></div>', (1600, 900)),
+                  f'<p style="font-size:40px;color:#5b6675;margin-top:14px">第 9 步 DMSO 在案例二。</p></div>', (1600, 900)),
       "完成案例一。初步處理九個步驟：" + "；".join(f"第{i + 1}，{s['t']}" for i, s in enumerate(H["STEPS9"])) + "。第九步 DMSO 在案例二。")
     C("HS_GO_LOOKUP", btncard("下一站：查詢站 ▶", "#123a6b", 1000, 300, 72))
     C("HS_GO_C2", btncard("🟣 案例二 DMSO", "#7a3fb5", 1000, 300, 72))
@@ -228,7 +228,7 @@ def build(card):
       "Doxorubicin 外滲，查詢站說要怎麼敷？開查詢站，輸入 Doxorubicin，記住：塗多大範圍、風乾還是覆蓋、幾天。")
     C("HS_OPEN_DOX", btncard("🔍 開查詢站查 Doxorubicin", "#7a3fb5", 1100, 300, 66))
     C("HS_C2_FOUND", fbcard("dm", "查到了：DMSO＋冷敷", H["LOOKUP_DOXO"], "查詢站 Doxorubicin 列（院內 2023.5 版）", hint="點這張卡片 ▶ 開始三題",
-                            extra=f'<p style="margin-top:16px;font-size:40px;color:#1c2430">為什麼是 DMSO：{e(q20["explain_ok"].removeprefix("答對了。"))}</p>'),
+                            extra=f'<p style="margin-top:16px;font-size:48px;color:#1c2430">為什麼是 DMSO：{e(q20["explain_ok"].removeprefix("答對了。"))}</p>'),
       "查到了：DMSO 加冷敷。" + H["LOOKUP_DOXO"])
     for i, d in enumerate(H["DM"]):
         C(f"HS_{d['key']}_Q", qcard(f"DMSO {i + 1}／3", d["stem"], cls="dm"), d["stem"] + "點選你的答案。")
@@ -242,7 +242,7 @@ def build(card):
     C("HS_PAINT_BTN", btncard("🖌️ 開始塗抹", "#7a3fb5", 900, 300, 80))
     C("HS_PAINT_VRQ", qcard("動手塗　DMSO 範圍（頭顯版）", "DMSO 要塗到多大？哪一張的紫色範圍對？", "頭顯內無法用手指塗，改成選圖", cls="dm"),
       "DMSO 要塗到多大？哪一張的紫色範圍是對的？點選你的答案。")
-    keyp_html = "<ul>" + "".join(f"<li style='font-size:38px;line-height:1.4'>{e(x)}</li>" for x in H["keyp"]) + "</ul>"
+    keyp_html = "<ul>" + "".join(f"<li style='font-size:46px;line-height:1.4'>{e(x)}</li>" for x in H["keyp"]) + "</ul>"
     C("HS_PAINT_OK", fbcard("ok", H["paintOK"], "", H["paintSrc"], extra=keyp_html), H["paintOK"] + "。" + "；".join(H["keyp"]))
     C("HS_PAINT_SMALL", fbcard("warn", *H["paintSmall"], H["paintSrc"], hint="retry"), "。".join(H["paintSmall"]))
     C("HS_PAINT_BIG", fbcard("warn", *H["paintBig"], H["paintSrc"], hint="retry"), "。".join(H["paintBig"]))
@@ -262,7 +262,7 @@ def build(card):
                 C(f"HS_{d['key']}_{'ABC'[j]}_FB", fbcard("ok", "答對了", o["why"], H["EL_SRC"]), "答對了。" + o["why"])
             else:
                 C(f"HS_{d['key']}_{'ABC'[j]}_FB", fbcard("ng", "這樣不對", o["why"], None, hint="retry",
-                                                           extra=f'<p style="margin-top:18px;font-size:42px;color:#1f8a4c;font-weight:800">正解：{e(right["t"])}</p>'),
+                                                           extra=f'<p style="margin-top:18px;font-size:50px;color:#1f8a4c;font-weight:800">正解：{e(right["t"])}</p>'),
                   "這樣不對。" + o["why"])
     C("HS_C3_SUM", infocard("完成案例三", "一句話帶走", e(H["el_one"]), cls="ok", extra=f'<div class="src">{e(H["EL_SRC"])}</div>'), "完成案例三。" + H["el_one"])
 

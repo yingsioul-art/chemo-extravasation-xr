@@ -40,7 +40,7 @@ for k, src in SKYS.items():
 
 # ---------- 圖卡：依主檔名找來源 ----------
 def find(stem):
-    for d in (VR3 / "cards", VR3 / "cards2", LOOKC, HERE / "_extra", HERE / "_extra/hs"):
+    for d in (VR3 / "cards", VR3 / "cards2", LOOKC, HERE / "_extra", HERE / "_extra/hs", HERE / "_extra/lookup"):
         for ext in (".png", ".jpg", ".jpeg"):
             p = d / f"{stem}{ext}"
             if p.exists():
@@ -139,7 +139,10 @@ steps = [
     {"id": "lookup", "case": 4, "title": "外滲處置查詢站", "sky": "store", "type": "end", "nar": "VN08",
      "lookup": card("W_LOOKUP"), "handson": card("W_HANDSON"), "notice": card("W_NOTICE"),
      "vrcards": [card(s) for s in ("A01_作法_冷敷作法", "A02_作法_熱敷作法", "A03_作法_DMSO作法")],
-     "again": card("BTN_從頭再玩"), "home": card("BTN_回教材首頁"), "toC2": GOTO["toC2"], "toC3": GOTO["toC3"]},
+     "again": card("BTN_從頭再玩"), "home": card("BTN_回教材首頁"), "toC2": GOTO["toC2"], "toC3": GOTO["toC3"],
+     # 9/29：補回 MAKAR 查詢站的環繞卡片（作法 3／原理 6／藥品 5）＋QR；點卡片播放／停止對應語音（_extra/lookup 來自 MAKAR 查詢站合成卡）
+     "ring": [{"img": card(k), "au": ("V" + k[1:]) if k != "LQR" else None} for k in
+              ("LA01", "LA02", "LA03", "LB00", "LB01", "LB02", "LB03", "LB04", "LB05", "LP1", "LP2", "LP3", "LP4", "LP5", "LQR")]},
 ]
 common = {"mute": card("MUTE"), "listen": card("LISTENQ"), "start": card("W_START")}
 json.dump({"steps": steps, "common": common, "paint": PAINT, "sizes": {v["f"]: [v["w"], v["h"]] for v in SIZES.values()}},

@@ -165,8 +165,9 @@ const app=$('app');
 function load(){ try{ const s=JSON.parse(localStorage.getItem(KEY)||'null'); if(s&&s.ans) return Object.assign({auto:true,gans:{}},s);}catch(e){} return {ans:{},gans:{},auto:true}; }
 const xrMark=k=>{try{const p=JSON.parse(localStorage.getItem('xrprog')||'{}');if(!p[k]){p[k]=Date.now();localStorage.setItem('xrprog',JSON.stringify(p));}}catch(e){}};
 /* 首頁進度：區塊 A–D 題目全部作答過＝完成 */
+function markRecord(){ if(gQ.length&&gQ.every(q=>st.gans[q.id])) xrMark('record'); }
 function markLearn(){ if(learnQ.length&&learnQ.every(q=>st.ans[q.id])) xrMark('learn'); }
-function save(){ try{ localStorage.setItem(KEY,JSON.stringify(st)); }catch(e){} markLearn(); }
+function save(){ try{ localStorage.setItem(KEY,JSON.stringify(st)); }catch(e){} markLearn(); markRecord(); }
 function el(tag,cls,html){ const e=document.createElement(tag); if(cls) e.className=cls; if(html!=null) e.innerHTML=html; return e; }
 function esc(s){ return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
 function stopAudio(){ if(curAudio){ try{curAudio.pause();}catch(e){} curAudio=null; } }
@@ -261,9 +262,10 @@ function renderHome(){
   markLearn();
   stopAudio(); setHead('預防與辨識','← 回首頁'); setProg(false);
   app.innerHTML='';
-  app.appendChild(el('div','hint','先選答案再看講解，答對答錯各有一版講解與語音。區塊 A–D 共 '+learnQ.length+' 題，做完出總複習；區塊 G 是圖卡＋自我檢核，不計分。'));
+  app.appendChild(el('div','hint','先選答案再看講解，答對答錯各有一版講解與語音。區塊 A–D 共 '+learnQ.length+' 題，做完出總複習。'));
   const grid=el('div','grid');
   TILES.forEach(t=>{
+    if(t.b==='G') return;   // G 紀錄與追蹤已移到首頁獨立一站（排在「發生外滲後的指導」之後）
     const list=t.b==='G'?gQ:(blocks[t.b]||[]); const store=t.b==='G'?st.gans:st.ans;
     const done=list.filter(q=>store[q.id]).length; const total=list.length;
     const b=el('button','tile t'+t.b); b.type='button';
@@ -341,7 +343,7 @@ function renderReview(){
   app.appendChild(w);
   const row=el('div','row');
   const b1=el('button','btn sec','回首頁'); b1.type='button'; b1.addEventListener('click',()=>go('#home'));
-  const b2=el('button','btn','前往 G 紀錄與追蹤 →'); b2.type='button'; b2.addEventListener('click',()=>go('#G'));
+  const b2=el('button','btn','下一站：外滲當下怎麼做 →'); b2.type='button'; b2.addEventListener('click',()=>{location.href='../handson/';});
   const b3=el('button','btn lite','A–D 全部重做'); b3.type='button'; b3.style.flex='1 1 100%'; b3.addEventListener('click',()=>{ st.ans={}; save(); go('#A'); });
   row.appendChild(b1); row.appendChild(b2); row.appendChild(b3); app.appendChild(row);
   window.scrollTo(0,0);
@@ -361,7 +363,7 @@ function renderCards(idx){
   stopAudio();
   idx=Math.max(0,Math.min(idx||0,CARDS.length-1));
   const c=CARDS[idx]; const q=gQ[idx];
-  setHead('區塊 G・紀錄與追蹤','← 區塊列表');
+  setHead('紀錄與追蹤','← 回首頁');
   const lbl='圖卡 第 '+(idx+1)+'／'+CARDS.length+' 張';
   setProg(true,lbl,idx,CARDS.length);
   app.innerHTML='';
@@ -379,7 +381,7 @@ function renderCards(idx){
     const chk=el('section','card check'); chk.style.borderTop='0';
     chk.appendChild(el('div','tag','✍️ 自我檢核（不計分）'));
     const last=idx===CARDS.length-1;
-    const actions=last?[{label:'完成，回區塊列表 →',go:()=>go('#home')}]:[{label:'下一張圖卡 →',go:()=>go('#G/'+(idx+2))}];
+    const actions=last?[{label:'完成，回首頁 →',go:()=>{location.href='../';}}]:[{label:'下一張圖卡 →',go:()=>go('#G/'+(idx+2))}];
     chk.appendChild(questionCard(q,{counted:false,actions,onAnswer:()=>setProg(true,lbl,idx+1,CARDS.length)}));
     app.appendChild(chk);
   }
@@ -399,7 +401,7 @@ function route(){
   if(blocks[a]) return renderQuiz(a,b?+b-1:null);
   renderHome();
 }
-$('back').addEventListener('click',()=>{ stopAudio(); const h=location.hash||'#home'; if(h==='#home'){ location.href='../'; } else if(h.startsWith('#redo')){ go('#review'); } else go('#home'); });
+$('back').addEventListener('click',()=>{ stopAudio(); const h=location.hash||'#home'; if(h==='#home'||h.startsWith('#G')){ location.href='../'; } else if(h.startsWith('#redo')){ go('#review'); } else go('#home'); });
 function paintAuto(){ const b=$('auto'); b.textContent=st.auto?'🔊 自動播放 開':'🔇 自動播放 關'; b.classList.toggle('off',!st.auto); b.setAttribute('aria-pressed',String(st.auto)); }
 $('auto').addEventListener('click',()=>{ st.auto=!st.auto; save(); paintAuto(); if(!st.auto) stopAudio(); });
 paintAuto();

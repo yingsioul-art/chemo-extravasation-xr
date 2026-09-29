@@ -1,6 +1,6 @@
 <!DOCTYPE html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>練習：對 AI 病人做衛教</title>
-<meta name="description" content="化療藥品外滲後續處置（表單 17–19）：把提示詞貼給生成式 AI（Copilot、ChatGPT、Gemini 等），AI 扮演外滲病人，你用口語做出院衛教，AI 依六項檢核表逐項回饋。">
+<title>發生外滲後的指導</title>
+<meta name="description" content="化療藥品外滲後續處置（表單 17–19）：把提示詞貼給生成式 AI（Copilot、ChatGPT、Gemini 等），AI 扮演外滲病人，你用口語做外滲後的出院指導，AI 依六項檢核表逐項回饋。">
 <style>
 :root{--bg:#f4f7fb;--card:#fff;--ink:#1c2430;--mut:#5b6675;--line:#e3e8ef;--navy:#123a6b;--red:#c81e3a;--cold:#1f6fd0;--warm:#d9541e;--dmso:#7a3fb5;--ok:#2e8b57;--soft:#fff4f6;--gold:#b7791f}
 *{box-sizing:border-box}
@@ -113,12 +113,21 @@ footer{text-align:center;color:var(--mut);font-size:.8rem;padding:16px}
 .mock .tip{font-size:.8rem;color:var(--gold);margin:2px 0 8px;text-align:center}
 .faq dt{font-weight:700;margin-top:8px;font-size:.92rem}.faq dd{margin:2px 0 0 0;font-size:.9rem;color:var(--ink)}
 
+.usecard{border:2px solid #bcd0ea;border-radius:14px;padding:12px 14px;margin:12px 0;background:#f7faff}
+.uc-h{font-weight:700;color:var(--navy);margin-bottom:8px}
+.uc-row{display:flex;align-items:stretch;gap:6px}
+.uc-row div{flex:1;background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 6px;text-align:center;font-size:.9rem;line-height:1.35}
+.uc-row div b{display:block;font-size:1.9rem;margin-bottom:4px}
+.uc-row i{align-self:center;color:var(--mut);font-style:normal}
+.uc-foot{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:8px;font-size:.84rem;color:var(--mut)}
+.howicons{margin:10px 0}
+@media (max-width:480px){.uc-row.howicons{display:grid;grid-template-columns:1fr 1fr;gap:6px}.uc-row.howicons i{display:none}.uc-row div{font-size:.84rem;padding:8px 4px}.uc-row div b{font-size:1.6rem}}
 .stepbar a.lock{opacity:.45;cursor:default}
 .sec.wiz{animation:fadein .25s ease}@keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 @media (max-width:480px){.sec{padding:14px}.stepbar a{font-size:.8rem}.stepbar a .txt{display:none}.stepbar a.on .txt{display:inline}}
 </style></head>
 <body>
-<header><div class="wrap"><a href="../">← 回首頁</a><h1>🗣️ 練習：對 AI 病人做衛教</h1><div class="flow"><div><span>🧊🔥</span>選案例</div><i>›</i><div><span>📋</span>複製提示詞</div><i>›</i><div><span>🤖</span>貼給 AI</div><i>›</i><div><span>🗣️</span>講衛教</div><i>›</i><div><span>✅</span>看回饋</div></div></div></header>
+<header><div class="wrap"><a href="../">← 回首頁</a><h1>🗣️ 發生外滲後的指導</h1><div class="flow"><div><span>🧊🔥</span>選案例</div><i>›</i><div><span>📋</span>複製提示詞</div><i>›</i><div><span>🤖</span>貼給 AI</div><i>›</i><div><span>🗣️</span>做指導</div><i>›</i><div><span>✅</span>看回饋</div></div></div></header>
 
 <nav class="stepbar"><div class="wrap">
 <a href="#" id="nav1" data-step="1" class="on"><span class="n">1</span><span class="txt">選案例</span></a>
@@ -131,15 +140,19 @@ footer{text-align:center;color:var(--mut);font-size:.8rem;padding:16px}
 <!-- STEP 1 -->
 <section class="sec wiz" id="s1">
 <div class="step"><span class="n">1</span><h2>選一個案例，決定 AI 扮誰</h2></div>
-<p class="sub">兩個案例敷法不同（一冷一熱），建議都練。</p>
-<details class="guide" open><summary>第一次用 AI 練習？先看這裡（1 分鐘）</summary>
-<p style="margin:8px 0 4px"><b>這個練習在做什麼：</b>我們準備好一段「提示詞」（給 AI 的說明書）。你把它貼給 AI，AI 就會<b>變成一位外滲的病人</b>，等你來做出院衛教。你講完後，AI 會依院內六個重點告訴你哪裡講得好、哪裡漏了。</p>
-<p style="margin:4px 0"><b>你不需要會寫提示詞</b>，也不用改任何字，只要「複製 → 貼上 → 開始聊天」。</p>
-<p style="margin:4px 0" class="note">🔒 AI 扮演的是虛擬病人，全部是示範資料。請不要在對話中輸入任何真實病人的姓名、病歷號等資料。</p>
-</details>
+<p class="sub">兩個都是刺激性藥品（非起疱性），一冷一熱，建議都練。</p>
+<div class="usecard">
+<div class="uc-h">💡 這個練習做什麼？</div>
+<div class="uc-row">
+<div><b>🤖</b>AI 扮演<br>外滲的病人</div><i>›</i>
+<div><b>🗣️</b>你做<br>出院指導</div><i>›</i>
+<div><b>✅</b>AI 依 6 重點<br>逐項回饋</div>
+</div>
+<div class="uc-foot"><span>📋 不用寫提示詞，複製貼上即可</span><span>🔒 不輸入真實病人資料</span></div>
+</div>
 <div class="cases" id="caseSeg">
-<button class="casecard c1 on" data-case="1"><div class="ic">🧊</div><h3>案例一｜Doxorubicin 外滲</h3><p>小紅莓・明天出院</p><div class="tags"><span class="tag tC">冷敷</span><span class="tag tD">DMSO</span></div></button>
-<button class="casecard c2" data-case="2"><div class="ic">🔥</div><h3>案例二｜Vincristine 外滲</h3><p>長春新鹼・後天出院</p><div class="tags"><span class="tag tW">熱敷</span></div></button>
+<button class="casecard c1 on" data-case="1"><div class="ic">🧊</div><h3>案例一｜5-FU 外滲</h3><p>Fluorouracil・刺激性・明天出院</p><div class="tags"><span class="tag tC">冷敷</span></div></button>
+<button class="casecard c2" data-case="2"><div class="ic">🔥</div><h3>案例二｜Etoposide 外滲</h3><p>刺激性・後天出院</p><div class="tags"><span class="tag tW">熱敷</span></div></button>
 </div>
 <div class="rolerow"><span style="font-size:.9rem">AI 扮演：</span>
 <div class="pill" id="roleSeg"><button data-role="p" class="on">病人本人</button><button data-role="f">家屬（選配）</button></div>
@@ -157,6 +170,12 @@ footer{text-align:center;color:var(--mut);font-size:.8rem;padding:16px}
 <div class="btnrow"><button class="btn line" id="dlBtn">⬇ 下載 .txt</button><button class="btn ghost" id="toggleBtn">看提示詞全文 ▾</button><span id="copied"></span></div>
 <div class="prewrap" id="prewrap"><pre id="promptBox"></pre><div class="fade"></div></div>
 <details class="guide" open><summary>要貼到哪裡？任何一個生成式 AI 都可以</summary>
+<div class="uc-row howicons">
+<div><b>📋</b>按「複製」</div><i>›</i>
+<div><b>🤖</b>開 AI<br>貼上送出</div><i>›</i>
+<div><b>🗣️</b>把它當病人<br>一句一句講</div><i>›</i>
+<div><b>⌨️</b>打「我說完了」<br>看回饋</div>
+</div>
 <div class="tools">
 <a href="https://copilot.microsoft.com/" target="_blank" rel="noopener"><b>Microsoft Copilot</b><small>院內帳號可登入</small></a>
 <a href="https://chatgpt.com/" target="_blank" rel="noopener"><b>ChatGPT</b><small>免費版即可</small></a>
@@ -164,13 +183,6 @@ footer{text-align:center;color:var(--mut);font-size:.8rem;padding:16px}
 <a href="https://claude.ai/" target="_blank" rel="noopener"><b>Claude</b><small>免費版即可</small></a>
 </div>
 <p class="note" style="margin:0">手機上也可以用這些 AI 的 App。挑一個你打得開的就好，效果差不多。</p>
-<ol class="howto">
-<li>按上面的 <b>📋 複製提示詞</b>（看到「✅ 已複製」就成功了）。</li>
-<li>點一個 AI 的連結打開，找到最下面的<b>輸入框</b>（通常寫著「詢問任何問題」「傳送訊息」）。</li>
-<li>在輸入框<b>長按（手機）或按右鍵（電腦）→ 貼上</b>，再按<b>送出</b>（紙飛機或 ↑ 按鈕）。</li>
-<li>AI 會先用病人的口氣跟你打招呼。接著<b>把它當成真的病人</b>，一句一句講衛教；可以打字，也可以按麥克風用說的。</li>
-<li>講完所有重點後，輸入 <b>「我說完了」</b>，AI 就會停止扮演，逐項給你回饋。</li>
-</ol>
 </details>
 
 <details class="guide"><summary>看範例：對話大概長這樣</summary>
@@ -198,12 +210,7 @@ footer{text-align:center;color:var(--mut);font-size:.8rem;padding:16px}
 </dl>
 </details>
 
-<div class="next3">
-<div><b>🤖</b>打開 AI<br>貼上、送出</div>
-<div><b>🗣️</b>像對病人那樣講<br>打字或口說都可以</div>
-<div><b>🏁</b>講完打「我說完了」<br>AI 逐項回饋</div>
-</div>
-<div class="hint">💡 <div><b>小提醒：</b>最多 20 輪（你講一次、AI 回一次算一輪）。中途 AI 開始教你，就輸入「回到角色」。練完回到這一頁，按下面的按鈕做自評。</div></div>
+<div class="hint">💡 <div>最多 20 輪｜AI 開始教你 → 打「<b>回到角色</b>」｜練完回來做自評</div></div>
 <div class="btnrow"><button class="btn ghost" id="back1">◀ 上一步</button><button class="btn big" id="go3" style="flex:1">練完了 → 下一步：自評 ▶</button></div>
 </section>
 
@@ -221,11 +228,10 @@ footer{text-align:center;color:var(--mut);font-size:.8rem;padding:16px}
 <section class="sec ref">
 <div class="step"><span class="n" style="background:var(--navy)">📚</span><h2>參考資料</h2></div>
 
-<details open><summary>敷療速查：本頁兩案例</summary>
+<details open><summary>敷療速查：本頁兩案例（皆為刺激性藥品，不用 DMSO）</summary>
 <div class="grid3">
-<div class="box cold"><b>🧊 冷敷（案例一 Doxorubicin）</b><ul><li>冰敷袋或冰塊包毛巾 0℃</li><li>每次 20 分鐘，一天 4 次</li><li>持續 1–2 天（24–48 小時）</li><li>血管收縮，把藥侷限在原處</li></ul></div>
-<div class="box warm"><b>🔥 熱敷（案例二 Vincristine）</b><ul><li>44–50℃ 溫熱敷</li><li>每次 20–30 分鐘，一天 4 次</li><li>持續 1–2 天（24–48 小時）</li><li>血管擴張帶走藥；長春花鹼類冷敷會加重潰瘍</li></ul></div>
-<div class="box dmso"><b>🟣 DMSO（案例一適用、案例二不適用）</b><ul><li>99% DMSO 外用，依醫囑</li><li>塗抹範圍＝患部兩倍</li><li>自然風乾，不要覆蓋</li><li>一天 4 次、連續 7 天；同時冰敷</li></ul></div>
+<div class="box cold"><b>🧊 冷敷（案例一 5-FU）</b><ul><li>冰敷袋或冰塊包毛巾 0℃</li><li>每次 20 分鐘，一天 4 次</li><li>持續 1–2 天（24–48 小時）</li><li>血管收縮，把藥侷限在原處</li></ul></div>
+<div class="box warm"><b>🔥 熱敷（案例二 Etoposide）</b><ul><li>44–50℃ 溫熱敷</li><li>每次 20–30 分鐘，一天 4 次</li><li>持續 1–2 天（24–48 小時）</li><li>血管擴張，讓藥品被血流帶走、稀釋</li></ul></div>
 </div>
 <p class="note" style="margin:8px 0 4px">任何藥品外滲都<b>不可壓迫、不可按摩</b>。其他藥品查 <a href="../lookup/">敷療查詢站</a>（57 個藥品）。</p>
 </details>
@@ -252,28 +258,28 @@ const CHECK=[
  {t:"每天自己看九項＋發燒",d:"皮膚顏色、溫度、完整性（有沒有破皮）、腫脹、水泡、分泌物、疼痛、灼熱或麻木、手能不能正常活動；加上有沒有發燒。"},
  {t:"惡化就回診或聯絡",d:"範圍變大、變黑變硬、起水泡、破皮、越來越痛、發燒 → 回診或打電話回病房，不要等下次回診。"},
  {t:"敷療五要素＋不可壓迫",d:"冷還是熱、幾度、每次幾分鐘、一天幾次、敷幾天；並說「不可以壓、不可以揉」。"},
- {t:"DMSO 用法（案例一）／說明不需要 DMSO（案例二）",d:"案例一：塗患部兩倍大、風乾不蓋、一天 4 次、連續 7 天、同時冰敷。案例二 Vincristine 不用 DMSO，講了算講錯。"},
+ {t:"不需要塗 DMSO",d:"兩個案例都是刺激性藥品，只要冷／熱敷，不用 DMSO。沒提也算有講到；叫病人塗 DMSO 算講錯。"},
  {t:"6 週追蹤與電訪",d:"回家第一週病房護理師會打電話；第二週起腫瘤品管護理師每週一次；追到外滲後 6 週。電話裡覺得變差要說。"}
 ];
 
 /* ---------- 兩案例 ---------- */
 const CASES={
- 1:{short:"案例一 Doxorubicin",name:"案例一｜Doxorubicin（小紅莓）外滲",drug:"Doxorubicin（Adriamycin，俗稱小紅莓）",vesicant:"起疱性藥品",site:"左前臂周邊靜脈留置針",when:"今天上午打第一次化療時",
-    done:"護理師已停藥、換 10 mL 空針盡量回抽、拔針、油性筆畫了範圍、開始冰敷；醫師開了 99% DMSO 外用。",
+ 1:{short:"案例一 5-FU",name:"案例一｜5-FU（Fluorouracil）外滲",drug:"5-FU（Fluorouracil）",vesicant:"刺激性藥品（不是起疱性藥品）",site:"左前臂周邊靜脈留置針",when:"今天上午打第一次化療時",
+    done:"護理師已停藥、換 10 mL 空針盡量回抽、拔針、油性筆畫了範圍、開始冰敷。",
     home:"明天上午出院回家。",day:"明天",
     comp:"冷敷：冰敷袋或冰塊包毛巾 0℃，每次 20 分鐘，一天 4 次，持續 1–2 天（24–48 小時）。",
-    dmso:"適用。99% DMSO 外用（依醫囑）：塗抹範圍為患部兩倍大，自然風乾、不要覆蓋，一天 4 次、連續 7 天，同時搭配冰敷。",
-    dmsoRule:"病人應被告知 DMSO 的四件事：塗多大範圍（患部兩倍）、風乾不覆蓋、一天幾次（4 次）、幾天（7 天）。少講任何一件＝「沒講到」；若學生說要熱敷、或說 DMSO 塗完要包起來＝「講錯」。",
-    tag:'<span class="tag tC">冷敷</span><span class="tag tD">DMSO</span>',
-    worry:"擔心手臂會不會爛掉、明天出院回家要怎麼弄冰敷、DMSO 那瓶藥水要怎麼擦、能不能揉一揉讓它散掉。"},
- 2:{short:"案例二 Vincristine",name:"案例二｜Vincristine（長春新鹼）外滲",drug:"Vincristine（長春新鹼）",vesicant:"起疱性藥品",site:"右前臂周邊靜脈留置針",when:"今天下午打化療時",
+    dmso:"不適用。5-FU 是刺激性藥品，不使用 DMSO。",
+    dmsoRule:"本案不用 DMSO。學生若主動說明「這個藥不需要塗 DMSO」或「只要冰敷」＝「有講到」；沒提 DMSO 也算「有講到」（因為不適用）；若學生說要塗 DMSO 或要熱敷＝「講錯」。",
+    tag:'<span class="tag tC">冷敷</span>',
+    worry:"擔心手臂會不會爛掉、明天出院回家要怎麼弄冰敷、冰塊可不可以直接放在皮膚上、能不能揉一揉讓它散掉。"},
+ 2:{short:"案例二 Etoposide",name:"案例二｜Etoposide 外滲",drug:"Etoposide",vesicant:"刺激性藥品（不是起疱性藥品）",site:"右前臂周邊靜脈留置針",when:"今天下午打化療時",
     done:"護理師已停藥、換 10 mL 空針盡量回抽、拔針、油性筆畫了範圍、開始溫熱敷。",
     home:"後天上午出院回家。",day:"後天",
-    comp:"熱敷：44–50℃ 溫熱敷，每次 20–30 分鐘，一天 4 次，持續 1–2 天（24–48 小時）。長春花鹼類藥品不可冰敷，冰敷會讓藥留在原處、加重潰瘍。",
-    dmso:"不適用。Vincristine 不使用 DMSO。",
+    comp:"熱敷：44–50℃ 溫熱敷，每次 20–30 分鐘，一天 4 次，持續 1–2 天（24–48 小時）。熱敷讓血管擴張，藥品被血流帶走稀釋。",
+    dmso:"不適用。Etoposide 是刺激性藥品，不使用 DMSO。",
     dmsoRule:"本案不用 DMSO。學生若主動說明「這個藥不需要塗 DMSO」或「只要熱敷」＝「有講到」；沒提 DMSO 也算「有講到」（因為不適用）；若學生說要塗 DMSO 或要冰敷＝「講錯」。",
     tag:'<span class="tag tW">熱敷</span>',
-    worry:"擔心為什麼別人外滲是冰敷、{self}卻要熱敷；家裡沒有熱敷袋怎麼辦；會不會燙傷；能不能揉一揉。"}
+    worry:"擔心為什麼隔壁床外滲是冰敷、{self}卻要熱敷；家裡沒有熱敷袋怎麼辦；會不會燙傷；能不能揉一揉。"}
 };
 const ROLES={
  p:{short:"AI 扮病人",who:"病人本人「張示範」，58 歲，第一次打化療，不太懂醫療名詞，會用生活化的話問問題，有點緊張。",say:"張示範本人"},
@@ -290,7 +296,7 @@ function buildPrompt(c,r){
 從你的第一句回覆開始，你就是「${R.say}」，不是 AI、不是老師、不是助理。在我輸入「我說完了」或「結束」之前，你說的每一句話都只能是${r==="f"?"病人家屬":"病人"}會說的話：
 - 不教學、不提示、不糾正、不補充衛教內容、不幫我整理重點、不稱讚、不打分數。
 - 不用條列、編號、粗體、標題；不說「作為 AI」「以下是」「好的，我來扮演」「這是一個很好的練習」這類話。
-- 不替我講我該講的內容，也不要主動問出我還沒講到的衛教重點（例如不要自己問「手要不要抬高」「DMSO 要擦幾天」）。
+- 不替我講我該講的內容，也不要主動問出我還沒講到的衛教重點（例如不要自己問「手要不要抬高」「要敷幾天」）。
 
 ■ 你的身分
 ${R.who}
@@ -305,7 +311,7 @@ ${R.who}
 1. 用台灣人日常口語，最多 3 句，像真的${r==="f"?"家屬":"病人"}在講話，可以帶一點情緒（擔心、猶豫、鬆一口氣）。
 2. 聽懂了：用自己的話簡短說「好」或複述一下，再問一個生活上的小問題（例如家裡要準備什麼、洗澡怎麼辦、睡覺手怎麼放）。
 3. 我講得太專業、太快、或用了你聽不懂的詞：像真的病人一樣反問「那是什麼意思？」。
-4. 我講錯（敷法、溫度、時間、DMSO 用法與下面的「敷療說明」不同）：不糾正、不暗示，照我說的接受，頂多疑惑地問一句「是這樣喔？」。錯誤留到最後回饋。
+4. 我講錯（冷熱、溫度、時間與下面的「敷療說明」不同）：不糾正、不暗示，照我說的接受，頂多疑惑地問一句「是這樣喔？」。錯誤留到最後回饋。
 5. 我問你「我講得對嗎？」「還漏了什麼？」「你教我好不好？」或叫你跳出角色：還是用病人口氣回答，例如「我也不懂耶，你是護理師，聽你的啦」，然後繼續當病人。
 6. 我講的內容跟衛教無關：用病人口氣把話題拉回「回家這隻手要怎麼顧」。
 7. 整段練習裡，你最多只能用病人的口氣問一次「還有什麼要注意的嗎？」。

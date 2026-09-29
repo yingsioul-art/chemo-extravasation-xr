@@ -37,12 +37,12 @@ a.tile:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.1)}
 </div>
 </main>
 <script>
-/* 學習順序：前測 → 四站（自學／動手／查詢／練習）→ 後測。進度存在本機瀏覽器（各站完成時寫入 'xrprog'） */
+/* 學習順序：前測 → 四站（預防與辨識／外滲當下怎麼做／查詢／練習）→ 後測。進度存在本機瀏覽器（各站完成時寫入 'xrprog'） */
 const P = (() => { try { return JSON.parse(localStorage.getItem("xrprog") || "{}") || {}; } catch (e) { return {}; } })();
 const mark = k => { try { P[k] = P[k] || Date.now(); localStorage.setItem("xrprog", JSON.stringify(P)); } catch (e) {} };
 const STATIONS = [
-  ["learn", "自學", "作答完 12 題"],
-  ["handson", "動手", "走完 2D 案例一，或開啟 3D VR"],
+  ["learn", "預防與辨識", "作答完 12 題"],
+  ["handson", "外滲當下怎麼做", "走完 2D 案例一，或開啟 3D VR"],
   ["lookup", "查詢", "做完「小測驗」分頁 4 題"],
   ["coach", "練習", "完成自評六項"],
 ];
@@ -62,7 +62,7 @@ function render() {
   document.getElementById("t-post").classList.toggle("hide", !postOpen);
   if (postOpen) tag("t-post", post ? "done" : "todo", post ? "✓ 已完成，辛苦了！" : "▶ 最後一步");
   const g = document.getElementById("guide-txt");
-  if (!pre) g.innerHTML = "<b>第一步：請先完成前測。</b>完成後，自學、動手、查詢、練習四站才會開啟。";
+  if (!pre) g.innerHTML = "<b>第一步：請先完成前測。</b>完成後，預防與辨識、外滲當下怎麼做、查詢、練習四站才會開啟。";
   else if (!postOpen) g.innerHTML = `<b>前測完成！</b>請完成下面四站，全部完成後會出現後測。還差：${left.join("、")}。`;
   else if (!post) g.innerHTML = "<b>四站都完成了！</b>最後請做後測，並填寫課程滿意度。";
   else g.innerHTML = "<b>全部完成，謝謝你！</b>各站仍可隨時回來複習。";

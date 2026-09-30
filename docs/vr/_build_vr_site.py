@@ -40,7 +40,7 @@ for k, src in SKYS.items():
 
 # ---------- 圖卡：依主檔名找來源 ----------
 def find(stem):
-    for d in (VR3 / "cards", VR3 / "cards2", LOOKC, HERE / "_extra", HERE / "_extra/hs", HERE / "_extra/lookup"):
+    for d in (VR3 / "cards", VR3 / "cards2", LOOKC, HERE / "_extra", HERE / "_extra/hs", HERE / "_extra/lookup", HERE / "_extra/lookupvr"):
         for ext in (".png", ".jpg", ".jpeg"):
             p = d / f"{stem}{ext}"
             if p.exists():
@@ -48,7 +48,7 @@ def find(stem):
     raise FileNotFoundError(stem)
 
 SIZES = {}
-def card(stem):
+def card(stem, q=86):
     """複製並壓縮一張圖卡，回傳網站用檔名；同時記下原始比例。"""
     if stem in SIZES:
         return SIZES[stem]["f"]
@@ -64,7 +64,7 @@ def card(stem):
     if alpha:
         im.save(A / "cards" / f, optimize=True)
     else:
-        im.save(A / "cards" / f, "JPEG", quality=86, optimize=True)
+        im.save(A / "cards" / f, "JPEG", quality=q, optimize=True)
     SIZES[stem] = {"f": f, "w": im.width, "h": im.height}
     return f
 
@@ -144,8 +144,12 @@ steps = [
      "ring": [{"img": card(k), "au": ("V" + k[1:]) if k != "LQR" else None} for k in
               ("LA01", "LA02", "LA03", "LB00", "LB01", "LB02", "LB03", "LB04", "LB05", "LP1", "LP2", "LP3", "LP4", "LP5", "LQR")]},
 ]
+# 9/30：頭顯內查詢站（VR 查詢面板）：藥品卡＋藥名索引＋作法與原理（沿用環繞卡前 9 張）
+from _build_vr_lookup import build as build_lookup
+LOOKVR = build_lookup(card)
+LOOKVR["guide"] = [card(k) for k in ("LA01", "LA02", "LA03", "LB00", "LB01", "LB02", "LB03", "LB04", "LB05")]
 common = {"mute": card("MUTE"), "listen": card("LISTENQ"), "start": card("W_START")}
-json.dump({"ver": int(__import__("time").time()), "steps": steps, "common": common, "paint": PAINT, "sizes": {v["f"]: [v["w"], v["h"]] for v in SIZES.values()}},
+json.dump({"ver": int(__import__("time").time()), "lookupVR": LOOKVR, "steps": steps, "common": common, "paint": PAINT, "sizes": {v["f"]: [v["w"], v["h"]] for v in SIZES.values()}},
           open(A / "scenes.json", "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 
 # 清掉已不用的舊圖卡

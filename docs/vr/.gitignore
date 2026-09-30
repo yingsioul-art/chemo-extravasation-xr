@@ -1,3 +1,4 @@
 __pycache__/
 # 動手版搬來的新圖卡中間檔（由 _build_vr_handson.py 重產；網站只用 assets/cards/ 壓縮後的版本）
 _extra/hs/*.png
+_extra/lookupvr/

@@ -1,5 +1,391 @@
 {
- "ver": 1790690265,
+ "ver": 1790730912,
+ "lookupVR": {
+  "drugs": [
+   {
+    "g": "Arsenic trioxide",
+    "card": "LK_Arsenic_trioxide.jpg",
+    "btn": "LKB_Arsenic_trioxide.jpg"
+   },
+   {
+    "g": "Asparaginase",
+    "card": "LK_Asparaginase.jpg",
+    "btn": "LKB_Asparaginase.jpg"
+   },
+   {
+    "g": "Azacitidine",
+    "card": "LK_Azacitidine.jpg",
+    "btn": "LKB_Azacitidine.jpg"
+   },
+   {
+    "g": "Bendamustine",
+    "card": "LK_Bendamustine.jpg",
+    "btn": "LKB_Bendamustine.jpg"
+   },
+   {
+    "g": "Bleomycin",
+    "card": "LK_Bleomycin.jpg",
+    "btn": "LKB_Bleomycin.jpg"
+   },
+   {
+    "g": "Bortezomib",
+    "card": "LK_Bortezomib.jpg",
+    "btn": "LKB_Bortezomib.jpg"
+   },
+   {
+    "g": "Brentuximab vedotin",
+    "card": "LK_Brentuximab_vedotin.jpg",
+    "btn": "LKB_Brentuximab_vedotin.jpg"
+   },
+   {
+    "g": "Busulfan",
+    "card": "LK_Busulfan.jpg",
+    "btn": "LKB_Busulfan.jpg"
+   },
+   {
+    "g": "Cabazitaxel",
+    "card": "LK_Cabazitaxel.jpg",
+    "btn": "LKB_Cabazitaxel.jpg"
+   },
+   {
+    "g": "Carboplatin",
+    "card": "LK_Carboplatin.jpg",
+    "btn": "LKB_Carboplatin.jpg"
+   },
+   {
+    "g": "Carfilzomib",
+    "card": "LK_Carfilzomib.jpg",
+    "btn": "LKB_Carfilzomib.jpg"
+   },
+   {
+    "g": "Carmustine",
+    "card": "LK_Carmustine.jpg",
+    "btn": "LKB_Carmustine.jpg"
+   },
+   {
+    "g": "Cisplatin",
+    "card": "LK_Cisplatin.jpg",
+    "btn": "LKB_Cisplatin.jpg"
+   },
+   {
+    "g": "Cladribine",
+    "card": "LK_Cladribine.jpg",
+    "btn": "LKB_Cladribine.jpg"
+   },
+   {
+    "g": "Clofarabine",
+    "card": "LK_Clofarabine.jpg",
+    "btn": "LKB_Clofarabine.jpg"
+   },
+   {
+    "g": "Cyclophosphamide",
+    "card": "LK_Cyclophosphamide.jpg",
+    "btn": "LKB_Cyclophosphamide.jpg"
+   },
+   {
+    "g": "Cytarabine",
+    "card": "LK_Cytarabine.jpg",
+    "btn": "LKB_Cytarabine.jpg"
+   },
+   {
+    "g": "Dacarbazine",
+    "card": "LK_Dacarbazine.jpg",
+    "btn": "LKB_Dacarbazine.jpg"
+   },
+   {
+    "g": "Dactinomycin",
+    "card": "LK_Dactinomycin.jpg",
+    "btn": "LKB_Dactinomycin.jpg"
+   },
+   {
+    "g": "Decitabine",
+    "card": "LK_Decitabine.jpg",
+    "btn": "LKB_Decitabine.jpg"
+   },
+   {
+    "g": "Docetaxel",
+    "card": "LK_Docetaxel.jpg",
+    "btn": "LKB_Docetaxel.jpg"
+   },
+   {
+    "g": "Doxorubicin",
+    "card": "LK_Doxorubicin.jpg",
+    "btn": "LKB_Doxorubicin.jpg"
+   },
+   {
+    "g": "Doxorubicin, liposomal",
+    "card": "LK_Doxorubicin_liposomal.jpg",
+    "btn": "LKB_Doxorubicin_liposomal.jpg"
+   },
+   {
+    "g": "Enfortumab vedotin",
+    "card": "LK_Enfortumab_vedotin.jpg",
+    "btn": "LKB_Enfortumab_vedotin.jpg"
+   },
+   {
+    "g": "Epirubicin",
+    "card": "LK_Epirubicin.jpg",
+    "btn": "LKB_Epirubicin.jpg"
+   },
+   {
+    "g": "Eribulin",
+    "card": "LK_Eribulin.jpg",
+    "btn": "LKB_Eribulin.jpg"
+   },
+   {
+    "g": "Etoposide",
+    "card": "LK_Etoposide.jpg",
+    "btn": "LKB_Etoposide.jpg"
+   },
+   {
+    "g": "Fludarabine",
+    "card": "LK_Fludarabine.jpg",
+    "btn": "LKB_Fludarabine.jpg"
+   },
+   {
+    "g": "Fluorouracil",
+    "card": "LK_Fluorouracil.jpg",
+    "btn": "LKB_Fluorouracil.jpg"
+   },
+   {
+    "g": "Gemcitabine",
+    "card": "LK_Gemcitabine.jpg",
+    "btn": "LKB_Gemcitabine.jpg"
+   },
+   {
+    "g": "Gemtuzumab ozogamicin",
+    "card": "LK_Gemtuzumab_ozogamicin.jpg",
+    "btn": "LKB_Gemtuzumab_ozogamicin.jpg"
+   },
+   {
+    "g": "Idarubicin",
+    "card": "LK_Idarubicin.jpg",
+    "btn": "LKB_Idarubicin.jpg"
+   },
+   {
+    "g": "Ifosfamide",
+    "card": "LK_Ifosfamide.jpg",
+    "btn": "LKB_Ifosfamide.jpg"
+   },
+   {
+    "g": "Inotuzumab ozogamicin",
+    "card": "LK_Inotuzumab_ozogamicin.jpg",
+    "btn": "LKB_Inotuzumab_ozogamicin.jpg"
+   },
+   {
+    "g": "Irinotecan",
+    "card": "LK_Irinotecan.jpg",
+    "btn": "LKB_Irinotecan.jpg"
+   },
+   {
+    "g": "Irinotecan, liposomal",
+    "card": "LK_Irinotecan_liposomal.jpg",
+    "btn": "LKB_Irinotecan_liposomal.jpg"
+   },
+   {
+    "g": "Ixabepilone",
+    "card": "LK_Ixabepilone.jpg",
+    "btn": "LKB_Ixabepilone.jpg"
+   },
+   {
+    "g": "Melphalan",
+    "card": "LK_Melphalan.jpg",
+    "btn": "LKB_Melphalan.jpg"
+   },
+   {
+    "g": "Methotrexate",
+    "card": "LK_Methotrexate.jpg",
+    "btn": "LKB_Methotrexate.jpg"
+   },
+   {
+    "g": "Mitomycin",
+    "card": "LK_Mitomycin.jpg",
+    "btn": "LKB_Mitomycin.jpg"
+   },
+   {
+    "g": "Mitoxantrone",
+    "card": "LK_Mitoxantrone.jpg",
+    "btn": "LKB_Mitoxantrone.jpg"
+   },
+   {
+    "g": "Nelarabine",
+    "card": "LK_Nelarabine.jpg",
+    "btn": "LKB_Nelarabine.jpg"
+   },
+   {
+    "g": "Oxaliplatin",
+    "card": "LK_Oxaliplatin.jpg",
+    "btn": "LKB_Oxaliplatin.jpg"
+   },
+   {
+    "g": "Paclitaxel",
+    "card": "LK_Paclitaxel.jpg",
+    "btn": "LKB_Paclitaxel.jpg"
+   },
+   {
+    "g": "Paclitaxel, albumin-bound",
+    "card": "LK_Paclitaxel_albumin_bound.jpg",
+    "btn": "LKB_Paclitaxel_albumin_bound.jpg"
+   },
+   {
+    "g": "Pemetrexed",
+    "card": "LK_Pemetrexed.jpg",
+    "btn": "LKB_Pemetrexed.jpg"
+   },
+   {
+    "g": "Polatuzumab vedotin",
+    "card": "LK_Polatuzumab_vedotin.jpg",
+    "btn": "LKB_Polatuzumab_vedotin.jpg"
+   },
+   {
+    "g": "Pralatrexate",
+    "card": "LK_Pralatrexate.jpg",
+    "btn": "LKB_Pralatrexate.jpg"
+   },
+   {
+    "g": "Sacituzumab govitecan",
+    "card": "LK_Sacituzumab_govitecan.jpg",
+    "btn": "LKB_Sacituzumab_govitecan.jpg"
+   },
+   {
+    "g": "Thiotepa",
+    "card": "LK_Thiotepa.jpg",
+    "btn": "LKB_Thiotepa.jpg"
+   },
+   {
+    "g": "Topotecan",
+    "card": "LK_Topotecan.jpg",
+    "btn": "LKB_Topotecan.jpg"
+   },
+   {
+    "g": "Trabectedin",
+    "card": "LK_Trabectedin.jpg",
+    "btn": "LKB_Trabectedin.jpg"
+   },
+   {
+    "g": "Trastuzumab deruxtecan",
+    "card": "LK_Trastuzumab_deruxtecan.jpg",
+    "btn": "LKB_Trastuzumab_deruxtecan.jpg"
+   },
+   {
+    "g": "Trastuzumab emtansine",
+    "card": "LK_Trastuzumab_emtansine.jpg",
+    "btn": "LKB_Trastuzumab_emtansine.jpg"
+   },
+   {
+    "g": "Vinblastine",
+    "card": "LK_Vinblastine.jpg",
+    "btn": "LKB_Vinblastine.jpg"
+   },
+   {
+    "g": "Vincristine",
+    "card": "LK_Vincristine.jpg",
+    "btn": "LKB_Vincristine.jpg"
+   },
+   {
+    "g": "Vinorelbine",
+    "card": "LK_Vinorelbine.jpg",
+    "btn": "LKB_Vinorelbine.jpg"
+   }
+  ],
+  "pages": [
+   {
+    "head": "LKI_1.jpg",
+    "idx": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14
+    ]
+   },
+   {
+    "head": "LKI_2.jpg",
+    "idx": [
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     25,
+     26,
+     27,
+     28,
+     29
+    ]
+   },
+   {
+    "head": "LKI_3.jpg",
+    "idx": [
+     30,
+     31,
+     32,
+     33,
+     34,
+     35,
+     36,
+     37,
+     38,
+     39,
+     40,
+     41,
+     42,
+     43,
+     44
+    ]
+   },
+   {
+    "head": "LKI_4.jpg",
+    "idx": [
+     45,
+     46,
+     47,
+     48,
+     49,
+     50,
+     51,
+     52,
+     53,
+     54,
+     55,
+     56
+    ]
+   }
+  ],
+  "nav": {
+   "prev": "LKN_prev.jpg",
+   "next": "LKN_next.jpg",
+   "index": "LKN_index.jpg",
+   "guide": "LKN_guide.jpg",
+   "close": "LKN_close.jpg"
+  },
+  "guide": [
+   "LA01.jpg",
+   "LA02.jpg",
+   "LA03.jpg",
+   "LB00.jpg",
+   "LB01.jpg",
+   "LB02.jpg",
+   "LB03.jpg",
+   "LB04.jpg",
+   "LB05.jpg"
+  ]
+ },
  "steps": [
   {
    "id": "intro",
@@ -1524,6 +1910,498 @@
   "LQR.jpg": [
    1600,
    900
+  ],
+  "LK_Arsenic_trioxide.jpg": [
+   2048,
+   1152
+  ],
+  "LKB_Arsenic_trioxide.jpg": [
+   896,
+   192
+  ],
+  "LK_Asparaginase.jpg": [
+   2048,
+   1152
+  ],
+  "LKB_Asparaginase.jpg": [
+   896,
+   192
+  ],
+  "LK_Azacitidine.jpg": [
+   2048,
+   1152
+  ],
+  "LKB_Azacitidine.jpg": [
+   896,
+   192
+  ],
+  "LK_Bendamustine.jpg": [
+   2048,
+   1152
+  ],
+  "LKB_Bendamustine.jpg": [
+   896,
+   192
+  ],
+  "LK_Bleomycin.jpg": [
+   2048,
+   1152
+  ],
+  "LKB_Bleomycin.jpg": [
+   896,
+   192
+  ],
+  "LK_Bortezomib.jpg": [
+   2048,
+   1152
+  ],
+  "LKB_Bortezomib.jpg": [
+   896,
+   192
+  ],
+  "LK_Brentuximab_vedotin.jpg": [
+   2048,
+   1152
+  ],
+  "LKB_Brentuximab_vedotin.jpg": [
+   896,
+   192
+  ],
+  "LK_Busulfan.jpg": [
+   2048,
+   1152
+  ],
+  "LKB_Busulfan.jpg": [
+   896,
+   192
+  ],
+  "LK_Cabazitaxel.jpg": [
+   2048,
+   1152
+  ],
+  "LKB_Cabazitaxel.jpg": [
+   896,
+   192
+  ],
+  "LK_Carboplatin.jpg": [
+   2048,
+   1152
+  ],
+  "LKB_Carboplatin.jpg": [
+   896,
+   192
+  ],
+  "LK_Carfilzomib.jpg": [
+   2048,
+   1152
+  ],
+  "LKB_Carfilzomib.jpg": [
+   896,
+   192
+  ],
+  "LK_Carmustine.jpg": [
+   2048,
+   1152
+  ],
+  "LKB_Carmustine.jpg": [
+   896,
+   192
+  ],
+  "LK_Cisplatin.jpg": [
+   2048,
+   1152
+  ],
+  "LKB_Cisplatin.jpg": [
+   896,
+   192
+  ],
+  "LK_Cladribine.jpg": [
+   2048,
+   1152
+  ],
+  "LKB_Cladribine.jpg": [
+   896,
+   192
+  ],
+  "LK_Clofarabine.jpg": [
+   2048,
+   1152
+  ],
+  "LKB_Clofarabine.jpg": [
+   896,
+   192
+  ],
+  "LK_Cyclophosphamide.jpg": [
+   2048,
+   1152
+  ],
+  "LKB_Cyclophosphamide.jpg": [
+   896,
+   192
+  ],
+  "LK_Cytarabine.jpg": [
+   2048,
+   1152
+  ],
+  "LKB_Cytarabine.jpg": [
+   896,
+   192
+  ],
+  "LK_Dacarbazine.jpg": [
+   2048,
+   1152
+  ],
+  "LKB_Dacarbazine.jpg": [
+   896,
+   192
+  ],
+  "LK_Dactinomycin.jpg": [
+   2048,
+   1152
+  ],
+  "LKB_Dactinomycin.jpg": [
+   896,
+   192
+  ],
+  "LK_Decitabine.jpg": [
+   2048,
+   1152
+  ],
+  "LKB_Decitabine.jpg": [
+   896,
+   192
+  ],
+  "LK_Docetaxel.jpg": [
+   2048,
+   1152
+  ],
+  "LKB_Docetaxel.jpg": [
+   896,
+   192
+  ],
+  "LK_Doxorubicin.jpg": [
+   2048,
+   1152
+  ],
+  "LKB_Doxorubicin.jpg": [
+   896,
+   192
+  ],
+  "LK_Doxorubicin_liposomal.jpg": [
+   2048,
+   1152
+  ],
+  "LKB_Doxorubicin_liposomal.jpg": [
+   896,
+   192
+  ],
+  "LK_Enfortumab_vedotin.jpg": [
+   2048,
+   1152
+  ],
+  "LKB_Enfortumab_vedotin.jpg": [
+   896,
+   192
+  ],
+  "LK_Epirubicin.jpg": [
+   2048,
+   1152
+  ],
+  "LKB_Epirubicin.jpg": [
+   896,
+   192
+  ],
+  "LK_Eribulin.jpg": [
+   2048,
+   1152
+  ],
+  "LKB_Eribulin.jpg": [
+   896,
+   192
+  ],
+  "LK_Etoposide.jpg": [
+   2048,
+   1152
+  ],
+  "LKB_Etoposide.jpg": [
+   896,
+   192
+  ],
+  "LK_Fludarabine.jpg": [
+   2048,
+   1152
+  ],
+  "LKB_Fludarabine.jpg": [
+   896,
+   192
+  ],
+  "LK_Fluorouracil.jpg": [
+   2048,
+   1152
+  ],
+  "LKB_Fluorouracil.jpg": [
+   896,
+   192
+  ],
+  "LK_Gemcitabine.jpg": [
+   2048,
+   1152
+  ],
+  "LKB_Gemcitabine.jpg": [
+   896,
+   192
+  ],
+  "LK_Gemtuzumab_ozogamicin.jpg": [
+   2048,
+   1152
+  ],
+  "LKB_Gemtuzumab_ozogamicin.jpg": [
+   896,
+   192
+  ],
+  "LK_Idarubicin.jpg": [
+   2048,
+   1152
+  ],
+  "LKB_Idarubicin.jpg": [
+   896,
+   192
+  ],
+  "LK_Ifosfamide.jpg": [
+   2048,
+   1152
+  ],
+  "LKB_Ifosfamide.jpg": [
+   896,
+   192
+  ],
+  "LK_Inotuzumab_ozogamicin.jpg": [
+   2048,
+   1152
+  ],
+  "LKB_Inotuzumab_ozogamicin.jpg": [
+   896,
+   192
+  ],
+  "LK_Irinotecan.jpg": [
+   2048,
+   1152
+  ],
+  "LKB_Irinotecan.jpg": [
+   896,
+   192
+  ],
+  "LK_Irinotecan_liposomal.jpg": [
+   2048,
+   1152
+  ],
+  "LKB_Irinotecan_liposomal.jpg": [
+   896,
+   192
+  ],
+  "LK_Ixabepilone.jpg": [
+   2048,
+   1152
+  ],
+  "LKB_Ixabepilone.jpg": [
+   896,
+   192
+  ],
+  "LK_Melphalan.jpg": [
+   2048,
+   1152
+  ],
+  "LKB_Melphalan.jpg": [
+   896,
+   192
+  ],
+  "LK_Methotrexate.jpg": [
+   2048,
+   1152
+  ],
+  "LKB_Methotrexate.jpg": [
+   896,
+   192
+  ],
+  "LK_Mitomycin.jpg": [
+   2048,
+   1152
+  ],
+  "LKB_Mitomycin.jpg": [
+   896,
+   192
+  ],
+  "LK_Mitoxantrone.jpg": [
+   2048,
+   1152
+  ],
+  "LKB_Mitoxantrone.jpg": [
+   896,
+   192
+  ],
+  "LK_Nelarabine.jpg": [
+   2048,
+   1152
+  ],
+  "LKB_Nelarabine.jpg": [
+   896,
+   192
+  ],
+  "LK_Oxaliplatin.jpg": [
+   2048,
+   1152
+  ],
+  "LKB_Oxaliplatin.jpg": [
+   896,
+   192
+  ],
+  "LK_Paclitaxel.jpg": [
+   2048,
+   1152
+  ],
+  "LKB_Paclitaxel.jpg": [
+   896,
+   192
+  ],
+  "LK_Paclitaxel_albumin_bound.jpg": [
+   2048,
+   1152
+  ],
+  "LKB_Paclitaxel_albumin_bound.jpg": [
+   896,
+   192
+  ],
+  "LK_Pemetrexed.jpg": [
+   2048,
+   1152
+  ],
+  "LKB_Pemetrexed.jpg": [
+   896,
+   192
+  ],
+  "LK_Polatuzumab_vedotin.jpg": [
+   2048,
+   1152
+  ],
+  "LKB_Polatuzumab_vedotin.jpg": [
+   896,
+   192
+  ],
+  "LK_Pralatrexate.jpg": [
+   2048,
+   1152
+  ],
+  "LKB_Pralatrexate.jpg": [
+   896,
+   192
+  ],
+  "LK_Sacituzumab_govitecan.jpg": [
+   2048,
+   1152
+  ],
+  "LKB_Sacituzumab_govitecan.jpg": [
+   896,
+   192
+  ],
+  "LK_Thiotepa.jpg": [
+   2048,
+   1152
+  ],
+  "LKB_Thiotepa.jpg": [
+   896,
+   192
+  ],
+  "LK_Topotecan.jpg": [
+   2048,
+   1152
+  ],
+  "LKB_Topotecan.jpg": [
+   896,
+   192
+  ],
+  "LK_Trabectedin.jpg": [
+   2048,
+   1152
+  ],
+  "LKB_Trabectedin.jpg": [
+   896,
+   192
+  ],
+  "LK_Trastuzumab_deruxtecan.jpg": [
+   2048,
+   1152
+  ],
+  "LKB_Trastuzumab_deruxtecan.jpg": [
+   896,
+   192
+  ],
+  "LK_Trastuzumab_emtansine.jpg": [
+   2048,
+   1152
+  ],
+  "LKB_Trastuzumab_emtansine.jpg": [
+   896,
+   192
+  ],
+  "LK_Vinblastine.jpg": [
+   2048,
+   1152
+  ],
+  "LKB_Vinblastine.jpg": [
+   896,
+   192
+  ],
+  "LK_Vincristine.jpg": [
+   2048,
+   1152
+  ],
+  "LKB_Vincristine.jpg": [
+   896,
+   192
+  ],
+  "LK_Vinorelbine.jpg": [
+   2048,
+   1152
+  ],
+  "LKB_Vinorelbine.jpg": [
+   896,
+   192
+  ],
+  "LKI_1.jpg": [
+   2048,
+   384
+  ],
+  "LKI_2.jpg": [
+   2048,
+   384
+  ],
+  "LKI_3.jpg": [
+   2048,
+   384
+  ],
+  "LKI_4.jpg": [
+   2048,
+   384
+  ],
+  "LKN_prev.jpg": [
+   896,
+   256
+  ],
+  "LKN_next.jpg": [
+   896,
+   256
+  ],
+  "LKN_index.jpg": [
+   896,
+   256
+  ],
+  "LKN_guide.jpg": [
+   896,
+   256
+  ],
+  "LKN_close.jpg": [
+   896,
+   256
   ],
   "MUTE.jpg": [
    1600,

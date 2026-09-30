@@ -186,18 +186,18 @@ function renderLK(){
   const ov=$("#overlay"), L=D.lookupVR; clear(ov);
   // 面板跟著開啟當下的視線（水平＋俯仰），以眼睛高度 1.6 m 為中心
   const g=document.createElement("a-entity"); g.setAttribute("position","0 1.6 0"); g.setAttribute("rotation",`${LKV.pitch*180/Math.PI} ${LKV.yaw*180/Math.PI} 0`); ov.appendChild(g);
-  const Z=-3.0, Y=-1.35;   // 下面的 y 值沿用原本（相對地面），扣掉 1.35 後以視線為中心
-  if(LKV.mode==="drug"){ const d=L.drugs[LKV.i]; mk(g,d.card,{x:0,y:1.8+Y,z:Z,w:2.9}); T("view_drug",{item:d.g}); }
-  else if(LKV.mode==="guide"){ mk(g,L.guide[LKV.i],{x:0,y:1.8+Y,z:Z,w:2.9}); }
-  else { const pg=L.pages[LKV.page]; mk(g,pg.head,{x:0,y:2.8+Y,z:Z,w:2.3});
+  const Z=-2.5, Y=-1.55;   // 9/30：拉近到 2.5 m、卡片中心對準視線（再往下 0.2 m 讓按鈕列也在視野內）
+  if(LKV.mode==="drug"){ const d=L.drugs[LKV.i]; mk(g,d.card,{x:0,y:1.85+Y,z:Z,w:3.0}); T("view_drug",{item:d.g}); }
+  else if(LKV.mode==="guide"){ mk(g,L.guide[LKV.i],{x:0,y:1.85+Y,z:Z,w:3.0}); }
+  else { const pg=L.pages[LKV.page]; mk(g,pg.head,{x:0,y:2.85+Y,z:Z,w:2.4});
     pg.idx.forEach((di,k)=>{ const r=Math.floor(k/3), c=k%3;
-      mk(g,L.drugs[di].btn,{x:(c-1)*0.98,y:2.33-r*0.33+Y,z:Z,w:0.92,click:()=>{LKV.mode="drug";LKV.i=di;renderLK();}}); }); }
+      mk(g,L.drugs[di].btn,{x:(c-1)*1.12,y:2.4-r*0.38+Y,z:Z,w:1.06,click:()=>{LKV.mode="drug";LKV.i=di;renderLK();}}); }); }
   const N=L.nav, move=k=>{ const n=LKV.mode==="drug"?L.drugs.length:LKV.mode==="guide"?L.guide.length:L.pages.length;
       if(LKV.mode==="index") LKV.page=(LKV.page+k+n)%n; else LKV.i=(LKV.i+k+n)%n; renderLK(); };
   [["prev",()=>move(-1)],["next",()=>move(1)],
    ["index",()=>{ if(LKV.mode==="drug") LKV.page=Math.floor(LKV.i/LKPER()); LKV.mode="index"; renderLK(); }],
    ["guide",()=>{ LKV.mode="guide"; LKV.i=0; renderLK(); }],
-   ["close",closeLK]].forEach(([k,fn],n)=>mk(g,N[k],{x:(n-2)*0.66,y:0.5+Y,z:Z+0.2,rx:-15,w:0.6,click:fn}));
+   ["close",closeLK]].forEach(([k,fn],n)=>mk(g,N[k],{x:(n-2)*0.68,y:(LKV.mode==="index"?0.5:0.72)+Y,z:Z+0.15,rx:-12,w:0.64,click:fn}));
   refreshRay();
 }
 function closeLK(){ if(!LKV) return; LKV=null; clear($("#overlay")); stageActive(true); T("close_panel_vr",{item:D.steps[cur].id}); }

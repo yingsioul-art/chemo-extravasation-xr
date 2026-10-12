@@ -130,7 +130,7 @@ textarea{width:100%;min-height:90px;font-size:1rem;padding:10px;border:2px solid
   <div class="top"><span><span id="sat-phase" class="tag"></span> <span id="sat-code"></span></span><span>最後一部分｜課程滿意度</span></div>
   <div class="card">
     <h2>課程滿意度</h2>
-    <div class="sq" id="sq-DEVICE"><p class="t">這次你主要用哪一個裝置練習網頁版 VR 教材？</p><div class="choice" id="dev"></div></div>
+    <div class="sq" id="sq-DEVICE"><p class="t">這次你用哪些裝置練習網頁版 VR 教材？（可複選）</p><div class="choice" id="dev"></div></div>
     <p class="mut" id="sat-hint">請先選擇裝置，再回答下面的滿意度題目（1＝非常不同意、3＝普通、5＝非常同意）。</p>
     <div id="sat-list"></div>
     <div class="sq" id="sq-OPEN"><p class="t">這套教材有哪裡建議調整？歡迎寫下你的想法（選填，可留白）</p><textarea id="open" maxlength="1000" placeholder="例如：哪一段不清楚、操作卡住的地方、希望增加的內容……"></textarea></div>
@@ -175,7 +175,7 @@ textarea{width:100%;min-height:90px;font-size:1rem;padding:10px;border:2px solid
 </section>
 
 </main>
-<footer>8PE 兒科情境版｜題目範圍＝院內技術評核表單第 7–17 項（網頁版 VR 教材），情境不與教材重複｜情境人物為虛構，無病人資料｜v1.3 2026-10-13（識別＝6 碼員工編號；滿意度前先問練習裝置）</footer>
+<footer>8PE 兒科情境版｜題目範圍＝院內技術評核表單第 7–17 項（網頁版 VR 教材），情境不與教材重複｜情境人物為虛構，無病人資料｜v1.4 2026-10-13（識別＝6 碼員工編號；裝置複選，選 VR 頭盔才出現頭盔題 5 題）</footer>
 
 <script>
 /* ===== 設定 =====
@@ -184,7 +184,7 @@ textarea{width:100%;min-height:90px;font-size:1rem;padding:10px;border:2px solid
  */
 const ENDPOINT = "https://script.google.com/macros/s/AKfycbwOJxletmIO5oFTa0FwPE7LuTV4TxVM4isRndlLes2QKA6g5BxIC1PBv_olDxgzOM7Q_Q/exec";   // 8PE 專用試算表「8PE外滲前後測成績」（_Code_8pe.gs 部署 v1，2026-10-13）；不可換成主站網址
 const DATA_URL = "./questions_8pe.json";
-const VERSION = "test-8pe-v1.3-20261013";
+const VERSION = "test-8pe-v1.4-20261013";
 /* 代號＝員工編號（10/13 使用者：單位專案需比對前後測；6 碼數字）；試算表端加前導單引號保留開頭的 0 */
 const CODE_RE = /^[0-9]{6}$/;
 const LAST_CODE_KEY = "xr8pe:lastcode";
@@ -216,8 +216,12 @@ const SAT_ITEMS = [
   ["S1", "ARCS 滿足", "整體而言，我對這個教材感到滿意"],
   ["M1", "多媒體", "語音說明清楚、有助理解"],
   ["M2", "多媒體", "「停止語音」鈕讓我能照自己的步調學習"],
-  ["IM1", "VR 沉浸", "360 度病室場景讓我有身歷其境的感覺"],
-  ["IM2", "VR 沉浸", "在 VR 情境中做決定，比讀文字更接近真實臨床的壓力"],
+  /* 第 4 欄 true＝只有選了「VR 頭盔」才出現（10/13 使用者：依 VR 教材使用特點，頭盔題至多 5 題） */
+  ["IM1", "VR 頭盔：沉浸", "戴頭盔看 360 度病室場景，讓我有身歷其境的感覺", true],
+  ["IM2", "VR 頭盔：臨場決策", "在頭盔的情境中做決定，比讀文字更接近真實臨床的壓力", true],
+  ["IM3", "VR 頭盔：互動操作", "在頭盔中用視線或手把點選卡片作答，操作順手", true],
+  ["IM4", "VR 頭盔：頭盔內查詢", "在頭盔中打開敷療查詢站的藥品卡片，能找到需要的處置方式", true],
+  ["IM5", "VR 頭盔：配戴舒適", "戴頭盔練習時，沒有明顯頭暈、眼睛疲勞或其他不舒服", true],
 ];
 /* 成績頁四組：依 questions_8pe.json 的 block 字母歸組 */
 const GROUPS = [
@@ -344,22 +348,29 @@ $("btn-se-next").onclick = () => {
 };
 
 /* ===== 課程滿意度頁（後測；只有網頁版 VR） ===== */
-const satKeys = () => SAT_ITEMS.map(([c]) => `VR_${c}`);
-/* 10/13 使用者：先問練習裝置，再問滿意度 */
+/* 10/13 使用者：先問練習裝置（可複選），再問滿意度；選了 VR 頭盔才出現頭盔題 */
 const DEVICES = ["手機", "電腦", "平板", "VR 頭盔"];
+const devs = () => S.sat.DEVS || [];
+const hasHMD = () => devs().includes("VR 頭盔");
+const satShown = () => SAT_ITEMS.filter(([, , , hmd]) => !hmd || hasHMD());
+const satKeys = () => satShown().map(([c]) => `VR_${c}`);
 function renderSat() {
   tagIt("sat-phase", "sat-code");
   const dv = $("dev"); dv.innerHTML = "";
   for (const d of DEVICES) {
     const b = document.createElement("button"); b.type = "button"; b.textContent = d;
-    b.setAttribute("aria-pressed", S.sat.DEVICE === d); b.onclick = () => { S.sat.DEVICE = d; saveState(); renderSat(); }; dv.appendChild(b);
+    b.setAttribute("aria-pressed", devs().includes(d));
+    b.onclick = () => { const s = new Set(devs()); s.has(d) ? s.delete(d) : s.add(d); S.sat.DEVS = DEVICES.filter(x => s.has(x)); S.sat.DEVICE = S.sat.DEVS.join("、"); saveState(); renderSat(); };
+    dv.appendChild(b);
   }
   const list = $("sat-list"); list.innerHTML = "";
-  const picked = !!S.sat.DEVICE;
+  const picked = devs().length > 0;
   $("sat-hint").textContent = picked ? "請依你的使用經驗作答：1＝非常不同意、3＝普通、5＝非常同意。" : "請先選擇裝置，再回答下面的滿意度題目。";
   list.classList.toggle("hide", !picked); $("sq-OPEN").classList.toggle("hide", !picked);
-  for (const [c, , text] of SAT_ITEMS) {
+  let hmdHead = false;
+  for (const [c, , text, hmd] of satShown()) {
     const key = `VR_${c}`;
+    if (hmd && !hmdHead) { const h = document.createElement("h3"); h.className = "sech"; h.textContent = "【戴 VR 頭盔練習的部分】"; list.appendChild(h); hmdHead = true; }
     const q = document.createElement("div"); q.className = "sq"; q.id = "sq-" + key;
     q.innerHTML = `<p class="t"><span></span></p>`;   // 理論構面只留在送出資料的代號，不顯示給作答者
     q.querySelector(".t span:last-child").textContent = text;
@@ -374,6 +385,7 @@ $("btn-sat-next").onclick = () => {
   const miss = ["DEVICE", ...satKeys()].filter(k => S.sat[k] == null || S.sat[k] === "");
   markMissing("#s-sat", miss);
   if (miss.length) { $("sat-err").textContent = `還有 ${miss.length} 題沒有作答（標紅字的題目）。`; $("sq-" + miss[0]).scrollIntoView({ behavior: "smooth", block: "center" }); return; }
+  if (!hasHMD()) for (const [c, , , hmd] of SAT_ITEMS) if (hmd) delete S.sat[`VR_${c}`];   // 取消頭盔後，之前填的頭盔題不送出
   $("sat-err").textContent = ""; S.sat.V0 = "vr"; submit();
 };
 

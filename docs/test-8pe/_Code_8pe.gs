@@ -1,5 +1,5 @@
 /**
- * 8PE 兒科情境｜化療外滲前後測成績接收（Web App）v2（2026-10-13：加「練習裝置」欄）
+ * 8PE 兒科情境｜化療外滲前後測成績接收（Web App）v3（2026-10-13：「練習裝置」可複選、頭盔題 IM1–IM5）
  * 由主站 _Code_v3.gs 改寫：19 題（選擇題 12＋是非題 7，Q_答 的 U＝不知道）、四組（辨識／立即處理／敷療 DMSO／後續照護與家長指導）、自我效能 SE1–SE11、滿意度只有 VR_*。
  * 🔴 部署在「新的、8PE 專用」試算表，不要貼進主站那份，否則會和原 27 題混欄。
  */
@@ -8,7 +8,7 @@ var N_Q = 19;
 var GROUP_KEYS = ['detect', 'first', 'comp', 'care'];
 var GROUP_LABELS = ['辨識外滲', '立即處理', '敷療與DMSO', '後續照護與家長指導'];
 var SE_KEYS = ['SE1','SE2','SE3','SE4','SE5','SE6','SE7','SE8','SE9','SE10','SE11'];
-var SAT_ITEMS = ['PU1','PU2','EU1','EU2','BI1','A1','R1','R2','C1','S1','M1','M2','IM1','IM2'];
+var SAT_ITEMS = ['PU1','PU2','EU1','EU2','BI1','A1','R1','R2','C1','S1','M1','M2','IM1','IM2','IM3','IM4','IM5'];
 
 function headers_() {
   var h = ['收到時間', '代號', '階段', '開始時間', '送出時間', '作答秒數', '總分', '滿分', '不知道題數'];
@@ -77,7 +77,7 @@ function rowMap_(p, withTime) {
   if (p.se_mean != null) m['自我效能平均'] = p.se_mean;
   var s = p.satisfaction || {};
   if (s.OPEN) m['開放建議'] = s.OPEN;
-  if (s.DEVICE) m['練習裝置'] = s.DEVICE;   // v2：手機／電腦／平板／VR 頭盔
+  if (s.DEVICE) m['練習裝置'] = s.DEVICE;   // 可複選，以「、」串接；IM1–IM5 只有選 VR 頭盔才有值
   Object.keys(s).forEach(function (k) { if (/^VR_/.test(k)) m[k] = s[k]; });
   return m;
 }

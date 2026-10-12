@@ -130,7 +130,8 @@ textarea{width:100%;min-height:90px;font-size:1rem;padding:10px;border:2px solid
   <div class="top"><span><span id="sat-phase" class="tag"></span> <span id="sat-code"></span></span><span>最後一部分｜課程滿意度</span></div>
   <div class="card">
     <h2>課程滿意度</h2>
-    <p class="mut">請依你的使用經驗作答：1＝非常不同意、3＝普通、5＝非常同意。</p>
+    <div class="sq" id="sq-DEVICE"><p class="t">這次你主要用哪一個裝置練習網頁版 VR 教材？</p><div class="choice" id="dev"></div></div>
+    <p class="mut" id="sat-hint">請先選擇裝置，再回答下面的滿意度題目（1＝非常不同意、3＝普通、5＝非常同意）。</p>
     <div id="sat-list"></div>
     <div class="sq" id="sq-OPEN"><p class="t">這套教材有哪裡建議調整？歡迎寫下你的想法（選填，可留白）</p><textarea id="open" maxlength="1000" placeholder="例如：哪一段不清楚、操作卡住的地方、希望增加的內容……"></textarea></div>
     <div id="sat-err" class="err" aria-live="polite"></div>
@@ -168,11 +169,13 @@ textarea{width:100%;min-height:90px;font-size:1rem;padding:10px;border:2px solid
     <button type="button" class="btn sec hide" id="btn-retry">重新送出成績</button>
   </div>
   <a class="btn hide" id="btn-vr" href="../vr/" target="_blank" rel="noopener">前測完成 → 開始網頁版 VR 教材</a>
+  <p class="mut hide" id="g-count" style="text-align:center;margin-top:14px"></p>
+  <a class="btn hide" id="btn-g" href="../learn/#G">後測完成 → 前往：外滲的紀錄與追蹤</a>
   <button type="button" class="btn ghost" id="btn-again">回到開始頁</button>
 </section>
 
 </main>
-<footer>8PE 兒科情境版｜題目範圍＝院內技術評核表單第 7–17 項（網頁版 VR 教材），情境不與教材重複｜情境人物為虛構，無病人資料｜v1.2 2026-10-13（識別＝6 碼員工編號）</footer>
+<footer>8PE 兒科情境版｜題目範圍＝院內技術評核表單第 7–17 項（網頁版 VR 教材），情境不與教材重複｜情境人物為虛構，無病人資料｜v1.3 2026-10-13（識別＝6 碼員工編號；滿意度前先問練習裝置）</footer>
 
 <script>
 /* ===== 設定 =====
@@ -181,7 +184,7 @@ textarea{width:100%;min-height:90px;font-size:1rem;padding:10px;border:2px solid
  */
 const ENDPOINT = "https://script.google.com/macros/s/AKfycbwOJxletmIO5oFTa0FwPE7LuTV4TxVM4isRndlLes2QKA6g5BxIC1PBv_olDxgzOM7Q_Q/exec";   // 8PE 專用試算表「8PE外滲前後測成績」（_Code_8pe.gs 部署 v1，2026-10-13）；不可換成主站網址
 const DATA_URL = "./questions_8pe.json";
-const VERSION = "test-8pe-v1.2-20261013";
+const VERSION = "test-8pe-v1.3-20261013";
 /* 代號＝員工編號（10/13 使用者：單位專案需比對前後測；6 碼數字）；試算表端加前導單引號保留開頭的 0 */
 const CODE_RE = /^[0-9]{6}$/;
 const LAST_CODE_KEY = "xr8pe:lastcode";
@@ -204,7 +207,7 @@ const SAT_ITEMS = [
   ["PU1", "TAM 知覺有用", "這個教材幫助我記住外滲立即處理的步驟順序"],
   ["PU2", "TAM 知覺有用", "這個教材讓我更知道臨床遇到外滲時該怎麼做"],
   ["EU1", "TAM 知覺易用", "網頁版 VR 的操作方式容易上手"],
-  ["EU2", "TAM 知覺易用", "我在手機或平板上使用時很順暢"],
+  ["EU2", "TAM 知覺易用", "我在這次使用的裝置上操作很順暢"],
   ["BI1", "TAM 使用意願", "臨床上遇到疑問時，我願意再回來使用這個教材"],
   ["A1", "ARCS 注意", "「選錯會看到後果」的設計讓我更專注"],
   ["R1", "ARCS 關聯", "教材的處理步驟可以用在兒科病房的孩子身上"],
@@ -342,9 +345,19 @@ $("btn-se-next").onclick = () => {
 
 /* ===== 課程滿意度頁（後測；只有網頁版 VR） ===== */
 const satKeys = () => SAT_ITEMS.map(([c]) => `VR_${c}`);
+/* 10/13 使用者：先問練習裝置，再問滿意度 */
+const DEVICES = ["手機", "電腦", "平板", "VR 頭盔"];
 function renderSat() {
   tagIt("sat-phase", "sat-code");
+  const dv = $("dev"); dv.innerHTML = "";
+  for (const d of DEVICES) {
+    const b = document.createElement("button"); b.type = "button"; b.textContent = d;
+    b.setAttribute("aria-pressed", S.sat.DEVICE === d); b.onclick = () => { S.sat.DEVICE = d; saveState(); renderSat(); }; dv.appendChild(b);
+  }
   const list = $("sat-list"); list.innerHTML = "";
+  const picked = !!S.sat.DEVICE;
+  $("sat-hint").textContent = picked ? "請依你的使用經驗作答：1＝非常不同意、3＝普通、5＝非常同意。" : "請先選擇裝置，再回答下面的滿意度題目。";
+  list.classList.toggle("hide", !picked); $("sq-OPEN").classList.toggle("hide", !picked);
   for (const [c, , text] of SAT_ITEMS) {
     const key = `VR_${c}`;
     const q = document.createElement("div"); q.className = "sq"; q.id = "sq-" + key;
@@ -358,7 +371,7 @@ function renderSat() {
 }
 $("open").addEventListener("input", () => { S.sat.OPEN = $("open").value; saveState(); });
 $("btn-sat-next").onclick = () => {
-  const miss = satKeys().filter(k => S.sat[k] == null || S.sat[k] === "");
+  const miss = ["DEVICE", ...satKeys()].filter(k => S.sat[k] == null || S.sat[k] === "");
   markMissing("#s-sat", miss);
   if (miss.length) { $("sat-err").textContent = `還有 ${miss.length} 題沒有作答（標紅字的題目）。`; $("sq-" + miss[0]).scrollIntoView({ behavior: "smooth", block: "center" }); return; }
   $("sat-err").textContent = ""; S.sat.V0 = "vr"; submit();
@@ -452,6 +465,7 @@ function renderResult(p) {
     box.appendChild(d);
   }
   $("btn-vr").classList.toggle("hide", p.phase !== "pre");
+  $("btn-g").classList.toggle("hide", p.phase !== "post");   // 10/13 使用者：後測結束後開啟⑤紀錄與追蹤
   show("s-result");
 }
 function setStatus(cls, text, retry) { const s = $("r-status"); s.className = "status " + cls; s.textContent = text; $("btn-retry").classList.toggle("hide", !retry); }
@@ -463,19 +477,27 @@ async function send(payload) {
     const res = await fetch(ENDPOINT, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(payload), redirect: "follow" });
     const txt = await res.text();
     let j = null; try { j = JSON.parse(txt); } catch (e) {}
-    if (res.ok && j && j.ok) { setStatus("ok", `成績已送出 ✅（${j.duplicate ? "此份先前已送過" : "試算表第 " + j.row + " 列"}）`, false); dropPending(payload.submission_id); return; }
+    if (res.ok && j && j.ok) { setStatus("ok", `成績已送出 ✅（${j.duplicate ? "此份先前已送過" : "試算表第 " + j.row + " 列"}）`, false); dropPending(payload.submission_id); goG(payload); return; }
     throw new Error(j && j.error ? j.error : `HTTP ${res.status}`);
   } catch (e1) {
     try {
       // 讀不到回應時改 no-cors 再送一次；伺服器端以 submission_id 去重，不會重複寫入
       await fetch(ENDPOINT, { method: "POST", mode: "no-cors", body: JSON.stringify(payload) });
       setStatus("ok", "成績已送出（瀏覽器無法讀取伺服器回應；若講師端沒看到，請按「重新送出成績」）", true);
-      addPending(payload);
+      addPending(payload); goG(payload);
     } catch (e2) {
       setStatus("bad", `成績送出失敗：${e2 && e2.message || e2}。請確認網路後按「重新送出成績」，或截圖本頁交給講師。`, true);
       addPending(payload);
     }
   }
+}
+/* 10/13 使用者：後測結束以網頁跳轉（同一分頁）讓學員進入⑤紀錄與追蹤；成績確定送出後才倒數，避免成績沒送到就離開 */
+let gTimer = null;
+function goG(p) {
+  if (p.phase !== "post" || gTimer) return;
+  let n = 5; const el = $("g-count"); el.classList.remove("hide");
+  const tick = () => { el.textContent = `${n} 秒後自動前往「外滲的紀錄與追蹤」，也可以直接按下方按鈕。`; if (n-- <= 0) { clearInterval(gTimer); location.href = "../learn/#G"; } };
+  tick(); gTimer = setInterval(tick, 1000);
 }
 function addPending(p) { const q = lsGet(PENDING_KEY) || []; if (!q.some(x => x.submission_id === p.submission_id)) { q.push(p); lsSet(PENDING_KEY, q); } }
 function dropPending(sid) { const q = (lsGet(PENDING_KEY) || []).filter(x => x.submission_id !== sid); if (q.length) lsSet(PENDING_KEY, q); else lsDel(PENDING_KEY); }

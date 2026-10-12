@@ -1,5 +1,5 @@
 /**
- * 8PE 兒科情境｜化療外滲前後測成績接收（Web App）v1（2026-10-13）
+ * 8PE 兒科情境｜化療外滲前後測成績接收（Web App）v2（2026-10-13：加「練習裝置」欄）
  * 由主站 _Code_v3.gs 改寫：19 題（選擇題 12＋是非題 7，Q_答 的 U＝不知道）、四組（辨識／立即處理／敷療 DMSO／後續照護與家長指導）、自我效能 SE1–SE11、滿意度只有 VR_*。
  * 🔴 部署在「新的、8PE 專用」試算表，不要貼進主站那份，否則會和原 27 題混欄。
  */
@@ -17,7 +17,7 @@ function headers_() {
   for (var q2 = 1; q2 <= N_Q; q2++) h.push('Q' + q2 + '_對');
   h.push('submission_id', '版本', 'UA', '原始JSON');
   // v2 新增
-  h.push('開放建議', '自我效能平均');
+  h.push('開放建議', '自我效能平均', '練習裝置');
   SE_KEYS.forEach(function (k) { h.push(k); });
   SAT_ITEMS.forEach(function (k) { h.push('VR_' + k); });
   return h;
@@ -77,6 +77,7 @@ function rowMap_(p, withTime) {
   if (p.se_mean != null) m['自我效能平均'] = p.se_mean;
   var s = p.satisfaction || {};
   if (s.OPEN) m['開放建議'] = s.OPEN;
+  if (s.DEVICE) m['練習裝置'] = s.DEVICE;   // v2：手機／電腦／平板／VR 頭盔
   Object.keys(s).forEach(function (k) { if (/^VR_/.test(k)) m[k] = s[k]; });
   return m;
 }

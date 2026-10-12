@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<title>8PE 外滲前後測</title>
+<style>
+:root{--bg:#f4f7fb;--ink:#1c2430;--mut:#5b6675;--navy:#123a6b;--green:#2e8b57;--red:#c81e3a;--line:#dfe5ee;--card:#fff;--sel:#e6f0ff;--selb:#2b7de9}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"Microsoft JhengHei","PingFang TC","Noto Sans TC",system-ui,sans-serif;line-height:1.55;-webkit-text-size-adjust:100%}
+header{background:var(--navy);color:#fff;padding:14px 16px 12px;text-align:center}
+header h1{margin:0;font-size:1.2rem}
+header p{margin:4px 0 0;font-size:.82rem;opacity:.85}
+main{max-width:640px;margin:0 auto;padding:16px 16px 40px}
+.card{background:var(--card);border-radius:16px;padding:18px 16px;box-shadow:0 2px 10px rgba(0,0,0,.05);margin-bottom:14px}
+h2{margin:0 0 10px;font-size:1.08rem}
+p{margin:6px 0}
+.mut{color:var(--mut);font-size:.9rem}
+label.f{display:block;font-weight:700;margin:14px 0 6px}
+input[type=text]{width:100%;font-size:1.4rem;letter-spacing:.35em;text-align:center;padding:10px 12px;border:2px solid var(--line);border-radius:12px;font-family:inherit;text-transform:uppercase}
+input[type=text]:focus{outline:none;border-color:var(--selb)}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.seg button{font-size:1.05rem;padding:12px;border:2px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);font-family:inherit;cursor:pointer}
+.seg button[aria-pressed=true]{background:var(--sel);border-color:var(--selb);color:var(--navy);font-weight:700}
+.btn{display:block;width:100%;font-size:1.08rem;padding:13px;border:0;border-radius:12px;background:var(--navy);color:#fff;font-family:inherit;cursor:pointer;margin-top:14px;text-align:center;text-decoration:none}
+.btn:disabled{background:#b8c2cf;cursor:not-allowed}
+.btn.sec{background:#fff;color:var(--navy);border:2px solid var(--navy)}
+.btn.ghost{background:transparent;color:var(--mut);border:2px solid var(--line)}
+.err{color:var(--red);font-size:.9rem;min-height:1.3em;margin-top:6px}
+.top{display:flex;justify-content:space-between;align-items:center;font-size:.88rem;color:var(--mut);margin-bottom:6px}
+.tag{display:inline-block;padding:2px 10px;border-radius:999px;background:#eef2f7;color:var(--navy);font-weight:700}
+.tag.post{background:#fdebd3;color:#a24f00}
+.bar{height:8px;background:var(--line);border-radius:999px;overflow:hidden;margin-bottom:14px}
+.bar i{display:block;height:100%;background:var(--selb);width:0;transition:width .25s}
+.stem{font-size:1.08rem;font-weight:700;margin:0 0 12px}
+.case{background:#eef4fb;border-left:4px solid var(--navy);border-radius:8px;padding:10px 12px;margin:0 0 12px;font-size:1rem}
+.case:empty{display:none}
+.qimg{width:100%;max-height:22vh;max-height:22dvh;object-fit:contain;background:#fff;border-radius:12px;border:1px solid var(--line);margin:0 0 4px;display:none;cursor:zoom-in}
+.zoomhint{font-size:.78rem;color:var(--mut);text-align:right;margin:0 0 10px}
+.lb{position:fixed;inset:0;background:rgba(10,20,35,.92);z-index:999;display:flex;align-items:center;justify-content:center;padding:12px;cursor:zoom-out}
+.lb img{max-width:100%;max-height:100%;object-fit:contain;border-radius:8px;background:#fff}
+.lb span{position:absolute;top:10px;right:14px;color:#fff;background:rgba(255,255,255,.18);padding:6px 14px;border-radius:999px}
+.opts{display:grid;gap:10px;margin:0;padding:0;list-style:none}
+.opts button{width:100%;text-align:left;font-size:1rem;line-height:1.5;padding:12px 14px;border:2px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);font-family:inherit;cursor:pointer;display:flex;gap:10px;align-items:flex-start}
+.opts button .n{flex:0 0 26px;height:26px;border-radius:50%;border:2px solid var(--line);display:inline-flex;align-items:center;justify-content:center;font-size:.85rem;color:var(--mut)}
+.opts button[aria-pressed=true]{background:var(--sel);border-color:var(--selb)}
+.opts button[aria-pressed=true] .n{background:var(--selb);border-color:var(--selb);color:#fff}
+.nav{display:grid;grid-template-columns:1fr 2fr;gap:10px;margin-top:14px}
+.nav .btn{margin-top:0}
+.total{text-align:center;padding:8px 0 4px}
+.total b{font-size:3rem;line-height:1;color:var(--navy)}
+.total span{font-size:1.1rem;color:var(--mut)}
+.grp{margin:12px 0}
+.grp .h{display:flex;justify-content:space-between;font-size:.95rem;margin-bottom:4px}
+.grp .bar{margin-bottom:0;height:10px}
+.grp .bar i{background:var(--green)}
+.status{padding:10px 12px;border-radius:10px;background:#eef2f7;font-size:.9rem;margin-top:12px}
+.status.ok{background:#e4f5ea;color:#1c5c36}
+.status.bad{background:#fde8ec;color:#8a1226}
+.status.warn{background:#fdf3d8;color:#7a4a00}
+footer{text-align:center;color:var(--mut);font-size:.78rem;padding:10px 16px 24px}
+a{color:var(--navy)}
+.hide{display:none!important}
+body.compact header{padding:8px 16px}
+body.compact header p{display:none}
+body.compact header h1{font-size:1.05rem}
+@media (max-height:720px){body.compact main{padding-top:10px}.qimg{max-height:17vh;max-height:17dvh}.opts{gap:7px}.opts button{padding:9px 12px}.stem{margin-bottom:8px}.nav{margin-top:10px}.zoomhint{margin-bottom:6px}}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.two label.f{margin-top:10px}
+.sq{border-top:1px solid var(--line);padding:14px 0 6px}
+.sq:first-child{border-top:0}
+.sq .t{font-weight:700;margin:0 0 8px}
+.sq .code{color:var(--mut);font-size:.8rem;font-weight:400;margin-right:6px}
+.scale{display:grid;gap:4px}
+.scale.s11{grid-template-columns:repeat(11,1fr)}
+.scale.s5{grid-template-columns:repeat(5,1fr)}
+.scale button{font-size:.95rem;padding:9px 0;border:2px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);font-family:inherit;cursor:pointer;min-width:0}
+.scale button[aria-pressed=true]{background:var(--selb);border-color:var(--selb);color:#fff;font-weight:700}
+.anch{display:flex;justify-content:space-between;font-size:.75rem;color:var(--mut);margin-top:3px}
+.sq.miss .t{color:var(--red)}
+.choice{display:grid;gap:8px}
+.choice button{text-align:left;font-size:1rem;padding:11px 14px;border:2px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);font-family:inherit;cursor:pointer}
+.choice button[aria-pressed=true]{background:var(--sel);border-color:var(--selb);font-weight:700}
+textarea{width:100%;min-height:90px;font-size:1rem;padding:10px;border:2px solid var(--line);border-radius:12px;font-family:inherit}
+.sech{margin:18px 0 4px;font-size:1rem;color:var(--navy)}
+@media (min-width:600px){header h1{font-size:1.4rem}.stem{font-size:1.15rem}}
+</style>
+</head>
+<body>
+<header><h1>8PE 化療藥品外滲前後測</h1><p>兒科情境｜搭配網頁版 VR 教材｜知識題 19 題（題組選擇題＋是非題）＋自我效能 11 題（後測另加課程滿意度）</p></header>
+<main>
+
+<!-- 載入中／錯誤 -->
+<section id="s-load" class="card"><h2>載入題庫中…</h2><p class="mut">讀取 <code>questions_8pe.json</code></p></section>
+<section id="s-error" class="card hide"><h2>題庫載入失敗</h2><p id="err-msg" class="mut"></p><p class="mut">請用網址（GitHub Pages）開啟本頁；直接用檔案總管開啟 HTML 時瀏覽器不允許讀取題庫。</p></section>
+
+<!-- 開始頁 -->
+<section id="s-start" class="card hide">
+  <h2>開始前請填寫</h2>
+  <p class="mut">先作答<b>知識題</b> 19 題（題組選擇題與是非題；不確定時請選「不知道」，不要用猜的），再填<b>自我效能</b> 11 題（0–10 分，沒有對錯）；後測最後另有<b>課程滿意度</b>。全程約 15 分鐘。知識題作答過程<b>不會顯示對錯</b>，送出後才看得到成績。</p>
+  <div class="two">
+    <div><label class="f" for="ph4">手機號碼末 4 碼</label>
+      <input id="ph4" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="off" placeholder="5678"></div>
+    <div><label class="f" for="bd4">生日月日</label>
+      <input id="bd4" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="off" placeholder="0315"></div>
+  </div>
+  <p id="code-help" class="mut">生日月日例：3 月 15 日填 0315。這兩組數字<b>只用來比對你的前測與後測</b>，前後測請填一樣的。</p>
+  <label class="f">這一次是</label>
+  <div class="seg" role="group" aria-label="前測或後測">
+    <button type="button" id="ph-pre" aria-pressed="false">前測</button>
+    <button type="button" id="ph-post" aria-pressed="false">後測</button>
+  </div>
+  <div id="start-err" class="err" aria-live="polite"></div>
+  <button type="button" class="btn" id="btn-start">開始作答</button>
+  <p class="mut">建議流程：<b>前測</b> → 走完<a href="../vr/" target="_blank" rel="noopener">網頁版 VR 教材</a>三個案例 → <b>後測</b>。</p>
+</section>
+
+<!-- 自我效能頁 -->
+<section id="s-se" class="hide">
+  <div class="top"><span><span id="se-phase" class="tag"></span> <span id="se-code"></span></span><span>第二部分｜自我效能</span></div>
+  <div class="card">
+    <h2>處理化療藥品外滲：你有多少信心？</h2>
+    <p class="mut">以下是處理化療藥品外滲時的各個步驟。請依你<b>現在</b>的狀況，點選你有多少信心能做到：<b>0＝完全沒信心、5＝還算有信心、10＝非常有信心</b>。沒有對錯，不計分。</p>
+    <div id="se-list"></div>
+    <div id="se-err" class="err" aria-live="polite"></div>
+    <button type="button" class="btn" id="btn-se-next">下一步</button>
+  </div>
+</section>
+
+<!-- 課程滿意度頁（後測） -->
+<section id="s-sat" class="hide">
+  <div class="top"><span><span id="sat-phase" class="tag"></span> <span id="sat-code"></span></span><span>最後一部分｜課程滿意度</span></div>
+  <div class="card">
+    <h2>課程滿意度</h2>
+    <p class="mut">請依你的使用經驗作答：1＝非常不同意、3＝普通、5＝非常同意。</p>
+    <div id="sat-list"></div>
+    <div class="sq" id="sq-OPEN"><p class="t">這套教材有哪裡建議調整？歡迎寫下你的想法（選填，可留白）</p><textarea id="open" maxlength="1000" placeholder="例如：哪一段不清楚、操作卡住的地方、希望增加的內容……"></textarea></div>
+    <div id="sat-err" class="err" aria-live="polite"></div>
+    <button type="button" class="btn" id="btn-sat-next">送出全部作答</button>
+  </div>
+</section>
+
+<!-- 作答頁 -->
+<section id="s-quiz" class="hide">
+  <div class="top"><span><span id="q-phase" class="tag"></span> <span id="q-code"></span></span><span>第 <b id="q-n">1</b> / <span id="q-total">19</span> 題</span></div>
+  <div class="bar"><i id="q-bar"></i></div>
+  <div class="card">
+    <p class="case" id="q-case"></p>
+    <p class="stem" id="q-stem"></p>
+    <img id="q-img" class="qimg" alt="題目附圖"><p class="zoomhint hide" id="q-zoom">🔍 點圖可放大</p>
+    <ul class="opts" id="q-opts"></ul>
+    <div class="nav">
+      <button type="button" class="btn ghost" id="btn-prev">上一題</button>
+      <button type="button" class="btn" id="btn-next" disabled>下一題</button>
+    </div>
+    <div id="quiz-err" class="err" aria-live="polite"></div>
+  </div>
+  <p class="mut" style="text-align:center">中途離開再回來，會接續同一代號未完成的作答。</p>
+</section>
+
+<!-- 成績頁 -->
+<section id="s-result" class="hide">
+  <div class="card">
+    <div class="top"><span><span id="r-phase" class="tag"></span> <span id="r-code"></span></span><span id="r-time"></span></div>
+    <div class="total"><b id="r-total">0</b> <span>/ <span id="r-max">19</span> 分</span></div>
+    <p class="mut" style="text-align:center">答對題數（每題 1 分）</p>
+    <p class="mut" style="text-align:center" id="r-se"></p>
+    <div id="r-groups"></div>
+    <div id="r-status" class="status" aria-live="polite">處理中…</div>
+    <button type="button" class="btn sec hide" id="btn-retry">重新送出成績</button>
+  </div>
+  <a class="btn hide" id="btn-vr" href="../vr/" target="_blank" rel="noopener">前測完成 → 開始網頁版 VR 教材</a>
+  <button type="button" class="btn ghost" id="btn-again">回到開始頁</button>
+</section>
+
+</main>
+<footer>8PE 兒科情境版｜題目範圍＝院內技術評核表單第 7–17 項（網頁版 VR 教材），情境不與教材重複｜情境人物為虛構，無病人資料｜v1 2026-10-13</footer>
+
+<script>
+/* ===== 設定 =====
+ * ENDPOINT：Google Apps Script Web App 網址（部署步驟見同資料夾 _AppsScript部署步驟.md）。
+ * 留空字串時只顯示成績、不送出。
+ */
+const ENDPOINT = "https://script.google.com/macros/s/AKfycbwOJxletmIO5oFTa0FwPE7LuTV4TxVM4isRndlLes2QKA6g5BxIC1PBv_olDxgzOM7Q_Q/exec";   // 8PE 專用試算表「8PE外滲前後測成績」（_Code_8pe.gs 部署 v1，2026-10-13）；不可換成主站網址
+const DATA_URL = "./questions_8pe.json";
+const VERSION = "test-8pe-v1-20261013";
+/* 代號＝手機末 4 碼＋"_"＋生日月日（底線讓試算表當文字存，保留開頭的 0） */
+const CODE_RE = /^[0-9]{4}_(0[1-9]|1[0-2])(0[1-9]|[12][0-9]|3[01])$/;
+const LAST_CODE_KEY = "xr8pe:lastcode";
+/* 自我效能（評核表第 7–17 項；8PE 兒科版：家長情境＋抬高 48 小時衛教） */
+const SE_ITEMS = [
+  ["SE1", "在給藥中辨識出外滲的早期徵象（疼痛燒灼、紅腫、無回血、推注阻力），包括孩子說不出來、只會哭鬧的時候"],
+  ["SE2", "懷疑外滲時，立即停止給藥、不拔除留置針，並估計剩餘藥量"],
+  ["SE3", "處理前正確穿戴防護裝備（防水隔離衣、雙層手套、口罩，必要時護目鏡）"],
+  ["SE4", "換接無菌 10 mL 空針，從原注射處回抽到抽不出為止，並估計回抽量"],
+  ["SE5", "回抽完成後，先查有無解毒劑，再正確處理留置針（給解毒劑後再拔，或直接拔除）"],
+  ["SE6", "即使家長要求，仍堅持不壓迫、不按摩外滲部位，並向家長說明原因"],
+  ["SE7", "用油性筆標示外滲範圍"],
+  ["SE8", "先查敷療查詢站，再依藥品執行冷敷或熱敷"],
+  ["SE9", "依醫囑執行 DMSO 塗抹（範圍、風乾、次數）"],
+  ["SE10", "教孩子與家長在躺、坐、下床時都讓患肢高於心臟，至少 48 小時"],
+  ["SE11", "孩子哭鬧、家長在旁催促時，仍能依順序完成整套立即處理"],
+];
+/* 課程滿意度（TAM＋ARCS；後測專用；8PE 只有網頁版 VR 一個版本，送出代號一律 VR_*） */
+const SAT_ITEMS = [
+  ["PU1", "TAM 知覺有用", "這個教材幫助我記住外滲立即處理的步驟順序"],
+  ["PU2", "TAM 知覺有用", "這個教材讓我更知道臨床遇到外滲時該怎麼做"],
+  ["EU1", "TAM 知覺易用", "網頁版 VR 的操作方式容易上手"],
+  ["EU2", "TAM 知覺易用", "我在手機或平板上使用時很順暢"],
+  ["BI1", "TAM 使用意願", "臨床上遇到疑問時，我願意再回來使用這個教材"],
+  ["A1", "ARCS 注意", "「選錯會看到後果」的設計讓我更專注"],
+  ["R1", "ARCS 關聯", "教材的處理步驟可以用在兒科病房的孩子身上"],
+  ["R2", "ARCS 關聯", "教材中的家屬問題，和我在病房遇到家長的提問相似"],
+  ["C1", "ARCS 信心", "教材的難易度適中，我能順利完成"],
+  ["S1", "ARCS 滿足", "整體而言，我對這個教材感到滿意"],
+  ["M1", "多媒體", "語音說明清楚、有助理解"],
+  ["M2", "多媒體", "「停止語音」鈕讓我能照自己的步調學習"],
+  ["IM1", "VR 沉浸", "360 度病室場景讓我有身歷其境的感覺"],
+  ["IM2", "VR 沉浸", "在 VR 情境中做決定，比讀文字更接近真實臨床的壓力"],
+];
+/* 成績頁四組：依 questions_8pe.json 的 block 字母歸組 */
+const GROUPS = [
+  { key: "detect", label: "辨識外滲",       blocks: "A" },
+  { key: "first",  label: "立即處理",       blocks: "B" },
+  { key: "comp",   label: "敷療與 DMSO",    blocks: "C" },
+  { key: "care",   label: "後續照護與家長指導", blocks: "D" },
+];
+const PHASE_LABEL = { pre: "前測", post: "後測" };
+
+/* ===== 狀態 ===== */
+let QS = [];          // 題庫（依 id 排序）
+let byId = {};
+let S = null;         // 進行中的作答狀態 {code, phase, sid, order:[id...], opt:{id:[key...]}, ans:{id:key}, started, pos, submitted, result}
+const $ = (id) => document.getElementById(id);
+const show = (id) => { for (const s of ["s-load","s-error","s-start","s-se","s-quiz","s-sat","s-result"]) $(s).classList.toggle("hide", s !== id); document.body.classList.toggle("compact", ["s-se","s-quiz","s-sat"].includes(id)); window.scrollTo(0,0); };
+const lsGet = (k) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : null; } catch (e) { return null; } };
+const lsSet = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+const lsDel = (k) => { try { localStorage.removeItem(k); } catch (e) {} };
+const stateKey = (code, phase) => `xr8pe:${code}:${phase}`;
+const PENDING_KEY = "xr8pe:pending";
+
+function shuffle(a) { const r = a.slice(); for (let i = r.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [r[i], r[j]] = [r[j], r[i]]; } return r; }
+/* 出題順序：同一題組的題目整組一起、組內順序固定；題組與是非題之間的先後隨機 */
+function buildOrder() {
+  const units = [], seen = {};
+  for (const q of QS) {
+    if (q.group) { if (!seen[q.group]) { seen[q.group] = []; units.push(seen[q.group]); } seen[q.group].push(q.id); }
+    else units.push([q.id]);
+  }
+  return shuffle(units).flat();
+}
+function uuid() { return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, c => { const r = Math.random() * 16 | 0; return (c === "x" ? r : (r & 3 | 8)).toString(16); }); }
+function fmtTime(d) { const p = n => String(n).padStart(2, "0"); return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`; }
+function localISO(d) { const p = n => String(n).padStart(2, "0"); const tz = -d.getTimezoneOffset(); const s = tz >= 0 ? "+" : "-"; const a = Math.abs(tz); return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}${s}${p(a/60|0)}:${p(a%60)}`; }
+
+/* ===== 載入題庫 ===== */
+async function loadQuestions() {
+  try {
+    const res = await fetch(DATA_URL, { cache: "no-cache" });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    const qs = (data.questions || data).filter(q => (q.use || []).includes("test"));
+    if (!qs.length) throw new Error("題庫沒有標記 test 的題目");
+    QS = qs.slice().sort((a, b) => a.id - b.id);
+    byId = Object.fromEntries(QS.map(q => [q.id, q]));
+    $("q-total").textContent = QS.length;
+    $("r-max").textContent = QS.length;
+    show("s-start");
+  } catch (e) {
+    $("err-msg").textContent = String(e && e.message || e);
+    show("s-error");
+  }
+}
+
+/* ===== 開始頁 ===== */
+const xrMark = () => {};   // 8PE 獨立頁不寫主站首頁進度
+let phase = null;
+function setPhase(p) { phase = p; $("ph-pre").setAttribute("aria-pressed", p === "pre"); $("ph-post").setAttribute("aria-pressed", p === "post"); $("start-err").textContent = ""; }
+$("ph-pre").onclick = () => setPhase("pre");
+$("ph-post").onclick = () => setPhase("post");
+for (const id of ["ph4", "bd4"]) $(id).addEventListener("input", () => { $(id).value = $(id).value.replace(/[^0-9]/g, "").slice(0, 4); $("start-err").textContent = ""; if (id === "ph4" && $(id).value.length === 4) $("bd4").focus(); });
+(() => { const last = lsGet(LAST_CODE_KEY); if (last && CODE_RE.test(last)) { const [a, b] = last.split("_"); $("ph4").value = a; $("bd4").value = b; } })();   // 同一支手機再開會自動帶入上次的號碼
+$("btn-start").onclick = () => {
+  const ph = $("ph4").value.trim(), bd = $("bd4").value.trim();
+  if (!/^[0-9]{4}$/.test(ph)) { $("start-err").textContent = "手機號碼末 4 碼請填 4 個數字。"; $("ph4").focus(); return; }
+  const code = `${ph}_${bd}`;
+  if (!CODE_RE.test(code)) { $("start-err").textContent = "生日月日請填 4 個數字，例如 3 月 15 日填 0315。"; $("bd4").focus(); return; }
+  lsSet(LAST_CODE_KEY, code);
+  if (!phase) { $("start-err").textContent = "請選擇這一次是前測還是後測。"; return; }
+  const saved = lsGet(stateKey(code, phase));
+  if (saved && !saved.submitted && saved.order && saved.order.length === QS.length && saved.order.every(id => byId[id])) {
+    S = saved; S.pos = Math.min(S.pos || 0, QS.length - 1);   // 接續未完成的作答
+  } else {
+    S = { code, phase, sid: uuid(), order: buildOrder(), opt: {}, ans: {}, started: localISO(new Date()), pos: 0, submitted: false, stage: "quiz", se: {}, sat: {} };
+    for (const q of QS) {   // 選擇題選項隨機（JSON 內正解一律是 A），「不知道」固定最後；是非題固定「正確／錯誤／不知道」
+      const keys = q.options.map(o => o.key);
+      S.opt[q.id] = q.type === "tf" ? keys : [...shuffle(keys.filter(k => k !== "U")), "U"];
+    }
+  }
+  S.stage = S.stage || "quiz"; S.se = S.se || {}; S.sat = S.sat || {};
+  saveState();
+  goStage();
+};
+function goStage() {
+  if (S.stage === "se") { renderSE(); show("s-se"); }
+  else if (S.stage === "sat") { renderSat(); show("s-sat"); }
+  else { renderQ(); show("s-quiz"); }
+}
+const tagIt = (tagEl, codeEl) => { $(tagEl).textContent = PHASE_LABEL[S.phase]; $(tagEl).className = "tag " + S.phase; $(codeEl).textContent = S.code; };
+function scaleRow(n0, n1, cur, onPick) {
+  const d = document.createElement("div"); d.className = "scale " + (n1 - n0 === 10 ? "s11" : "s5");
+  for (let v = n0; v <= n1; v++) {
+    const b = document.createElement("button"); b.type = "button"; b.textContent = v;
+    b.setAttribute("aria-pressed", cur === v); b.onclick = () => onPick(v); d.appendChild(b);
+  }
+  return d;
+}
+function anchors(a, b, c) { const d = document.createElement("div"); d.className = "anch"; for (const t of [a, b, c]) { const s = document.createElement("span"); s.textContent = t; d.appendChild(s); } return d; }
+function markMissing(scope, miss) { document.querySelectorAll(scope + " .sq").forEach(el => el.classList.toggle("miss", miss.includes(el.id.slice(3)))); }
+
+/* ===== 自我效能頁（前後測都有） ===== */
+function renderSE() {
+  tagIt("se-phase", "se-code");
+  $("btn-se-next").textContent = S.phase === "post" ? "下一步：課程滿意度" : "送出全部作答";
+  const box = $("se-list"); box.innerHTML = "";
+  SE_ITEMS.forEach(([code, text], i) => {
+    const q = document.createElement("div"); q.className = "sq"; q.id = "sq-" + code;
+    q.innerHTML = `<p class="t"><span class="code">${i + 1}.</span><span></span></p>`;
+    q.querySelector(".t span:last-child").textContent = "我有信心能" + text;
+    q.appendChild(scaleRow(0, 10, S.se[code], v => { S.se[code] = v; saveState(); renderSE(); }));
+    q.appendChild(anchors("0 完全沒信心", "5 還算有信心", "10 非常有信心"));
+    box.appendChild(q);
+  });
+}
+$("btn-se-next").onclick = () => {
+  const miss = SE_ITEMS.filter(([c]) => S.se[c] == null).map(([c]) => c);
+  markMissing("#s-se", miss);
+  if (miss.length) { $("se-err").textContent = `還有 ${miss.length} 題沒有選分數（標紅字的題目）。`; $("sq-" + miss[0]).scrollIntoView({ behavior: "smooth", block: "center" }); return; }
+  $("se-err").textContent = "";
+  if (S.phase === "post") { S.stage = "sat"; saveState(); goStage(); return; }
+  submit();
+};
+
+/* ===== 課程滿意度頁（後測；只有網頁版 VR） ===== */
+const satKeys = () => SAT_ITEMS.map(([c]) => `VR_${c}`);
+function renderSat() {
+  tagIt("sat-phase", "sat-code");
+  const list = $("sat-list"); list.innerHTML = "";
+  for (const [c, , text] of SAT_ITEMS) {
+    const key = `VR_${c}`;
+    const q = document.createElement("div"); q.className = "sq"; q.id = "sq-" + key;
+    q.innerHTML = `<p class="t"><span></span></p>`;   // 理論構面只留在送出資料的代號，不顯示給作答者
+    q.querySelector(".t span:last-child").textContent = text;
+    q.appendChild(scaleRow(1, 5, S.sat[key], val => { S.sat[key] = val; saveState(); renderSat(); }));
+    q.appendChild(anchors("1 非常不同意", "3 普通", "5 非常同意"));
+    list.appendChild(q);
+  }
+  if (document.activeElement !== $("open")) $("open").value = S.sat.OPEN || "";
+}
+$("open").addEventListener("input", () => { S.sat.OPEN = $("open").value; saveState(); });
+$("btn-sat-next").onclick = () => {
+  const miss = satKeys().filter(k => S.sat[k] == null || S.sat[k] === "");
+  markMissing("#s-sat", miss);
+  if (miss.length) { $("sat-err").textContent = `還有 ${miss.length} 題沒有作答（標紅字的題目）。`; $("sq-" + miss[0]).scrollIntoView({ behavior: "smooth", block: "center" }); return; }
+  $("sat-err").textContent = ""; S.sat.V0 = "vr"; submit();
+};
+
+/* ===== 作答頁 ===== */
+function saveState() { if (S) lsSet(stateKey(S.code, S.phase), S); }
+function renderQ() {
+  const id = S.order[S.pos], q = byId[id];
+  $("q-phase").textContent = PHASE_LABEL[S.phase]; $("q-phase").className = "tag " + S.phase;
+  $("q-code").textContent = S.code;
+  $("q-n").textContent = S.pos + 1;
+  $("q-bar").style.width = `${Math.round((S.pos) / QS.length * 100)}%`;
+  $("q-case").textContent = q.case || "";
+  $("q-stem").textContent = q.stem;
+  const img = $("q-img");
+  img.style.display = "none"; $("q-zoom").classList.add("hide"); img.onload = () => { img.style.display = "block"; $("q-zoom").classList.remove("hide"); };
+  if ((q.note || "").includes("圖")) {   // 只有看圖題才帶圖，避免講解圖洩題；副檔名／大小寫依序嘗試（Pages 區分大小寫）
+    const nn = String(q.id).padStart(2, "0");
+    const cands = [`q${nn}.png`, `q${nn}.jpg`, `Q${nn}.jpg`, `Q${nn}.png`];
+    img.onerror = () => { const nx = cands.shift(); if (nx) img.src = `../assets/img/${nx}`; else img.style.display = "none"; };
+    img.src = `../assets/img/${cands.shift()}`;
+    if (img.complete && img.naturalWidth) img.onload();   // 同一張圖重畫時瀏覽器不會再觸發 load（點選項後圖會消失）
+  } else { img.onerror = null; img.removeAttribute("src"); }
+  const ul = $("q-opts"); ul.innerHTML = "";
+  const optText = Object.fromEntries(q.options.map(o => [o.key, o.text]));
+  S.opt[id].forEach((key, i) => {
+    const li = document.createElement("li");
+    const b = document.createElement("button"); b.type = "button";
+    b.setAttribute("aria-pressed", S.ans[id] === key);
+    b.innerHTML = `<span class="n">${i + 1}</span><span></span>`;
+    b.lastChild.textContent = optText[key];
+    b.onclick = () => { S.ans[id] = key; saveState(); renderQ(); };
+    li.appendChild(b); ul.appendChild(li);
+  });
+  const last = S.pos === QS.length - 1;
+  $("btn-prev").disabled = S.pos === 0;
+  $("btn-next").textContent = last ? "下一步：自我效能" : "下一題";
+  $("btn-next").disabled = !S.ans[id];
+  $("quiz-err").textContent = "";
+}
+$("btn-prev").onclick = () => { if (S.pos > 0) { S.pos--; saveState(); renderQ(); } };
+$("btn-next").onclick = () => {
+  const id = S.order[S.pos];
+  if (!S.ans[id]) { $("quiz-err").textContent = "請先選一個答案。"; return; }
+  if (S.pos < QS.length - 1) { S.pos++; saveState(); renderQ(); return; }
+  const missing = S.order.map((qid, i) => S.ans[qid] ? -1 : i).filter(i => i >= 0);
+  if (missing.length) { S.pos = missing[0]; saveState(); renderQ(); $("quiz-err").textContent = `尚有 ${missing.length} 題未作答，已跳到第一題未作答的題目。`; return; }
+  S.stage = "se"; saveState(); goStage();
+};
+
+/* ===== 計分與送出 ===== */
+function score() {
+  const answers = S.order.map((id, i) => { const q = byId[id]; const chosen = S.ans[id]; return { id, type: q.type, group: q.group, bloom: q.bloom, form_item: q.form_item, block: q.block, seq: i + 1, chosen, correct_key: q.answer, correct: chosen === q.answer, unknown: chosen === "U" }; });
+  const groups = GROUPS.map(g => { const items = answers.filter(a => g.blocks.includes(a.block)); const ids = items.map(a => a.id).sort((x, y) => x - y); return { key: g.key, label: g.label, range: ids.length ? `Q${ids[0]}–Q${ids[ids.length-1]}` : "", score: items.filter(a => a.correct).length, max: items.length }; });
+  return { answers, groups, total: answers.filter(a => a.correct).length, max: answers.length, unknown: answers.filter(a => a.unknown).length };
+}
+function submit() {
+  const now = new Date();
+  const sc = score();
+  const payload = {
+    submission_id: S.sid, version: VERSION, cohort: "8PE",
+    code: S.code, phase: S.phase, phase_label: PHASE_LABEL[S.phase],
+    started_at: S.started, submitted_at: localISO(now),
+    duration_sec: Math.max(0, Math.round((now - new Date(S.started)) / 1000)),
+    total: sc.total, max: sc.max, unknown: sc.unknown,
+    groups: Object.fromEntries(sc.groups.map(g => [g.key, { label: g.label, range: g.range, score: g.score, max: g.max }])),
+    answers: sc.answers.sort((a, b) => a.id - b.id),
+    self_efficacy: Object.fromEntries(SE_ITEMS.map(([c]) => [c, S.se[c]])),
+    se_mean: Math.round(SE_ITEMS.reduce((t, [c]) => t + (S.se[c] || 0), 0) / SE_ITEMS.length * 100) / 100,
+    satisfaction: S.phase === "post" ? S.sat : null,
+    ua: navigator.userAgent,
+  };
+  S.submitted = true; S.result = payload; saveState();
+  xrMark(S.phase);   // 首頁進度：前測／後測已送出
+  renderResult(payload);
+  send(payload);
+}
+function renderResult(p) {
+  $("r-phase").textContent = p.phase_label; $("r-phase").className = "tag " + p.phase;
+  $("r-code").textContent = p.code;
+  $("r-time").textContent = fmtTime(new Date(p.submitted_at));
+  $("r-total").textContent = p.total; $("r-max").textContent = p.max;
+  $("r-se").textContent = `選「不知道」${p.unknown || 0} 題（計為答錯）` + (p.se_mean != null ? `｜自我效能平均 ${p.se_mean} / 10（不計分）` : "");
+  const box = $("r-groups"); box.innerHTML = "";
+  for (const k of Object.keys(p.groups)) {
+    const g = p.groups[k];
+    const d = document.createElement("div"); d.className = "grp";
+    d.innerHTML = `<div class="h"><span></span><b></b></div><div class="bar"><i style="width:${g.max ? Math.round(g.score / g.max * 100) : 0}%"></i></div>`;
+    d.querySelector("span").textContent = g.label;   // 題目分散在題組與是非題，題號範圍沒有意義 d.querySelector("b").textContent = `${g.score} / ${g.max}`;
+    box.appendChild(d);
+  }
+  $("btn-vr").classList.toggle("hide", p.phase !== "pre");
+  show("s-result");
+}
+function setStatus(cls, text, retry) { const s = $("r-status"); s.className = "status " + cls; s.textContent = text; $("btn-retry").classList.toggle("hide", !retry); }
+async function send(payload) {
+  if (!ENDPOINT) { setStatus("warn", "尚未設定成績回傳網址（ENDPOINT 空白），成績只顯示在本頁，請截圖保存。", false); return; }
+  setStatus("", "成績送出中…", false);
+  try {
+    // Content-Type 用 text/plain 屬「簡單請求」，不觸發 CORS 預檢；Apps Script 會 302 轉址，fetch 自動跟隨
+    const res = await fetch(ENDPOINT, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(payload), redirect: "follow" });
+    const txt = await res.text();
+    let j = null; try { j = JSON.parse(txt); } catch (e) {}
+    if (res.ok && j && j.ok) { setStatus("ok", `成績已送出 ✅（${j.duplicate ? "此份先前已送過" : "試算表第 " + j.row + " 列"}）`, false); dropPending(payload.submission_id); return; }
+    throw new Error(j && j.error ? j.error : `HTTP ${res.status}`);
+  } catch (e1) {
+    try {
+      // 讀不到回應時改 no-cors 再送一次；伺服器端以 submission_id 去重，不會重複寫入
+      await fetch(ENDPOINT, { method: "POST", mode: "no-cors", body: JSON.stringify(payload) });
+      setStatus("ok", "成績已送出（瀏覽器無法讀取伺服器回應；若講師端沒看到，請按「重新送出成績」）", true);
+      addPending(payload);
+    } catch (e2) {
+      setStatus("bad", `成績送出失敗：${e2 && e2.message || e2}。請確認網路後按「重新送出成績」，或截圖本頁交給講師。`, true);
+      addPending(payload);
+    }
+  }
+}
+function addPending(p) { const q = lsGet(PENDING_KEY) || []; if (!q.some(x => x.submission_id === p.submission_id)) { q.push(p); lsSet(PENDING_KEY, q); } }
+function dropPending(sid) { const q = (lsGet(PENDING_KEY) || []).filter(x => x.submission_id !== sid); if (q.length) lsSet(PENDING_KEY, q); else lsDel(PENDING_KEY); }
+$("btn-retry").onclick = () => { if (S && S.result) send(S.result); };
+$("btn-again").onclick = () => { S = null; setPhase(null); show("s-start"); };
+
+$("q-img").addEventListener("click", () => { const im = $("q-img"); if (!im.src) return; const lb = document.createElement("div"); lb.className = "lb"; const big = new Image(); big.src = im.src; big.alt = im.alt; const x = document.createElement("span"); x.textContent = "✕ 關閉"; lb.append(big, x); lb.onclick = () => lb.remove(); document.body.appendChild(lb); });
+loadQuestions().then(() => { const ph = new URLSearchParams(location.search).get("phase"); if (ph === "pre" || ph === "post") setPhase(ph); });
+</script>
+</body>
+</html>

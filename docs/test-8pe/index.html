@@ -99,13 +99,9 @@ textarea{width:100%;min-height:90px;font-size:1rem;padding:10px;border:2px solid
 <section id="s-start" class="card hide">
   <h2>開始前請填寫</h2>
   <p class="mut">先作答<b>知識題</b> 19 題（題組選擇題與是非題；不確定時請選「不知道」，不要用猜的），再填<b>自我效能</b> 11 題（0–10 分，沒有對錯）；後測最後另有<b>課程滿意度</b>。全程約 15 分鐘。知識題作答過程<b>不會顯示對錯</b>，送出後才看得到成績。</p>
-  <div class="two">
-    <div><label class="f" for="ph4">手機號碼末 4 碼</label>
-      <input id="ph4" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="off" placeholder="5678"></div>
-    <div><label class="f" for="bd4">生日月日</label>
-      <input id="bd4" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="off" placeholder="0315"></div>
-  </div>
-  <p id="code-help" class="mut">生日月日例：3 月 15 日填 0315。這兩組數字<b>只用來比對你的前測與後測</b>，前後測請填一樣的。</p>
+  <label class="f" for="emp">員工編號</label>
+  <input id="emp" type="text" maxlength="10" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="例：012345">
+  <p id="code-help" class="mut">員工編號用來比對你的前測與後測（單位專案成效分析），<b>前後測請填同一個編號</b>。</p>
   <label class="f">這一次是</label>
   <div class="seg" role="group" aria-label="前測或後測">
     <button type="button" id="ph-pre" aria-pressed="false">前測</button>
@@ -175,7 +171,7 @@ textarea{width:100%;min-height:90px;font-size:1rem;padding:10px;border:2px solid
 </section>
 
 </main>
-<footer>8PE 兒科情境版｜題目範圍＝院內技術評核表單第 7–17 項（網頁版 VR 教材），情境不與教材重複｜情境人物為虛構，無病人資料｜v1 2026-10-13</footer>
+<footer>8PE 兒科情境版｜題目範圍＝院內技術評核表單第 7–17 項（網頁版 VR 教材），情境不與教材重複｜情境人物為虛構，無病人資料｜v1.1 2026-10-13（識別改員工編號）</footer>
 
 <script>
 /* ===== 設定 =====
@@ -184,9 +180,9 @@ textarea{width:100%;min-height:90px;font-size:1rem;padding:10px;border:2px solid
  */
 const ENDPOINT = "https://script.google.com/macros/s/AKfycbwOJxletmIO5oFTa0FwPE7LuTV4TxVM4isRndlLes2QKA6g5BxIC1PBv_olDxgzOM7Q_Q/exec";   // 8PE 專用試算表「8PE外滲前後測成績」（_Code_8pe.gs 部署 v1，2026-10-13）；不可換成主站網址
 const DATA_URL = "./questions_8pe.json";
-const VERSION = "test-8pe-v1-20261013";
-/* 代號＝手機末 4 碼＋"_"＋生日月日（底線讓試算表當文字存，保留開頭的 0） */
-const CODE_RE = /^[0-9]{4}_(0[1-9]|1[0-2])(0[1-9]|[12][0-9]|3[01])$/;
+const VERSION = "test-8pe-v1.1-20261013";
+/* 代號＝員工編號（10/13 使用者：單位專案需比對前後測）；英數 3–10 碼，一律轉大寫；試算表端加前導單引號保留開頭的 0 */
+const CODE_RE = /^[A-Z0-9]{3,10}$/;
 const LAST_CODE_KEY = "xr8pe:lastcode";
 /* 自我效能（評核表第 7–17 項；8PE 兒科版：家長情境＋抬高 48 小時衛教） */
 const SE_ITEMS = [
@@ -279,13 +275,11 @@ let phase = null;
 function setPhase(p) { phase = p; $("ph-pre").setAttribute("aria-pressed", p === "pre"); $("ph-post").setAttribute("aria-pressed", p === "post"); $("start-err").textContent = ""; }
 $("ph-pre").onclick = () => setPhase("pre");
 $("ph-post").onclick = () => setPhase("post");
-for (const id of ["ph4", "bd4"]) $(id).addEventListener("input", () => { $(id).value = $(id).value.replace(/[^0-9]/g, "").slice(0, 4); $("start-err").textContent = ""; if (id === "ph4" && $(id).value.length === 4) $("bd4").focus(); });
-(() => { const last = lsGet(LAST_CODE_KEY); if (last && CODE_RE.test(last)) { const [a, b] = last.split("_"); $("ph4").value = a; $("bd4").value = b; } })();   // 同一支手機再開會自動帶入上次的號碼
+$("emp").addEventListener("input", () => { $("emp").value = $("emp").value.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 10); $("start-err").textContent = ""; });
+(() => { const last = lsGet(LAST_CODE_KEY); if (last && CODE_RE.test(last)) $("emp").value = last; })();   // 同一支手機再開會自動帶入上次的員工編號
 $("btn-start").onclick = () => {
-  const ph = $("ph4").value.trim(), bd = $("bd4").value.trim();
-  if (!/^[0-9]{4}$/.test(ph)) { $("start-err").textContent = "手機號碼末 4 碼請填 4 個數字。"; $("ph4").focus(); return; }
-  const code = `${ph}_${bd}`;
-  if (!CODE_RE.test(code)) { $("start-err").textContent = "生日月日請填 4 個數字，例如 3 月 15 日填 0315。"; $("bd4").focus(); return; }
+  const code = $("emp").value.trim().toUpperCase();
+  if (!CODE_RE.test(code)) { $("start-err").textContent = "請填員工編號（英文或數字，3–10 碼）。"; $("emp").focus(); return; }
   lsSet(LAST_CODE_KEY, code);
   if (!phase) { $("start-err").textContent = "請選擇這一次是前測還是後測。"; return; }
   const saved = lsGet(stateKey(code, phase));

@@ -65,7 +65,7 @@ function ensureHeaders_(sh) {
 function rowMap_(p, withTime) {
   var m = {};
   if (withTime) m['收到時間'] = new Date();
-  m['代號'] = "'" + String(p.code).toUpperCase();   // 前導單引號＝文字，保留開頭的 0
+  m['代號'] = "'" + String(p.code).toUpperCase();   // 代號＝員工編號；前導單引號＝文字，保留開頭的 0
   m['階段'] = p.phase_label || p.phase; m['開始時間'] = p.started_at || ''; m['送出時間'] = p.submitted_at || '';
   m['作答秒數'] = p.duration_sec != null ? p.duration_sec : ''; m['總分'] = p.total != null ? p.total : ''; m['滿分'] = p.max != null ? p.max : ''; m['不知道題數'] = p.unknown != null ? p.unknown : '';
   var groups = p.groups || {};

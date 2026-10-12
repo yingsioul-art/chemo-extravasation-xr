@@ -45,7 +45,7 @@ html,body{margin:0;height:100%;background:#0f1a2b;font-family:"Microsoft JhengHe
 .a-enter-vr{bottom:max(56px,env(safe-area-inset-bottom))!important}
 </style></head>
 <body>
-<div id="hud"><a href="../">← 首頁</a><span class="t" id="ttl">外滲當下怎麼做</span><span class="n" id="prog"></span><button class="hb" id="muteBtn">🔇 停止語音</button></div>
+<div id="hud"><span class="t" id="ttl">外滲當下怎麼做</span><span class="n" id="prog"></span><button class="hb" id="muteBtn">🔇 停止語音</button></div>
 <div id="tip">拖曳／轉動手機看四周・點卡片作答</div>
 
 <div id="start"><div class="box">
@@ -170,6 +170,12 @@ function open2D(url,title,step){
   stopAudio(); $("#pTitle").textContent=title; $("#pFrame").src=url; $("#panel").classList.add("on");
 }
 $("#pClose").onclick=()=>{$("#panel").classList.remove("on"); $("#pFrame").src="about:blank";};
+/* 10/13 使用者：VR 版不可有回主站首頁的按鈕 → 面板內的查詢站／2D 動手版載入後，隱藏所有指向主站首頁的連結（含之後動態產生的）；原頁面不改 */
+(()=>{const HOMES=[new URL("../",location.href).href,"https://yingsioul-art.github.io/chemo-extravasation-xr/"];   // 查詢站的回首頁是寫死的絕對網址
+  const strip=d=>d.querySelectorAll("a[href]").forEach(a=>{ const h=a.href.replace(/index\.html$/,""); if(HOMES.includes(h)) a.style.display="none"; });
+  $("#pFrame").addEventListener("load",()=>{ try{ const d=$("#pFrame").contentDocument; if(!d||!d.body) return; strip(d);
+    new MutationObserver(()=>strip(d)).observe(d.body,{childList:true,subtree:true}); }catch(e){} });
+})();
 
 /* ---------- 頭顯內查詢面板（9/30）：iframe 在頭顯內無法顯示 → 圖卡版查詢站
    藥品卡（文字取自 lookup/index.html DATA 原文）＋藥名索引＋作法與原理；底部按鈕列：上一張／下一張／索引／作法與原理／關閉 ---------- */
@@ -229,8 +235,7 @@ function layoutPortrait(st,s,nextFn){
     mk(st,s.lookup,{x:0,y:2.3,z:Z,w:2.3,click:()=>open2D("../lookup/","敷療查詢站",s)});
     mk(st,s.handson,{x:0,y:1.55,z:Z,w:2.3,click:()=>open2D("../handson/","2D 動手版",s)});
     mk(st,s.toC2,{x:-0.66,y:0.3,z:Z,w:1.2,click:()=>to("c2intro")}); mk(st,s.toC3,{x:0.66,y:0.3,z:Z,w:1.25,click:()=>to("c3intro")});
-    mk(st,s.again,{x:-0.62,y:0.85,z:Z,w:1.15,click:()=>go(0)});
-    mk(st,s.home,{x:0.62,y:0.85,z:Z,w:1.15,click:()=>{location.href="../";}}); layRing(st,s); }
+    mk(st,s.again,{x:0,y:0.85,z:Z,w:1.15,click:()=>go(0)}); layRing(st,s); }   // 10/13 使用者：VR 版不放回主站首頁的按鈕
 }
 function go(i,quiet){
   if(D&&D.steps[(i+D.steps.length)%D.steps.length]) T('step',{item:D.steps[(i+D.steps.length)%D.steps.length].id,value:(i+D.steps.length)%D.steps.length+1});
@@ -278,8 +283,7 @@ function go(i,quiet){
     mk(st,s.toC3,{...arc(62,3.6),y:1.45,w:1.6,click:()=>to("c3intro")});
     mk(st,s.lookup,{x:-1.15,y:1.95,z:-3.8,w:2.0,click:()=>open2D("../lookup/","敷療查詢站",s)});
     mk(st,s.handson,{x:1.15,y:1.95,z:-3.8,w:2.0,click:()=>open2D("../handson/","2D 動手版",s)});
-    mk(st,s.again,{x:-0.8,y:1.05,z:-3.8,w:1.3,click:()=>go(0)});
-    mk(st,s.home,{x:0.8,y:1.05,z:-3.8,w:1.3,click:()=>{location.href="../";}});
+    mk(st,s.again,{x:0,y:1.05,z:-3.8,w:1.3,click:()=>go(0)});   // 10/13 使用者：VR 版不放回主站首頁的按鈕
     layRing(st,s);
   }
   }
